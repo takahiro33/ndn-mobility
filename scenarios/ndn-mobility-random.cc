@@ -559,7 +559,8 @@ string bounds = string(buffer);
 
 	// Use the Wifi Helper to define the wireless interfaces for APs
 	WifiHelper wifi;
-	wifi.SetStandard(WIFI_PHY_STANDARD_80211g);
+	// Using the G standard makes the network slower than using the default
+	//wifi.SetStandard(WIFI_PHY_STANDARD_80211g);
 	// The N standard is apparently not completely supported in NS-3
 	//wifi.setStandard(WIFI_PHY_STANDARD_80211n_2_4GHZ);
 	// The ConstantRateWifiManager only works with one rate, making issues
