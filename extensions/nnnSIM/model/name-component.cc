@@ -56,7 +56,7 @@ Component::fromUri (const std::string &uri)
     {
       Uri::fromEscaped (uri.begin (), uri.end (), std::back_inserter (*this));
     }
-  catch (error::Uri &err)
+  catch (error::NNNAddress &err)
     {
       // re-throwing different exception
       BOOST_THROW_EXCEPTION (error::name::Component ()
@@ -74,7 +74,7 @@ Component::fromUri (std::string::const_iterator begin, std::string::const_iterat
     {
       Uri::fromEscaped (begin, end, std::back_inserter (*this));
     }
-  catch (error::Uri &err)
+  catch (error::NNNAddress &err)
     {
       // re-throwing different exception
       BOOST_THROW_EXCEPTION (error::name::Component ()
