@@ -47,26 +47,19 @@
 
 NNN_NAMESPACE_BEGIN
 
-/**
- * @ingroup ndn-cxx
+/*
  * @brief Namespace holding all errors from NDN.cxx API
  */
 namespace error
 {
 
 struct Error           : public virtual boost::exception, public virtual std::exception {}; ///< @brief Some error with error reporting engine
-struct Uri             : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with URI processing
+struct NNNAddress      : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with URI processing
 struct StringTransform : public virtual boost::exception, public virtual std::exception {};
 struct Name            : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with Name
 namespace name {
 struct Component       : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with name::Component
 }
-struct Exclude         : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with Exclude
-struct KeyLocator      : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with KeyLocator
-namespace wire {
-struct Ccnb            : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with wire::Ccnb encoding
-}
-struct Keychain        : public virtual boost::exception, public virtual std::exception {}; ///< @brief An error with security::Keychain
 
 // Diagnostic information fields
 

@@ -123,7 +123,7 @@ public:
               }
             catch (nnn::error::StringTransform &e)
               {
-                BOOST_THROW_EXCEPTION (error::Uri ()
+                BOOST_THROW_EXCEPTION (error::NNNAddress ()
                                        << error::pos (std::distance (i, begin)));
               }
           }
@@ -134,7 +134,7 @@ public:
           }
         else
           {
-            BOOST_THROW_EXCEPTION (error::Uri ()
+            BOOST_THROW_EXCEPTION (error::NNNAddress ()
                                    << error::pos (std::distance (i, begin)));
           }
       }
@@ -161,6 +161,17 @@ public:
       }
   }
 };
+
+/**
+ * @brief A helper class to convert to/from NN layer names
+ */
+//class NNNname
+//{
+//public:
+//	template<class Iterator1, class Iterator2>
+//	  inline static void
+//	  fromEscaped (Iterator1 begin, Iterator1 end, Iterator2 inserter)
+//};
 
 NNN_NAMESPACE_END
 

@@ -21,8 +21,8 @@
 
 #include "name-component.h"
 
-#include "detail/error.h"
-#include "detail/uri.h"
+#include "error.h"
+#include "nnn-name-format.h"
 
 NNN_NAMESPACE_BEGIN
 
@@ -32,9 +32,9 @@ Component::Component ()
 {
 }
 
-Component::Component (const std::string &uri)
+Component::Component (const std::string &name)
 {
-  copy (uri.begin (), uri.end (), std::back_inserter (*this));
+  copy (name.begin (), name.end (), std::back_inserter (*this));
 }
 
 Component::Component (std::string::const_iterator begin, std::string::const_iterator end)
