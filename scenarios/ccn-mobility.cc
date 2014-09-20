@@ -542,7 +542,7 @@ int main (int argc, char *argv[])
 		sprintf(fileId, "%s-%02d-%03d-%03d.txt", routeType, mobile, clients, nodes);
 
 		// Print server nodes to file
-		sprintf(filename, "%s/%s-servers-%d", results, scenario, fileId);
+		sprintf(filename, "%s/%s-servers-%s", results, scenario, fileId);
 
 	/*	NS_LOG_INFO ("Printing node files");
 		std::ofstream serverFile;
