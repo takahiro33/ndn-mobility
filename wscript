@@ -31,7 +31,7 @@ OTHER_NS3_MODULES = ['antenna', 'aodv', 'bridge', 'brite', 'buildings', 'click',
 def configure(conf):
     conf.load("compiler_cxx boost ns3")
 
-    conf.check_boost(lib='system iostreams')
+    conf.check_boost(lib='system iostreams regex')
     boost_version = conf.env.BOOST_VERSION.split('_')
     if int(boost_version[0]) < 1 or int(boost_version[1]) < 48:
         Logs.error ("ndnSIM requires at least boost version 1.48")
@@ -70,7 +70,7 @@ def configure(conf):
         conf.define ('NS3_ASSERT_ENABLE', 1)
 
 def build (bld):
-    deps = 'BOOST BOOST_IOSTREAMS ' + ' '.join (['ns3_'+dep for dep in MANDATORY_NS3_MODULES + OTHER_NS3_MODULES]).upper ()
+    deps = 'BOOST BOOST_IOSTREAMS BOOST_REGEX' + ' '.join (['ns3_'+dep for dep in MANDATORY_NS3_MODULES + OTHER_NS3_MODULES]).upper ()
 
     common = bld.objects (
         target = "extensions",
