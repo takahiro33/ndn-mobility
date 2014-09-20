@@ -18,11 +18,13 @@
  *
  */
 
-#include "nnn-address.h"
-
+#include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include <ctype.h>
+
+#include "nnn-address.h"
+#include "error.h"
 
 using namespace std;
 
@@ -38,20 +40,50 @@ NNNAddress::NNNAddress ()
 {
 }
 
+// Create a valid NNN address
+// No more than 16 hexadecimal characters with a maximum of 15 "."
 NNNAddress::NNNAddress (const string &name)
 {
+	string::const_iterator i = name.begin ();
+	string::const_iterator end = name.end ();
 
+	// Check that we have only hexadecimal characters and dots
+	boost::regex e("[^.0-9a-fA-F]");
+	boost::match_results<std::string::const_iterator> what;
+	boost::match_flag_type flags = boost::match_default;
+
+	if (boost::regex_search(i, end, what, e, flags))
+	{
+		BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address should be composed of only hexadecimal characters and dots!"));
+	}
+
+	// Check that string has less than 15 dots.
+	int dotcount = count(i, end, '.');
+
+	if (dotcount > 15)
+	{
+		BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address should not have more than 15 '.'"));
+	}
+
+	int namesize = name.size () - dotcount;
+
+	// Check that the total size of the string is lower than 31
+	if (namesize > 16)
+	{
+		BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address is of maximum 16 hexadecimal characters!"));
+	}
 }
 
 NNNAddress::NNNAddress (const NNNAddress &other)
 {
-
+	m_address_comp = other.m_address_comp;
 }
 
 NNNAddress &
 NNNAddress::operator= (const NNNAddress &other)
 {
-  return *this;
+	m_address_comp = other.m_address_comp;
+	return *this;
 }
 
 std::string
@@ -72,14 +104,23 @@ NNNAddress::operator+ (const NNNAddress &name) const
 void
 NNNAddress::toString (std::ostream &os) const
 {
-    os << ".";
-    os << ".";
+//	for (NNNAddress::const_iterator comp = begin (); comp != end (); comp++)
+//	{
+//		os << comp->toUri (os);
+//		os << ".";
+//	}
 }
 
 int
 NNNAddress::compare (const NNNAddress &NNNAddress) const
 {
 
+}
+
+inline size_t
+NNNAddress::size () const
+{
+  return m_address_comp.size ();
 }
 
 NNN_NAMESPACE_END

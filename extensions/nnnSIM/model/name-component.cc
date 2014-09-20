@@ -152,7 +152,44 @@ Component::toUri () const
 void
 Component::toUri (std::ostream &os) const
 {
-  Uri::toEscaped (begin (), end (), std::ostream_iterator<char> (os));
+  const uint8_t* valuePtr = reinterpret_cast<const uint8_t*>(buf());
+  size_t valueSize = size();
+
+  bool gotNonDot = false;
+  for (unsigned i = 0; i < valueSize; ++i) {
+    if (valuePtr[i] != 0x2e) {
+      gotNonDot = true;
+      break;
+    }
+  }
+  if (!gotNonDot) {
+    // Special case for component of zero or more periods.  Add 3 periods.
+    os << "...";
+    for (size_t i = 0; i < valueSize; ++i)
+      os << '.';
+  }
+  else {
+    // In case we need to escape, set to upper case hex and save the previous flags.
+    std::ios::fmtflags saveFlags = os.flags(std::ios::hex | std::ios::uppercase);
+
+    for (size_t i = 0; i < valueSize; ++i) {
+      uint8_t x = valuePtr[i];
+      // Check for 0-9, A-Z, a-z, (+), (-), (.), (_)
+      if ((x >= 0x30 && x <= 0x39) || (x >= 0x41 && x <= 0x5a) ||
+          (x >= 0x61 && x <= 0x7a) || x == 0x2b || x == 0x2d ||
+          x == 0x2e || x == 0x5f)
+        os << x;
+      else {
+        os << '%';
+        if (x < 16)
+          os << '0';
+        os << static_cast<unsigned int>(x);
+      }
+    }
+
+    // Restore.
+    os.flags(saveFlags);
+  }
 }
 
 uint64_t
