@@ -19,10 +19,9 @@
  * Special thanks to University of California for initial implementation
  */
 
-#include "name-component.h"
-
 #include "error.h"
 #include "nnn-name-format.h"
+#include "name-component.h"
 
 NNN_NAMESPACE_BEGIN
 
@@ -84,6 +83,8 @@ Component::fromUri (std::string::const_iterator begin, std::string::const_iterat
   return *this;
 }
 
+
+
 int
 Component::compare (const Component &other) const
 {
@@ -99,7 +100,13 @@ Component::compare (const Component &other) const
   if (diff.first == end ()) // components are actually equal
     return 0;
 
-  return (std::lexicographical_compare (diff.first, end (), diff.second, other.end ())) ? -1 : +1;
+  //return (std::lexicographical_compare (diff.first, end (), diff.second, other.end ())) ? -1 : +1;
+
+  // Our comparison are actually numerical, so we have to convert to integers
+  uint64_t curr = toNumber();
+  uint64_t otherNum = other.toNumber();
+
+  return (curr > otherNum) ? 1 : -1;
 }
 
 Component &
@@ -112,6 +119,26 @@ Component::fromNumber (uint64_t number)
     }
   std::reverse (this->begin (), this->end ());
   return *this;
+}
+
+Component &
+Component::fromDotHexStr (std::string::const_iterator begin, std::string::const_iterator end)
+{
+	// Obtain the actual string given
+	std::string tmp (begin, end);
+
+	// Create a string stream
+	std::stringstream str;
+
+	// We assume that the string given is in hex and pass it to the stream
+	str << tmp;
+
+	// We then read the hex into value, an unsigned integer
+	uint64_t value;
+	str >> std::hex >> value;
+
+	// Use the fromNumber function to do the heavy lifting
+	return fromNumber(value);
 }
 
 Component &

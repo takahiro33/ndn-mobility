@@ -30,6 +30,8 @@
 #include "nnn-common.h"
 #include "name-component.h"
 
+#define SEP '.'
+
 NNN_NAMESPACE_BEGIN
 
 /**
@@ -70,6 +72,13 @@ public:
 	NNNAddress (const std::string &name);
 
 	/**
+	 * @brief Create a name from a vector of name::Components
+	 *
+	 * @param name vector of name::Components
+	 */
+	NNNAddress (const std::vector<name::Component> name);
+
+	/**
 	 * @brief Assignment operator
 	 */
 	NNNAddress &
@@ -100,6 +109,17 @@ public:
 	 */
 	inline NNNAddress &
 	append (const std::string &compStr);
+
+	/**
+	 * @brief Append a binary blob as a name component
+	 * @param comp a binary blob
+	 *
+	 * This version is a little bit more efficient, since it swaps contents of comp and newly added component
+	 *
+	 * Attention!!! This method has an intended side effect: content of comp becomes empty
+	 */
+	inline NNNAddress &
+	appendBySwap (name::Component &comp);
 
 	/**
 	 * @brief Get number of the name components
@@ -197,7 +217,20 @@ public:
 	 * @return True or False
 	 */
 	bool
-	sameSector (const NNNAddress &name) const;
+	isSameSector (const NNNAddress &name) const;
+
+	/**
+	 * @brief Find out if NNN address is empty
+	 * @return True or False
+	 */
+	bool
+	isToplvlSector () const;
+
+	/*
+	 * @brief Obtain the closest address common to the NNN addresses used
+	 */
+	NNNAddress
+	getClosestSector (const NNNAddress &name) const;
 
 	/**
 	 * @brief Check if 2 NNNAddress objects are equal
@@ -345,6 +378,17 @@ NNNAddress::append (const name::Component &comp)
 {
   if (comp.size () != 0)
 	  m_address_comp.push_back (comp);
+  return *this;
+}
+
+inline NNNAddress &
+NNNAddress::appendBySwap (name::Component &comp)
+{
+  if (comp.size () != 0)
+    {
+	  NNNAddress::iterator newComp = m_address_comp.insert (end (), name::Component ());
+      newComp->swap (comp);
+    }
   return *this;
 }
 

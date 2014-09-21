@@ -58,7 +58,7 @@ NNNAddress::NNNAddress (const string &name)
 	}
 
 	// Check that string has less than 15 dots.
-	int dotcount = count(i, end, '.');
+	int dotcount = count(i, end, SEP);
 
 	if (dotcount > 15)
 	{
@@ -67,16 +67,70 @@ NNNAddress::NNNAddress (const string &name)
 
 	int namesize = name.size () - dotcount;
 
-	// Check that the total size of the string is lower than 31
+	// Check that the total size of the string is lower than 16
 	if (namesize > 16)
 	{
 		BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address is of maximum 16 hexadecimal characters!"));
+	}
+
+	// With all the basic checks done, now attempt to get the components in order
+	while (i != end)
+	{
+		// Read until the next separator
+		string::const_iterator nextDot = std::find (i, end, SEP);
+
+		// Create a new name component until the spot found
+		name::Component comp;
+
+		appendBySwap(comp.fromDotHexStr(i, nextDot));
+
+		// Update the location and continue
+		i = nextDot;
 	}
 }
 
 NNNAddress::NNNAddress (const NNNAddress &other)
 {
 	m_address_comp = other.m_address_comp;
+}
+
+NNNAddress::NNNAddress (const std::vector<name::Component> name)
+{
+	m_address_comp = name;
+}
+
+const name::Component &
+NNNAddress::get (int index) const
+{
+	if (index < 0)
+	{
+		index = size () - (-index);
+	}
+
+	if (static_cast<unsigned int> (index) >= size ())
+	{
+		BOOST_THROW_EXCEPTION (error::NNNAddress ()
+			<< error::msg ("Index out of range")
+			<< error::pos (index));
+	}
+	return m_address_comp [index];
+}
+
+name::Component &
+NNNAddress::get (int index)
+{
+	if (index < 0)
+	{
+		index = size () - (-index);
+	}
+
+	if (static_cast<unsigned int> (index) >= size())
+	{
+		BOOST_THROW_EXCEPTION (error::NNNAddress ()
+			<< error::msg ("Index out of range")
+			<< error::pos (index));
+	}
+	return m_address_comp [index];
 }
 
 NNNAddress &
@@ -112,9 +166,80 @@ NNNAddress::toString (std::ostream &os) const
 }
 
 int
-NNNAddress::compare (const NNNAddress &NNNAddress) const
+NNNAddress::compare (const NNNAddress &name) const
 {
+	NNNAddress::const_iterator i = this->begin ();
+	NNNAddress::const_iterator j = name.begin ();
 
+	for (; i != this->end () && j != name.end (); i++, j++)
+	{
+		int res = i->compare (*j);
+		if (res == 0)
+			continue;
+		else
+			return res;
+	}
+
+	// If prefixes are equal
+	if (i == this->end () && j == name.end ())
+		return 0;
+
+	return (i == this->end ()) ? -1 : +1;
+}
+
+NNNAddress
+NNNAddress::getSectorName () const
+{
+	// Copy the old name
+	std::vector<name::Component> sectorName (m_address_comp);
+	// Eliminate the last position
+	sectorName.pop_back();
+
+	return NNNAddress (sectorName);
+}
+
+bool
+NNNAddress::isSameSector (const NNNAddress &name) const
+{
+	NNNAddress currSec = getSectorName();
+	NNNAddress nameSec = name.getSectorName();
+
+	int res = currSec.compare(nameSec);
+
+	return (res == 0) ? true : false;
+}
+
+bool
+NNNAddress::isToplvlSector () const
+{
+	return (size () == 0) ? true : false;
+}
+
+NNNAddress
+NNNAddress::getClosestSector (const NNNAddress &name) const
+{
+	if (isToplvlSector ())
+		return NNNAddress ().append (name[0]);
+
+	if (name.isToplvlSector ())
+		return NNNAddress ().append (get (0));
+
+	// Compare
+	int res = compare (name);
+
+	// If the same, then the top level is the closest sector
+	if (res == 0)
+	{
+		return NNNAddress (m_address_comp);
+	// The address given is smaller than the one we have
+	} else if ( res == -1)
+	{
+		return getSectorName ().getClosestSector(name);
+	// The address given is bigger than the one we have
+	} else
+	{
+		return getClosestSector (name.getSectorName ());
+	}
 }
 
 inline size_t
