@@ -162,17 +162,6 @@ public:
   }
 };
 
-/**
- * @brief A helper class to convert to/from NN layer names
- */
-//class NNNname
-//{
-//public:
-//	template<class Iterator1, class Iterator2>
-//	  inline static void
-//	  fromEscaped (Iterator1 begin, Iterator1 end, Iterator2 inserter)
-//};
-
 NNN_NAMESPACE_END
 
 #endif // NNN_DETAIL_URI_H
