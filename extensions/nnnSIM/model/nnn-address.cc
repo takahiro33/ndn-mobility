@@ -140,14 +140,6 @@ NNNAddress::operator= (const NNNAddress &other)
 	return *this;
 }
 
-std::string
-NNNAddress::toString () const
-{
-  ostringstream os;
-  toString (os);
-  return os.str ();
-}
-
 NNNAddress
 NNNAddress::operator+ (const NNNAddress &name) const
 {
@@ -155,14 +147,22 @@ NNNAddress::operator+ (const NNNAddress &name) const
   return newName;
 }
 
-void
-NNNAddress::toString (std::ostream &os) const
+std::string
+NNNAddress::toDotHex () const
 {
-//	for (NNNAddress::const_iterator comp = begin (); comp != end (); comp++)
-//	{
-//		os << comp->toUri (os);
-//		os << ".";
-//	}
+  ostringstream os;
+  toDotHex (os);
+  return os.str ();
+}
+
+void
+NNNAddress::toDotHex (std::ostream &os) const
+{
+	for (NNNAddress::const_iterator comp = begin (); comp != end (); comp++)
+	{
+		comp->toHex (os);
+		os << ".";
+	}
 }
 
 int

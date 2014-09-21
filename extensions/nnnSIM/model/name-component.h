@@ -213,6 +213,21 @@ public:
 	toUri (std::ostream &os) const;
 
 	/**
+	 * @brief Convert binary blob name component to std::string
+	 * @param comp name component to be converted
+	 * @see asString
+	 */
+	std::string
+	toHex () const;
+
+	/**
+	 * @brief Write name in NNN DotHex format
+	 * @param os output stream
+	 */
+	void
+	toHex (std::ostream &os) const;
+
+	/**
 	 * @brief Convert binary blob name component (network-ordered number) to number
 	 * @param comp name component to be converted
 	 */

@@ -190,14 +190,14 @@ public:
 	 * @brief Get text representation of the name (Dot notation)
 	 */
 	std::string
-	toString () const;
+	toDotHex () const;
 
 	/**
 	 * @brief Write name in Dot notation to the specified output stream
 	 * @param os output stream
 	 */
 	void
-	toString (std::ostream &os) const;
+	toDotHex (std::ostream &os) const;
 
 	/////////////////////////////////////////////////
 	// Helpers and compatibility wrappers
@@ -302,7 +302,7 @@ private:
 inline std::ostream &
 operator << (std::ostream &os, const NNNAddress &name)
 {
-	name.toString (os);
+	name.toDotHex (os);
 	return os;
 }
 

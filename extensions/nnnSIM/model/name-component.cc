@@ -219,6 +219,24 @@ Component::toUri (std::ostream &os) const
   }
 }
 
+std::string
+Component::toHex () const
+{
+  std::ostringstream os;
+  toHex (os);
+  return os.str ();
+}
+
+void
+Component::toHex (std::ostream &os) const
+{
+	// Obtain the component information via toNumber
+	uint64_t ret = toNumber();
+
+	// Use std:hex to get the representation we want
+	os << std::hex << ret;
+}
+
 uint64_t
 Component::toNumber () const
 {
