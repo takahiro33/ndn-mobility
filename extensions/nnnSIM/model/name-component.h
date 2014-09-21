@@ -331,7 +331,7 @@ Component::toVersion () const
 inline std::ostream&
 operator <<(std::ostream &os, const Component &name)
 {
-	name.toUri (os);
+	name.toHex (os);
 	return os;
 }
 
