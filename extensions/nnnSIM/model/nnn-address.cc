@@ -76,6 +76,23 @@ NNNAddress::NNNAddress (const string &name)
 	// With all the basic checks done, now attempt to get the components in order
 	while (i != end)
 	{
+		int consecutivedot = 0;
+		// If the start is with one or more SEP then move forward
+		while (i != end && *i == SEP)
+		{
+			consecutivedot++;
+			i++;
+		}
+
+		if (consecutivedot > 1)
+			BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address dot must be followed by a hexadecimal number!"));
+
+		if (consecutivedot != 0 && i == end)
+			BOOST_THROW_EXCEPTION(error::NNNAddress () << error::msg("NNN address dot must be followed by a hexadecimal number!"));
+
+		if (i == end)
+			break;
+
 		// Read until the next separator
 		string::const_iterator nextDot = std::find (i, end, SEP);
 
@@ -161,7 +178,11 @@ NNNAddress::toDotHex (std::ostream &os) const
 	for (NNNAddress::const_iterator comp = begin (); comp != end (); comp++)
 	{
 		comp->toHex (os);
-		os << ".";
+		// Do not write SEP at the final round
+		if (comp+1 == end ())
+			break;
+		else
+			os << SEP;
 	}
 }
 
@@ -206,23 +227,29 @@ NNNAddress::isSameSector (const NNNAddress &name) const
 
 	int res = currSec.compare(nameSec);
 
-	return (res == 0) ? true : false;
+	return (res == 0);
 }
 
 bool
 NNNAddress::isToplvlSector () const
 {
-	return (size () == 0) ? true : false;
+	return (size () == 1);
 }
+
+bool
+NNNAddress::isEmpty () const
+{
+	return (size () == 0);
+}
+
 
 NNNAddress
 NNNAddress::getClosestSector (const NNNAddress &name) const
 {
-	if (isToplvlSector ())
+	// Name is a usually a destination, thus in the worse of cases, the
+	// top level to get to the name is top level of name.
+	if (isToplvlSector () || name.isToplvlSector ())
 		return NNNAddress ().append (name[0]);
-
-	if (name.isToplvlSector ())
-		return NNNAddress ().append (get (0));
 
 	// Compare
 	int res = compare (name);
@@ -232,7 +259,7 @@ NNNAddress::getClosestSector (const NNNAddress &name) const
 	{
 		return NNNAddress (m_address_comp);
 	// The address given is smaller than the one we have
-	} else if ( res == -1)
+	} else if ( res == 1)
 	{
 		return getSectorName ().getClosestSector(name);
 	// The address given is bigger than the one we have

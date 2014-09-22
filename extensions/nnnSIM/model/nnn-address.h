@@ -220,11 +220,18 @@ public:
 	isSameSector (const NNNAddress &name) const;
 
 	/**
-	 * @brief Find out if NNN address is empty
+	 * @brief Find out if NNN address is a top level address
 	 * @return True or False
 	 */
 	bool
 	isToplvlSector () const;
+
+	/**
+	 * @brief Find out if NNN address is empty
+	 * @return True or False
+	 */
+	bool
+	isEmpty () const;
 
 	/*
 	 * @brief Obtain the closest address common to the NNN addresses used

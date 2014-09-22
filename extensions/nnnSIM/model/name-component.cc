@@ -106,7 +106,7 @@ Component::compare (const Component &other) const
   uint64_t curr = toNumber();
   uint64_t otherNum = other.toNumber();
 
-  return (curr > otherNum) ? 1 : -1;
+  return (curr > otherNum) ? +1 : -1;
 }
 
 Component &
