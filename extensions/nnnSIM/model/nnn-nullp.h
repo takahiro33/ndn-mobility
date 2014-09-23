@@ -62,7 +62,7 @@ public:
 	 * @brief Sets the length of the NULL packet
 	 */
 	void
-	SetLength (int32_t len);
+	SetLength (uint32_t len);
 
 	/**
 	 * @brief Gets the length of the NULL packet
