@@ -134,8 +134,6 @@ private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (0 for NULLp)
 	uint32_t m_length;        ///< @brief Length of the packet payload
 	Time m_ttl;               ///< @brief Packet life time (TTL)
-
-	Time  m_interestLifetime; ///< @brief InterestLifetime
 	Ptr<Packet> m_payload;    ///< @brief virtual payload
 
 	mutable Ptr<const Packet> m_wire;
