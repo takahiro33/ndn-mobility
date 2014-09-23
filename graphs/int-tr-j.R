@@ -53,6 +53,10 @@ intdata = subset(intdata, Type %in% c("SatisfiedInterests", "TimedOutInterests")
 name = ""
 filnodes = unlist(strsplit(opt$node, ","))
 
+# Set the theme for graph output
+theme_set(theme_grey(base_size = 24) + 
+    theme(axis.text = element_text(colour = "black")))
+
 # Get the basename of the file
 tmpname = strsplit(opt$file, "/")[[1]]
 filename = tmpname[length(tmpname)]
@@ -74,7 +78,7 @@ if (nchar(opt$node) > 0) {
   intname = sprintf("%s Interest Success rate for Nodes %s", opt$title, opt$node)
   
   intdata.combined = summaryBy (. ~ Time + Node + Type, data=intdata, FUN=sum)
-  
+
   g.int <- ggplot (intdata.combined, aes(x=Time, y=Packets.sum, color=Type)) +
     geom_line(aes (linetype=Type), size=0.5) + 
     geom_point(aes (shape=Type), size=1) +  
