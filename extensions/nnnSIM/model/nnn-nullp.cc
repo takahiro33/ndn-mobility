@@ -79,7 +79,7 @@ NULLp::GetLifetime () const
 }
 
 void
-NULLp::SetLength (int32_t len)
+NULLp::SetLength (uint32_t len)
 {
 	m_length = len;
 }
