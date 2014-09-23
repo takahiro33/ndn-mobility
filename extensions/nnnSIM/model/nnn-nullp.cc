@@ -58,8 +58,8 @@ NULLp::NULLp (Ptr<Packet> payload)
 NULLp::NULLp (const NULLp &nullp)
  : m_packetid (0)
  , m_ttl      (nullp.m_ttl)
- , m_payload  (nullp.GetPayload ()->Copy ())
  , m_length   (nullp.m_length)
+ , m_payload  (nullp.GetPayload ()->Copy ())
  , m_wire     (0)
 {
 	NS_LOG_FUNCTION("NULLp correct copy constructor");
