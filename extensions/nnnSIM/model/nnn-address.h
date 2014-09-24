@@ -122,6 +122,16 @@ public:
 	appendBySwap (name::Component &comp);
 
 	/**
+	 * @brief Append a binary blob as a name component
+	 *
+	 * @param buf pointer to the first byte of the binary blob
+	 * @param size length of the binary blob
+	 * @returns reference to self (to allow chaining of append methods)
+	 */
+	inline NNNAddress &
+	append (const void *buf, size_t size);
+
+	/**
 	 * @brief Get number of the name components
 	 * @return number of name components
 	 */
@@ -397,6 +407,13 @@ NNNAddress::appendBySwap (name::Component &comp)
       newComp->swap (comp);
     }
   return *this;
+}
+
+NNNAddress &
+NNNAddress::append (const void *buf, size_t size)
+{
+  name::Component comp (buf, size);
+  return appendBySwap (comp);
 }
 
 inline bool
