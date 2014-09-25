@@ -52,8 +52,8 @@ EN::EN (std::vector<Mac48Address> signatures)
 EN::EN (const EN &en_p)
  : m_packetid  (3)
  , m_ttl       (en_p.m_ttl)
- , m_poa_type  (0)
- , m_poas (en_p.m_poas)
+ , m_poa_type  (en_p.m_poa_type)
+ , m_poas      (en_p.m_poas)
  , m_wire      (0)
 {
 	NS_LOG_FUNCTION("EN correct copy constructor");
