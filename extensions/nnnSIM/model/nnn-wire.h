@@ -28,6 +28,10 @@
 #include "nnn-nullp.h"
 #include "nnn-so.h"
 #include "nnn-do.h"
+#include "nnn-en.h"
+#include "nnn-aen.h"
+#include "nnn-ren.h"
+#include "nnn-inf.h"
 
 NNN_NAMESPACE_BEGIN
 
@@ -59,12 +63,35 @@ struct Wire
 	static Ptr<DO>
 	ToDO (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
 
+	static Ptr<Packet>
+	FromEN (Ptr<const EN> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<EN>
+	ToEN (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static Ptr<Packet>
+	FromAEN (Ptr<const AEN> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<AEN>
+	ToAEN (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static Ptr<Packet>
+	FromREN (Ptr<const REN> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<REN>
+	ToREN (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static Ptr<Packet>
+	FromINF (Ptr<const INF> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<INF>
+	ToINF (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
 
 	// Helper methods for Python
 	static std::string
-	FromNULLpStr (Ptr<const SO> so_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+	FromNULLpStr (Ptr<const NULLp> so_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
 
-	static Ptr<SO>
+	static Ptr<NULLp>
 	ToNULLpStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
 
 	static std::string
@@ -78,6 +105,30 @@ struct Wire
 
 	static Ptr<DO>
 	ToDOStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static std::string
+	FromENStr (Ptr<const EN> en_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<EN>
+	ToENStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static std::string
+	FromAENStr (Ptr<const AEN> aen_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<AEN>
+	ToAENStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static std::string
+	FromRENStr (Ptr<const REN> ren_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<REN>
+	ToRENStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static std::string
+	FromINFStr (Ptr<const INF> inf_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<INF>
+	ToINFStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
 
 	// /*
 	//  * @brief Get size of buffer to fit wire-formatted name object

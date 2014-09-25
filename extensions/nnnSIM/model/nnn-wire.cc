@@ -216,6 +216,226 @@ Wire::ToDO (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
 	}
 }
 
+Ptr<Packet>
+Wire::FromEN (Ptr<const EN> en_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	if (wireFormat == WIRE_FORMAT_DEFAULT)
+		wireFormat = GetWireFormat ();
+
+	if (wireFormat == WIRE_FORMAT_NNNSIM)
+		return wire::nnnSIM::EN::ToWire (en_p);
+	else
+	{
+		NS_FATAL_ERROR ("Unsupported format requested");
+		return 0;
+	}
+}
+
+Ptr<EN>
+Wire::ToEN (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	if (wireFormat == WIRE_FORMAT_AUTODETECT)
+	{
+		try
+		{
+			HeaderHelper::Type type = HeaderHelper::GetNnnHeaderType (packet);
+			switch (type)
+			{
+			case HeaderHelper::EN_NNN:
+			{
+				return wire::nnnSIM::EN::FromWire (packet);
+			}
+			default:
+				NS_FATAL_ERROR ("Unsupported format");
+				return 0;
+			}
+
+			// exception will be thrown if packet is not recognized
+		}
+		catch (UnknownHeaderException)
+		{
+			NS_FATAL_ERROR ("Unknown NNN header");
+			return 0;
+		}
+	}
+	else
+	{
+		if (wireFormat == WIRE_FORMAT_NNNSIM)
+			return wire::nnnSIM::EN::FromWire (packet);
+		else
+		{
+			NS_FATAL_ERROR ("Unsupported format requested");
+			return 0;
+		}
+	}
+}
+
+Ptr<Packet>
+Wire::FromAEN (Ptr<const AEN> aen_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	if (wireFormat == WIRE_FORMAT_DEFAULT)
+		wireFormat = GetWireFormat ();
+
+	if (wireFormat == WIRE_FORMAT_NNNSIM)
+		return wire::nnnSIM::AEN::ToWire (aen_p);
+	else
+	{
+		NS_FATAL_ERROR ("Unsupported format requested");
+		return 0;
+	}
+}
+
+Ptr<AEN>
+Wire::ToAEN (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	if (wireFormat == WIRE_FORMAT_AUTODETECT)
+	{
+		try
+		{
+			HeaderHelper::Type type = HeaderHelper::GetNnnHeaderType (packet);
+			switch (type)
+			{
+			case HeaderHelper::AEN_NNN:
+			{
+				return wire::nnnSIM::AEN::FromWire (packet);
+			}
+			default:
+				NS_FATAL_ERROR ("Unsupported format");
+				return 0;
+			}
+
+			// exception will be thrown if packet is not recognized
+		}
+		catch (UnknownHeaderException)
+		{
+			NS_FATAL_ERROR ("Unknown NNN header");
+			return 0;
+		}
+	}
+	else
+	{
+		if (wireFormat == WIRE_FORMAT_NNNSIM)
+			return wire::nnnSIM::AEN::FromWire (packet);
+		else
+		{
+			NS_FATAL_ERROR ("Unsupported format requested");
+			return 0;
+		}
+	}
+}
+
+Ptr<Packet>
+Wire::FromREN (Ptr<const REN> ren_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	if (wireFormat == WIRE_FORMAT_DEFAULT)
+		wireFormat = GetWireFormat ();
+
+	if (wireFormat == WIRE_FORMAT_NNNSIM)
+		return wire::nnnSIM::REN::ToWire (ren_p);
+	else
+	{
+		NS_FATAL_ERROR ("Unsupported format requested");
+		return 0;
+	}
+}
+
+Ptr<REN>
+Wire::ToREN (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	if (wireFormat == WIRE_FORMAT_AUTODETECT)
+	{
+		try
+		{
+			HeaderHelper::Type type = HeaderHelper::GetNnnHeaderType (packet);
+			switch (type)
+			{
+			case HeaderHelper::REN_NNN:
+			{
+				return wire::nnnSIM::REN::FromWire (packet);
+			}
+			default:
+				NS_FATAL_ERROR ("Unsupported format");
+				return 0;
+			}
+
+			// exception will be thrown if packet is not recognized
+		}
+		catch (UnknownHeaderException)
+		{
+			NS_FATAL_ERROR ("Unknown NNN header");
+			return 0;
+		}
+	}
+	else
+	{
+		if (wireFormat == WIRE_FORMAT_NNNSIM)
+			return wire::nnnSIM::REN::FromWire (packet);
+		else
+		{
+			NS_FATAL_ERROR ("Unsupported format requested");
+			return 0;
+		}
+	}
+}
+
+Ptr<Packet>
+Wire::FromINF (Ptr<const INF> inf_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	if (wireFormat == WIRE_FORMAT_DEFAULT)
+		wireFormat = GetWireFormat ();
+
+	if (wireFormat == WIRE_FORMAT_NNNSIM)
+		return wire::nnnSIM::EN::ToWire (inf_p);
+	else
+	{
+		NS_FATAL_ERROR ("Unsupported format requested");
+		return 0;
+	}
+}
+
+Ptr<INF>
+Wire::ToEN (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	if (wireFormat == WIRE_FORMAT_AUTODETECT)
+	{
+		try
+		{
+			HeaderHelper::Type type = HeaderHelper::GetNnnHeaderType (packet);
+			switch (type)
+			{
+			case HeaderHelper::INF_NNN:
+			{
+				return wire::nnnSIM::INF::FromWire (packet);
+			}
+			default:
+				NS_FATAL_ERROR ("Unsupported format");
+				return 0;
+			}
+
+			// exception will be thrown if packet is not recognized
+		}
+		catch (UnknownHeaderException)
+		{
+			NS_FATAL_ERROR ("Unknown NNN header");
+			return 0;
+		}
+	}
+	else
+	{
+		if (wireFormat == WIRE_FORMAT_NNNSIM)
+			return wire::nnnSIM::INF::FromWire (packet);
+		else
+		{
+			NS_FATAL_ERROR ("Unsupported format requested");
+			return 0;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Helper methods for Python
+///////////////////////////////////////////////////////////////////////////////
+
 std::string
 Wire::FromSOStr (Ptr<const SO> so_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
 {
@@ -253,6 +473,78 @@ Wire::ToDOStr (const std::string &wire, int8_t type/* = WIRE_FORMAT_AUTODETECT*/
 }
 
 std::string
+Wire::FromENStr (Ptr<const EN> en_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	Ptr<Packet> pkt = FromEN (en_p, wireFormat);
+	std::string wire;
+	wire.resize (pkt->GetSize ());
+	pkt->CopyData (reinterpret_cast<uint8_t*> (&wire[0]), wire.size ());
+
+	return wire;
+}
+
+Ptr<EN>
+Wire::ToENStr (const std::string &wire, int8_t type/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	Ptr<Packet> pkt = Create<Packet> (reinterpret_cast<const uint8_t*> (&wire[0]), wire.size ());
+	return ToEN (pkt, type);
+}
+
+std::string
+Wire::FromAENStr (Ptr<const AEN> aen_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	Ptr<Packet> pkt = FromAEN (aen_p, wireFormat);
+	std::string wire;
+	wire.resize (pkt->GetSize ());
+	pkt->CopyData (reinterpret_cast<uint8_t*> (&wire[0]), wire.size ());
+
+	return wire;
+}
+
+Ptr<AEN>
+Wire::ToAENStr (const std::string &wire, int8_t type/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	Ptr<Packet> pkt = Create<Packet> (reinterpret_cast<const uint8_t*> (&wire[0]), wire.size ());
+	return ToAEN (pkt, type);
+}
+
+std::string
+Wire::FromRENStr (Ptr<const REN> ren_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	Ptr<Packet> pkt = FromREN (ren_p, wireFormat);
+	std::string wire;
+	wire.resize (pkt->GetSize ());
+	pkt->CopyData (reinterpret_cast<uint8_t*> (&wire[0]), wire.size ());
+
+	return wire;
+}
+
+Ptr<REN>
+Wire::ToRENStr (const std::string &wire, int8_t type/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	Ptr<Packet> pkt = Create<Packet> (reinterpret_cast<const uint8_t*> (&wire[0]), wire.size ());
+	return ToREN (pkt, type);
+}
+
+std::string
+Wire::FromINFStr (Ptr<const INF> inf_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
+{
+	Ptr<Packet> pkt = FromINF (inf_p, wireFormat);
+	std::string wire;
+	wire.resize (pkt->GetSize ());
+	pkt->CopyData (reinterpret_cast<uint8_t*> (&wire[0]), wire.size ());
+
+	return wire;
+}
+
+Ptr<INF>
+Wire::ToINFStr (const std::string &wire, int8_t type/* = WIRE_FORMAT_AUTODETECT*/)
+{
+	Ptr<Packet> pkt = Create<Packet> (reinterpret_cast<const uint8_t*> (&wire[0]), wire.size ());
+	return ToINF (pkt, type);
+}
+
+std::string
 Wire::FromName (Ptr<const NNNAddress> name, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/)
 {
 
@@ -276,6 +568,7 @@ Wire::FromName (Ptr<const NNNAddress> name, int8_t wireFormat/* = WIRE_FORMAT_DE
 	else
 	{
 		NS_FATAL_ERROR ("Unsupported format requested");
+		return "";
 	}
 }
 
