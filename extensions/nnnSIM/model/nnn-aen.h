@@ -2,7 +2,8 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
- *	     Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *	         Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *
  *  nnn-aen.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +16,6 @@
  *
  *  You should have received a copy of the GNU Affero Public License
  *  along with nnn-do.h.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 #ifndef _NNN_AEN_HEADER_H_
@@ -38,7 +38,7 @@ namespace nnn {
  * @ingroup nnn
  * @brief NNN AEN packet (wire formats are defined in wire)
  **/
-class AEN : public SimpleRefCount<aen>
+class AEN : public SimpleRefCount<AEN>
 {
 public:
 	/**
@@ -75,7 +75,7 @@ public:
 	 * \brief Return Id of the packet
 	 *
 	 **/
-	unit32_t
+	uint32_t
 	GetPacketId ();
 	
 	/**
@@ -132,6 +132,12 @@ public:
 	Time
 	GetLifetime () const;
 
+	void
+	SetLeasetime (Time lease);
+
+	Time
+	GetLeasetime() const;
+
 	/**
 	 * @brief Get wire formatted packet
 	 *
@@ -160,7 +166,8 @@ private:
 private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (4 for AEN)
 	Time m_ttl;               ///< @brief Packet life time (TTL)
-	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address used in the packet
+	Time m_lease;             ///< @brief Lease time for NNN Address
+	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address handed
 
 	mutable Ptr<const Packet> m_wire;
 };

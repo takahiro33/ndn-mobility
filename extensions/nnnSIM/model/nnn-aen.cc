@@ -2,6 +2,7 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
+ *           Zhu Li <philipszhuli1990@ruri.waseda.jp>
  *
  *  nnn-do.cc is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
@@ -32,6 +33,7 @@ namespace nnn {
 AEN::AEN ()
  : m_packetid (4)
  , m_ttl      (Seconds (0))
+ , m_lease    ()
  , m_wire     (0)
 {
 
@@ -39,21 +41,27 @@ AEN::AEN ()
 
 AEN::AEN (Ptr<NNNAddress> name)
  : m_packetid (4)
- , m_ttl      (Seconds (1))
+ , m_ttl      (Seconds (300))
  , m_name     (name)
  , m_wire     (0)
+{
 
-AEN::AEN (const NNNAddress &name, Ptr<Packet> payload)
+}
+
+AEN::AEN (const NNNAddress &name)
  : m_packetid (4)
- , m_ttl      (Seconds (1))
+ , m_ttl      (Seconds (300))
  , m_name     (Create<NNNAddress> (name))
  , m_wire     (0)
+{
+
+}
 
 
 AEN::AEN (const AEN &aen_p)
  : m_packetid (4)
  , m_ttl      (aen_p.m_ttl)
- , m_length   (aen_p.m_length)
+ , m_lease    (Seconds (300))
  , m_name     (Create<NNNAddress> (aen_p.GetName()))
  , m_wire     (0)
 {
@@ -103,11 +111,24 @@ AEN::GetLifetime () const
 }
 
 void
+AEN::SetLeasetime (Time lease)
+{
+	m_lease = lease;
+}
+
+Time
+AEN::GetLeasetime () const
+{
+	return m_lease;
+}
+
+void
 AEN::Print (std::ostream &os) const
 {
 	os << "<AEN>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
 	os << "  <Name>" << GetName () << "</Name>\n";
+	os << "  <Lease>" << GetLeasetime () << "</Lease>\n";
 	os << "</AEN>";
 }
 
