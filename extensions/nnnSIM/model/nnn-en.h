@@ -2,19 +2,19 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
- *
- *  nnn-do.h is free software: you can redistribute it and/or modify
+ *	     Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *  nnn-en.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnn-do.h is distributed in the hope that it will be useful,
+ *  nnn-en.h is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
  *
  *  You should have received a copy of the GNU Affero Public License
- *  along with nnn-do.h.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with nnn-en.h.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,7 +55,7 @@ public:
 	 *
 	 * @param name MAC vector
 	 **/
-	EN(std::vector<MACAddress48> signature);
+	EN (std::vector<MACAddress48> signature);
 
 	/**
 	 * @brief Copy constructor
@@ -63,11 +63,11 @@ public:
 	EN (const EN &en_p);
 
 	/**
-	 * \brief Get packet Identifier
+	 * \brief Return Id of the packet
 	 *
 	 **/
-	void
-	GetId();
+	unit32_t
+	GetPacketId ();
 
 	/**
 	 * \brief Add Signature(MAC)
@@ -78,21 +78,27 @@ public:
 	void
 	AddSig (std::vector<MACAddress48> signature);
 
+	void
+	AddSig (MACAddress48 signature);
+
 	/**
 	 * \brief Get number of MN's Signatures
 	 *
 	 * @param  const reference to Name object
 	 *
 	 **/
-    void
-    GetSize () const;
+    unit32_t
+    GetNumSig () const;
 
 	/**
 	 * \brief Get Signatures of MN
 	 *
 	 **/
-    const signature
-	GetSig () const;
+    std::vector<MACAddress48>
+	GetSigs () const;
+
+    MACAddress48
+    GetOneSig (int index) const;
 
 	/**
 	 * \brief Set time out for EN packet
@@ -143,7 +149,8 @@ private:
 private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (3 for EN)
 	Time m_ttl;               ///< @brief Packet life time (TTL)
-	uint48_t m_sign;   ///< @brief Packet Identifier (MAC)
+	uint32_t m_numsign;   ///< @brief number of MN's Signatures (MAC)
+	std::vector<MACAddress> m_mac_signs;  ///<@brief vactor of Signatures
 	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address used in the packet
 
 	mutable Ptr<const Packet> m_wire;
