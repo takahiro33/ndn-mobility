@@ -34,7 +34,7 @@ EN::EN ()
  : m_packetid (3)
  , m_ttl      (Seconds (0))
  , m_poa_type (0)
- , m_poas     (std::vector<Mac48Address>)
+ , m_poas     (std::vector<Mac48Address> ())
  , m_wire     (0)
 {
 
