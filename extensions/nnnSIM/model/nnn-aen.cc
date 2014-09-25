@@ -22,53 +22,53 @@
 #include <ns3-dev/ns3/unused.h>
 #include <ns3-dev/ns3/packet.h>
 
-#include "nnn-ren.h"
+#include "nnn-aen.h"
 
-NS_LOG_COMPONENT_DEFINE ("nnn.REN");
+NS_LOG_COMPONENT_DEFINE ("nnn.AEN");
 
 namespace ns3 {
 namespace nnn {
 
-REN::REN ()
- : m_packetid (5)
+AEN::AEN ()
+ : m_packetid (4)
  , m_ttl      (Seconds (0))
  , m_wire     (0)
 {
 
 }
 
-REN::REN (Ptr<NNNAddress> name)
- : m_packetid (5)
+AEN::AEN (Ptr<NNNAddress> name)
+ : m_packetid (4)
  , m_ttl      (Seconds (1))
  , m_name     (name)
  , m_wire     (0)
 
-REN::REN (const NNNAddress &name, Ptr<Packet> payload)
- : m_packetid (2)
+AEN::AEN (const NNNAddress &name, Ptr<Packet> payload)
+ : m_packetid (4)
  , m_ttl      (Seconds (1))
  , m_name     (Create<NNNAddress> (name))
  , m_wire     (0)
 
 
-REN::REN (const REN &ren_p)
- : m_packetid (2)
- , m_ttl      (ren_p.m_ttl)
- , m_length   (ren_p.m_length)
- , m_name     (Create<NNNAddress> (ren_p.GetName()))
+AEN::AEN (const AEN &aen_p)
+ : m_packetid (4)
+ , m_ttl      (aen_p.m_ttl)
+ , m_length   (aen_p.m_length)
+ , m_name     (Create<NNNAddress> (aen_p.GetName()))
  , m_wire     (0)
 {
-	NS_LOG_FUNCTION("REN correct copy constructor");
+	NS_LOG_FUNCTION("AEN correct copy constructor");
 }
 
 void
-REN::SetName (Ptr<NNNAddress> name)
+AEN::SetName (Ptr<NNNAddress> name)
 {
 	m_name = name;
 	m_wire = 0;
 }
 
 void
-REN::SetName (const NNNAddress &name)
+AEN::SetName (const NNNAddress &name)
 {
 	m_name = Create<NNNAddress> (name);
 	m_wire = 0;
@@ -76,39 +76,39 @@ REN::SetName (const NNNAddress &name)
 
 
 const NNNAddress&
-REN::GetName () const
+AEN::GetName () const
 {
-	if (m_name == 0) throw RENException ();
+	if (m_name == 0) throw AENException ();
 	return *m_name;
 }
 
 
 Ptr<const NNNAddress>
-REN::GetNamePtr () const
+AEN::GetNamePtr () const
 {
 	return m_name;
 }
 
 void
-REN::SetLifetime (Time ttl)
+AEN::SetLifetime (Time ttl)
 {
 	m_ttl = ttl;
 	m_wire = 0;
 }
 
 Time
-REN::GetLifetime () const
+AEN::GetLifetime () const
 {
 	return m_ttl;
 }
 
 void
-REN::Print (std::ostream &os) const
+AEN::Print (std::ostream &os) const
 {
-	os << "<REN>\n";
+	os << "<AEN>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
 	os << "  <Name>" << GetName () << "</Name>\n";
-	os << "</REN>";
+	os << "</AEN>";
 }
 
 } // namespace nnn

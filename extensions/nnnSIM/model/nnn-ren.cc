@@ -44,14 +44,14 @@ REN::REN (Ptr<NNNAddress> name)
  , m_wire     (0)
 
 REN::REN (const NNNAddress &name, Ptr<Packet> payload)
- : m_packetid (2)
+ : m_packetid (5)
  , m_ttl      (Seconds (1))
  , m_name     (Create<NNNAddress> (name))
  , m_wire     (0)
 
 
 REN::REN (const REN &ren_p)
- : m_packetid (2)
+ : m_packetid (5)
  , m_ttl      (ren_p.m_ttl)
  , m_length   (ren_p.m_length)
  , m_name     (Create<NNNAddress> (ren_p.GetName()))
