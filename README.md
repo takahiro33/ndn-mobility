@@ -1,4 +1,4 @@
-ccn-mobility
+ndn-mobility
 ============
 
 Simple scenario and files for mobility in ndnSIM
