@@ -57,8 +57,6 @@ NnnSim::SerializedSizeName (const NNNAddress &name)
 	{
 		nameSerializedSize += 2 + i->size ();
 	}
-	NS_ASSERT_MSG (nameSerializedSize < 30000, "Name is too long (> 30kbytes)");
-
 	return nameSerializedSize;
 }
 
