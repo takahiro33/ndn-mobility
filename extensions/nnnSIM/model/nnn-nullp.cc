@@ -32,7 +32,6 @@ namespace nnn {
 NULLp::NULLp ()
  : m_packetid (0)
  , m_ttl      (Seconds (0))
- , m_length   (0)
  , m_payload  (Create<Packet> ())
  , m_wire     (0)
 {
@@ -47,22 +46,25 @@ NULLp::NULLp (Ptr<Packet> payload)
 	if (m_payload == 0)
 	{
 		m_payload = Create<Packet> ();
-		m_length = 0;
 	} else
 	{
 		m_payload = payload;
-		m_length = m_payload->GetSize();
 	}
 }
 
 NULLp::NULLp (const NULLp &nullp)
  : m_packetid (0)
  , m_ttl      (nullp.m_ttl)
- , m_length   (nullp.m_length)
  , m_payload  (nullp.GetPayload ()->Copy ())
  , m_wire     (0)
 {
 	NS_LOG_FUNCTION("NULLp correct copy constructor");
+}
+
+uint32_t
+NULLp::GetPacketId ()
+{
+	return m_packetid;
 }
 
 void
@@ -76,18 +78,6 @@ Time
 NULLp::GetLifetime () const
 {
 	return m_ttl;
-}
-
-void
-NULLp::SetLength (uint32_t len)
-{
-	m_length = len;
-}
-
-uint32_t
-NULLp::GetLength () const
-{
-	return m_length;
 }
 
 void
@@ -108,7 +98,6 @@ NULLp::Print (std::ostream &os) const
 {
 	os << "<NULLp>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
-	os << "  <Length>" << GetLength () << "</Length>\n";
 	if (m_payload != 0)
 	{
 		os << "  <Payload>Yes</Payload>\n";

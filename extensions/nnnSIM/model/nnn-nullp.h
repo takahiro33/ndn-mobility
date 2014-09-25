@@ -24,7 +24,7 @@
 #include <ns3-dev/ns3/simple-ref-count.h>
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/packet.h>
-#include  <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/ptr.h>
 
 namespace ns3 {
 
@@ -59,16 +59,10 @@ public:
 	NULLp (const NULLp &nullp);
 
 	/**
-	 * @brief Sets the length of the NULL packet
-	 */
-	void
-	SetLength (uint32_t len);
-
-	/**
-	 * @brief Gets the length of the NULL packet
+	 * @brief Return Id of the packet
 	 */
 	uint32_t
-	GetLength () const;
+	GetPacketId();
 
 	/**
 	 * @brief Sets the payload of the NULL packet
@@ -130,7 +124,6 @@ private:
 
 private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (0 for NULLp)
-	uint32_t m_length;        ///< @brief Length of the packet payload
 	Time m_ttl;               ///< @brief Packet life time (TTL)
 	Ptr<Packet> m_payload;    ///< @brief Payload
 

@@ -24,7 +24,7 @@
 #include <ns3-dev/ns3/simple-ref-count.h>
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/packet.h>
-#include  <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/ptr.h>
 
 #include "nnn-address.h"
 
@@ -74,6 +74,12 @@ public:
 	DO (const DO &do_p);
 
 	/**
+	 * @brief Return Id of the packet
+	 */
+	uint32_t
+	GetPacketId();
+
+	/**
 	 * \brief Set interest name
 	 *
 	 * @param name smart pointer to Name
@@ -104,18 +110,6 @@ public:
 	 */
 	Ptr<const NNNAddress>
 	GetNamePtr () const;
-
-	/**
-	 * @brief Sets the length of the NULL packet
-	 */
-	void
-	SetLength (uint32_t len);
-
-	/**
-	 * @brief Gets the length of the NULL packet
-	 */
-	uint32_t
-	GetLength () const;
 
 	/**
 	 * @brief Sets the payload of the NULL packet
@@ -177,7 +171,6 @@ private:
 
 private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (2 for DO)
-	uint32_t m_length;        ///< @brief Length of the packet payload
 	Time m_ttl;               ///< @brief Packet life time (TTL)
 	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address used in the packet
 	Ptr<Packet> m_payload;    ///< @brief Payload

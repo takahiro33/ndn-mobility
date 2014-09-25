@@ -32,7 +32,6 @@ namespace nnn {
 SO::SO ()
  : m_packetid (1)
  , m_ttl      (Seconds (0))
- , m_length   (0)
  , m_payload  (Create<Packet> ())
  , m_wire     (0)
 {
@@ -48,11 +47,9 @@ SO::SO (Ptr<NNNAddress> name, Ptr<Packet> payload)
 	if (m_payload == 0)
 	{
 		m_payload = Create<Packet> ();
-		m_length = 0;
 	} else
 	{
 		m_payload = payload;
-		m_length = m_payload->GetSize();
 	}
 }
 
@@ -65,23 +62,26 @@ SO::SO (const NNNAddress &name, Ptr<Packet> payload)
 	if (m_payload == 0)
 	{
 		m_payload = Create<Packet> ();
-		m_length = 0;
 	} else
 	{
 		m_payload = payload;
-		m_length = m_payload->GetSize();
 	}
 }
 
 SO::SO (const SO &so_p)
  : m_packetid (1)
  , m_ttl      (so_p.m_ttl)
- , m_length   (so_p.m_length)
  , m_name     (Create<NNNAddress> (so_p.GetName()))
  , m_payload  (so_p.GetPayload ()->Copy ())
  , m_wire     (0)
 {
 	NS_LOG_FUNCTION("SO correct copy constructor");
+}
+
+uint32_t
+SO::GetPacketId ()
+{
+	return m_packetid;
 }
 
 void
@@ -127,18 +127,6 @@ SO::GetLifetime () const
 }
 
 void
-SO::SetLength (uint32_t len)
-{
-	m_length = len;
-}
-
-uint32_t
-SO::GetLength () const
-{
-	return m_length;
-}
-
-void
 SO::SetPayload (Ptr<Packet> payload)
 {
 	m_payload = payload;
@@ -156,7 +144,6 @@ SO::Print (std::ostream &os) const
 {
 	os << "<SO>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
-	os << "  <Length>" << GetLength () << "</Length>\n";
 	os << "  <Name>" << GetName () << "</Name>\n";
 	if (m_payload != 0)
 	{
