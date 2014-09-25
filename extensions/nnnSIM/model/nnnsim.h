@@ -45,13 +45,13 @@ class NULLp : public Header
 {
 public:
 	NULLp ();
-	NULLp (Ptr<nnn::NULLp> nullp);
+	NULLp (Ptr<nnn::NULLp> null_p);
 
 	Ptr<nnn::NULLp>
 	GetNULLp ();
 
 	static Ptr<Packet>
-	ToWire (Ptr<const nnn::NULLp> nullp_o);
+	ToWire (Ptr<const nnn::NULLp> null_p);
 
 	static Ptr<nnn::NULLp>
 	FromWire (Ptr<Packet> packet);
@@ -65,7 +65,7 @@ public:
 	virtual uint32_t Deserialize (Buffer::Iterator start);
 
 private:
-	Ptr<nnn::NULLp> m_nullp;
+	Ptr<nnn::NULLp> m_null_p;
 };
 
 /**
@@ -95,7 +95,7 @@ public:
 	virtual uint32_t Deserialize (Buffer::Iterator start);
 
 private:
-	Ptr<nnn::SO> m_so;
+	Ptr<nnn::SO> m_so_p;
 };
 
 /**
