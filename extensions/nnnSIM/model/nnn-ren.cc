@@ -32,6 +32,9 @@ namespace nnn {
 REN::REN ()
  : m_packetid (5)
  , m_ttl      (Seconds (0))
+ , m_re_lease (Seconds (0))
+ , m_poa_type (0)
+ , m_poas     (std::vector<Mac48Address> ())
  , m_wire     (0)
 {
 
@@ -41,20 +44,34 @@ REN::REN (Ptr<NNNAddress> name)
  : m_packetid (5)
  , m_ttl      (Seconds (1))
  , m_name     (name)
+ , m_re_lease (Seconds (0))
+ , m_poa_type (0)
+ , m_poas     (std::vector<Mac48Address> ())
  , m_wire     (0)
+{
 
-REN::REN (const NNNAddress &name, Ptr<Packet> payload)
+}
+
+REN::REN (const NNNAddress &name)
  : m_packetid (5)
  , m_ttl      (Seconds (1))
  , m_name     (Create<NNNAddress> (name))
+ , m_re_lease (Seconds (0))
+ , m_poa_type (0)
+ , m_poas     (std::vector<Mac48Address> ())
  , m_wire     (0)
+{
+
+}
 
 
 REN::REN (const REN &ren_p)
  : m_packetid (5)
  , m_ttl      (ren_p.m_ttl)
- , m_length   (ren_p.m_length)
  , m_name     (Create<NNNAddress> (ren_p.GetName()))
+ , m_re_lease (ren_p.m_re_lease)
+ , m_poa_type (ren_p.m_poa_type)
+ , m_poas     (ren_p.m_poas)
  , m_wire     (0)
 {
 	NS_LOG_FUNCTION("REN correct copy constructor");
@@ -90,6 +107,33 @@ REN::GetNamePtr () const
 }
 
 void
+REN::AddPoa (std::vector<Mac48Address> signatures)
+{
+	m_poas.insert(m_poas.end (), signatures.begin (), signatures.end ());
+}
+
+uint32_t
+REN::GetNumPoa () const
+{
+	return m_poas.size();
+}
+
+std::vector<Mac48Address>
+REN::GetPoas () const
+{
+	return m_poas;
+}
+
+Mac48Address
+REN::GetOnePoa (uint32_t index) const
+{
+	if (index < GetNumPoa ())
+		return m_poas[index];
+	else
+		return Mac48Address();
+}
+
+void
 REN::SetLifetime (Time ttl)
 {
 	m_ttl = ttl;
@@ -103,11 +147,32 @@ REN::GetLifetime () const
 }
 
 void
+REN::SetRemainLease (Time ex_lease)
+{
+	m_re_lease = ex_lease;
+}
+
+Time
+REN::GetRemainLease () const
+{
+	return m_re_lease;
+}
+
+void
 REN::Print (std::ostream &os) const
 {
+	uint32_t num = GetNumPoa ();
+	uint16_t type = GetPoaType ();
 	os << "<REN>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
 	os << "  <Name>" << GetName () << "</Name>\n";
+	os << "  <RLease>" << GetRemainLease () << "</RLease>\n";
+	os << "  <POATYPE>" << type << "</POATYPE>\n";
+	os << "  <POANUM>" << num << "</POANUM>\n";
+	for (int i = 0; i < num; i++)
+	{
+		os << "  <POA" << i << ">" << m_poas[i] << "</POA" << i << ">\n";
+	}
 	os << "</REN>";
 }
 
