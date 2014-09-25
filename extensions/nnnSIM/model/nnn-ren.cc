@@ -106,6 +106,12 @@ REN::GetNamePtr () const
 	return m_name;
 }
 
+uint16_t
+REN::GetPoaType () const
+{
+	return m_poa_type;
+}
+
 void
 REN::AddPoa (std::vector<Mac48Address> signatures)
 {
