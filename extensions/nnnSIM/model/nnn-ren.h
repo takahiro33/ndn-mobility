@@ -2,13 +2,13 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
- *
- *  nnn-do.h is free software: you can redistribute it and/or modify
+ *	     Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *  nnn-ren.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnn-do.h is distributed in the hope that it will be useful,
+ *  nnn-ren.h is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
@@ -71,6 +71,13 @@ public:
 	 */
 	REN (const REN &ren_p);
 
+	/**
+	 * \brief Return Id of the packet
+	 *
+	 **/
+	unit32_t
+	GetPacketId ();
+	
 	/**
 	 * \brief Set interest name
 	 *

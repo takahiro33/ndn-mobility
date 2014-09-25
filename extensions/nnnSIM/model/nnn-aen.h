@@ -2,13 +2,13 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
- *
- *  nnn-do.h is free software: you can redistribute it and/or modify
+ *	     Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *  nnn-aen.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnn-do.h is distributed in the hope that it will be useful,
+ *  nnn-aen.h is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
@@ -44,7 +44,7 @@ public:
 	/**
 	 * \brief Constructor
 	 *
-	 * Creates a AEN packet with no payload
+	 * Creates a AEN packet 
 	 **/
 	AEN ();
 
@@ -72,11 +72,19 @@ public:
 	AEN (const AEN &aen_p);
 
 	/**
+	 * \brief Return Id of the packet
+	 *
+	 **/
+	unit32_t
+	GetPacketId ();
+	
+	/**
 	 * \brief Set interest name
 	 *
 	 * @param name smart pointer to Name
 	 *
 	 **/
+	
 	void
 	SetName (Ptr<NNNAddress> name);
 
