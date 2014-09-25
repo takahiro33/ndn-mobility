@@ -2,7 +2,8 @@
 /*
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
- *	     Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *	         Zhu Li <philipszhuli1990@ruri.waseda.jp>
+ *
  *  nnn-inf.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +15,16 @@
  *  GNU Affero Public License for more details.
  *
  *  You should have received a copy of the GNU Affero Public License
- *  along with nnn-do.h.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *  along with nnn-inf.h.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _NNN_INF_HEADER_H_
 #define _NNN_INF_HEADER_H_
 
-#include <ns3-dev/ns3/simple-ref-count.h>
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/packet.h>
-#include  <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/simple-ref-count.h>
 
 #include "nnn-address.h"
 
@@ -38,13 +38,13 @@ namespace nnn {
  * @ingroup nnn
  * @brief NNN INF packet (wire formats are defined in wire)
  **/
-class INF : public SimpleRefCount<inf>
+class INF : public SimpleRefCount<INF>
 {
 public:
 	/**
 	 * \brief Constructor
 	 *
-	 * Creates a INF packet with no payload
+	 * Creates a INF packet
 	 **/
 	INF ();
 
@@ -52,9 +52,10 @@ public:
 	 * \brief Constructor
 	 *
 	 *
-	 * @param name NNN Address Ptr
+	 * @param oldname Old NNN Address
+	 * @param newname New NNN Address
 	 **/
-	INF(Ptr<NNNAddress> name);
+	INF(Ptr<NNNAddress> oldname, Ptr<NNNAddress> newname);
 
 	/**
 	 * \brief Constructor
@@ -64,7 +65,7 @@ public:
 	 * @param name NNN Address
 	 * @param payload Packet Ptr
 	 **/
-	INF(const NNNAddress &name);
+	INF(const NNNAddress &oldname, const NNNAddress &newname);
 
 	/**
 	 * @brief Copy constructor
@@ -75,26 +76,26 @@ public:
 	 * \brief Return Id of the packet
 	 *
 	 **/
-	unit32_t
+	uint32_t
 	GetPacketId ();
 	
 	/**
-	 * \brief Set interest name
+	 * \brief Set Old NNN Address name
 	 *
-	 * @param name smart pointer to Name
+	 * @param name smart pointer to NNNAddress
 	 *
 	 **/
 	void
-	SetName (Ptr<NNNAddress> name);
+	SetOldName (Ptr<NNNAddress> name);
 
 	/**
-	 * \brief Another variant to set interest name
+	 * \brief Another variant to set old NNN Address
 	 *
-	 * @param name const reference to Name object
+	 * @param name const reference to NNNAddress object
 	 *
 	 **/
 	void
-	SetName (const NNNAddress &name);
+	SetOldName (const NNNAddress &name);
 
 	/**
 	 * \brief Get interest name
@@ -102,13 +103,45 @@ public:
 	 * Gets name of the interest.
 	 **/
 	const NNNAddress&
-	GetName () const;
+	GetOldName () const;
 
 	/**
 	 * @brief Get smart pointer to the interest name (to avoid extra memory usage)
 	 */
 	Ptr<const NNNAddress>
-	GetNamePtr () const;
+	GetOldNamePtr () const;
+
+	/**
+	 * \brief Set Old NNN Address name
+	 *
+	 * @param name smart pointer to NNNAddress
+	 *
+	 **/
+	void
+	SetNewName (Ptr<NNNAddress> name);
+
+	/**
+	 * \brief Another variant to set old NNN Address
+	 *
+	 * @param name const reference to NNNAddress object
+	 *
+	 **/
+	void
+	SetNewName (const NNNAddress &name);
+
+	/**
+	 * \brief Get interest name
+	 *
+	 * Gets name of the interest.
+	 **/
+	const NNNAddress&
+	GetNewName () const;
+
+	/**
+	 * @brief Get smart pointer to the interest name (to avoid extra memory usage)
+	 */
+	Ptr<const NNNAddress>
+	GetNewNamePtr () const;
 
 	/**
 	 * \brief Set time out for INF packet
@@ -130,6 +163,12 @@ public:
 	 */
 	Time
 	GetLifetime () const;
+
+	void
+	SetRemainLease (Time ex_lease);
+
+	Time
+	GetRemainLease () const;
 
 	/**
 	 * @brief Get wire formatted packet
@@ -157,9 +196,11 @@ private:
 	operator = (const INF &other) { return *this; }
 
 private:
-	uint32_t m_packetid;      ///< @brief Packet Identifier (6 for INF)
-	Time m_ttl;               ///< @brief Packet life time (TTL)
-	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address used in the packet
+	uint32_t m_packetid;         ///< @brief Packet Identifier (6 for INF)
+	Time m_ttl;                  ///< @brief Packet life time (TTL)
+	Ptr<NNNAddress> m_old_name;  ///< @brief Old NNN Address used in the packet
+	Ptr<NNNAddress> m_new_name;  ///< @brief New NNN Address used in the packet
+	Time m_re_lease;             ///< @brief Packet Remaining lease time
 
 	mutable Ptr<const Packet> m_wire;
 };

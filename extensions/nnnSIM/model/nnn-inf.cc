@@ -3,24 +3,23 @@
  * Copyright 2014 Waseda University, Sato Laboratory
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
  *
- *  nnn-do.cc is free software: you can redistribute it and/or modify
+ *  nnn-inf.cc is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnn-do.cc is distributed in the hope that it will be useful,
+ *  nnn-inf.cc is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
  *
  *  You should have received a copy of the GNU Affero Public License
- *  along with nnn-en.cc.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *  along with nnn-inf.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <ns3-dev/ns3/log.h>
-#include <ns3-dev/ns3/unused.h>
 #include <ns3-dev/ns3/packet.h>
+#include <ns3-dev/ns3/unused.h>
 
 #include "nnn-inf.h"
 
@@ -37,56 +36,102 @@ INF::INF ()
 
 }
 
-INF::INF (Ptr<NNNAddress> name)
+INF::INF (Ptr<NNNAddress> oldname,  Ptr<NNNAddress> newname)
  : m_packetid (5)
  , m_ttl      (Seconds (1))
- , m_name     (name)
+ , m_old_name (oldname)
+ , m_new_name (newname)
+ , m_re_lease (Seconds (300))
  , m_wire     (0)
+{
 
-INF::INF (const NNNAddress &name, Ptr<Packet> payload)
+}
+
+INF::INF (const NNNAddress &oldname, const NNNAddress &newname)
  : m_packetid (5)
  , m_ttl      (Seconds (1))
- , m_name     (Create<NNNAddress> (name))
+ , m_old_name (Create<NNNAddress> (oldname))
+ , m_new_name (Create<NNNAddress> (newname))
+ , m_re_lease (Seconds (300))
  , m_wire     (0)
+{
+
+}
 
 
 INF::INF (const INF &inf_p)
  : m_packetid (5)
  , m_ttl      (inf_p.m_ttl)
- , m_length   (inf_p.m_length)
- , m_name     (Create<NNNAddress> (inf_p.GetName()))
+ , m_old_name (Create<NNNAddress> (inf_p.GetOldName()))
+ , m_new_name (Create<NNNAddress> (inf_p.GetNewName()))
+ , m_re_lease (inf_p.m_re_lease)
  , m_wire     (0)
 {
 	NS_LOG_FUNCTION("INF correct copy constructor");
 }
 
-void
-INF::SetName (Ptr<NNNAddress> name)
+uint32_t
+INF::GetPacketId ()
 {
-	m_name = name;
+	return m_packetid;
+}
+
+void
+INF::SetOldName (Ptr<NNNAddress> name)
+{
+	m_old_name = name;
 	m_wire = 0;
 }
 
 void
-INF::SetName (const NNNAddress &name)
+INF::SetOldName (const NNNAddress &name)
 {
-	m_name = Create<NNNAddress> (name);
+	m_old_name = Create<NNNAddress> (name);
 	m_wire = 0;
 }
 
 
 const NNNAddress&
-INF::GetName () const
+INF::GetOldName () const
 {
-	if (m_name == 0) throw INFException ();
-	return *m_name;
+	if (m_old_name == 0) throw INFException ();
+	return *m_old_name;
 }
 
 
 Ptr<const NNNAddress>
-INF::GetNamePtr () const
+INF::GetOldNamePtr () const
 {
-	return m_name;
+	return m_old_name;
+}
+
+void
+INF::SetNewName (Ptr<NNNAddress> name)
+{
+	m_new_name = name;
+	m_wire = 0;
+}
+
+void
+INF::SetNewName (const NNNAddress &name)
+{
+	m_new_name = Create<NNNAddress> (name);
+	m_wire = 0;
+}
+
+
+const NNNAddress&
+INF::GetNewName () const
+{
+	if (m_new_name == 0) throw INFException ();
+	return *m_new_name;
+}
+
+
+Ptr<const NNNAddress>
+INF::GetNewNamePtr () const
+{
+	return m_new_name;
 }
 
 void
@@ -103,11 +148,25 @@ INF::GetLifetime () const
 }
 
 void
+INF::SetRemainLease (Time ex_lease)
+{
+	m_re_lease = ex_lease;
+}
+
+Time
+INF::GetRemainLease () const
+{
+	return m_re_lease;
+}
+
+void
 INF::Print (std::ostream &os) const
 {
 	os << "<INF>\n";
 	os << "  <TTL>" << GetLifetime () << "</TTL>\n";
-	os << "  <Name>" << GetName () << "</Name>\n";
+	os << "  <OldName>" << GetOldName () << "</OldName>\n";
+	os << "  <NewName>" << GetNewName () << "</NewName>\n";
+	os << "  <RLease>" << GetRemainLease () << "</RLease>\n";
 	os << "</INF>";
 }
 
