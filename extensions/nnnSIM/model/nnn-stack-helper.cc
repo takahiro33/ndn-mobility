@@ -1,59 +1,52 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil -*- */
+/* -*- Mode:C++; c-file-style:"gnu" -*- */
 /*
- * Copyright (c) 2011 UCLA
+ * Copyright 2014 Waseda University, Sato Laboratory
+ *   Author: Zhu Li <phillipszhuli1990@gmail.com>
+ *           Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
+ *  nnn-stack-helper.h is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  nnn-stack-helper.h is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Author:  Alexander Afanasyev <alexander.afanasyev@ucla.edu>
- *          Ilya Moiseenko <iliamo@cs.ucla.edu>
+ *  You should have received a copy of the GNU Affero Public License
+ *  along with nnn-stack-helper.h.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/object.h"
-#include "ns3/names.h"
-#include "ns3/packet-socket-factory.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/string.h"
-#include "ns3/net-device.h"
-#include "ns3/channel.h"
-#include "ns3/callback.h"
-#include "ns3/node.h"
-#include "ns3/core-config.h"
-#include "ns3/point-to-point-net-device.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/callback.h"
-
-#include "../model/nnn-net-device-face.h"
-#include "../model/nnn-l3-protocol.h"
-
-#include "ns3/nnn-forwarding-strategy.h"
-#include "ns3/nnn-address.h"
-
-#include "ns3/node-list.h"
-// #include "ns3/loopback-net-device.h"
-
-#include "ns3/data-rate.h"
-
-#include "nnn-face-container.h"
-#include "nnn-stack-helper.h"
-
-#include <limits>
-#include <map>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <limits>
+#include <map>
+
+#include <ns3-dev/ns3/assert.h>
+#include <ns3-dev/ns3/callback.h>
+#include <ns3-dev/ns3/channel.h>
+#include <ns3-dev/ns3/config.h>
+#include <ns3-dev/ns3/core-config.h>
+#include <ns3-dev/ns3/data-rate.h>
+#include <ns3-dev/ns3/log.h>
+#include <ns3-dev/ns3/names.h>
+#include <ns3-dev/ns3/net-device.h>
+#include <ns3-dev/ns3/node.h>
+#include <ns3-dev/ns3/node-list.h>
+#include <ns3-dev/ns3/object.h>
+#include <ns3-dev/ns3/packet-socket-factory.h>
+#include <ns3-dev/ns3/point-to-point-helper.h>
+#include <ns3-dev/ns3/point-to-point-net-device.h>
+#include <ns3-dev/ns3/simulator.h>
+#include <ns3-dev/ns3/string.h>
+
+#include "nnn-net-device-face.h"
+#include "nnn-l3-protocol.h"
+
+#include "nnn-forwarding-strategy.h"
+#include "nnn-address.h"
+#include "nnn-face-container.h"
+#include "nnn-stack-helper.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.NNNStackHelper");
 

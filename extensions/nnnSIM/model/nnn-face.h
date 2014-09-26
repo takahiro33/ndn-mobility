@@ -39,9 +39,13 @@ class Node;
 
 namespace nnn {
 
+class NULLp;
 class SO;
 class DO;
-class NULLp;
+class EN;
+class AEN;
+class REN;
+class INF;
 
 /**
  * \ingroup nnn
@@ -72,6 +76,10 @@ public:
 	typedef Callback<void, Ptr<Face>, Ptr<NULLp> > NULLpHandler;
 	typedef Callback<void, Ptr<Face>, Ptr<SO> > SOHandler;
 	typedef Callback<void, Ptr<Face>, Ptr<DO> > DOHandler;
+	typedef Callback<void, Ptr<Face>, Ptr<EN> > ENHandler;
+	typedef Callback<void, Ptr<Face>, Ptr<AEN> > AENHandler;
+	typedef Callback<void, Ptr<Face>, Ptr<REN> > RENHandler;
+	typedef Callback<void, Ptr<Face>, Ptr<INF> > INFHandler;
 
 	/**
 	 * \brief Default constructor
@@ -93,7 +101,10 @@ public:
 	 * This method should call protocol-dependent registration function
 	 */
 	virtual void
-	RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler, const DOHandler &DOHandler);
+	RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
+			const DOHandler &DOHandler, const ENHandler &ENHandler,
+			const AENHandler &AENHandler, const RENHandler &RENHandler,
+			const INFHandler &INFHandler);
 
 	/**
 	 * \brief Un-Register callback to call when new packet arrives on the Face
@@ -133,6 +144,18 @@ public:
 	virtual bool
 	SendDO (Ptr<const DO> d_o);
 
+	virtual bool
+	SendEn (Ptr<const EN> en_o);
+
+	virtual bool
+	SendAEN (Ptr<const AEN> aen_o);
+
+	virtual bool
+	SendREN (Ptr<const REN> ren_o);
+
+	virtual bool
+	SendINF (Ptr<const INF> inf_o);
+
 	/**
 	 * \brief Receive NULL from application or another node and forward it up to the NDN stack
 	 *
@@ -157,6 +180,17 @@ public:
 	virtual bool
 	ReceiveDO (Ptr<DO>  d_o);
 
+	virtual bool
+	ReceiveEn (Ptr<const EN> en_o);
+
+	virtual bool
+	ReceiveAEN (Ptr<const AEN> aen_o);
+
+	virtual bool
+	ReceiveREN (Ptr<const REN> ren_o);
+
+	virtual bool
+	ReceiveINF (Ptr<const INF> inf_o);
 
 	////////////////////////////////////////////////////////////////////
 
@@ -210,7 +244,8 @@ public:
 	 */
 	enum Flags
 	{
-		NetDevice = 1 ///< @brief A netDevice Face, temporarily
+		POA = 0,
+		APPLICATION = 1 ///< @brief A netDevice Face, temporarily
 	};
 
 	/**
@@ -294,6 +329,10 @@ private:
 	NULLpHandler m_upstreamNULLpHandler;
 	SOHandler m_upstreamSOHandler;
 	DOHandler m_upstreamDOHandler;
+	ENHandler m_upstreamENHandler;
+	AENHandler m_upstreamAENHandler;
+	RENHandler m_upstreamRENHandler;
+	INFHandler m_upstreamINFHandler;
 	bool m_ifup;
 	uint32_t m_id; ///< \brief id of the interNN_Face in NNN stack (per-node uniqueness)
 	uint16_t m_metric; ///< \brief metric of the Face
