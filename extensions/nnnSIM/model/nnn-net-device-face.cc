@@ -26,7 +26,7 @@
 #include <ns3-dev/ns3/pointer.h>
 #include <ns3-dev/ns3/point-to-point-net-device.h>
 
-#include "nnn-address.h"
+#include "naming/nnn-address.h"
 #include "nnn-l3-protocol.h"
 #include "nnn-net-device-face.h"
 

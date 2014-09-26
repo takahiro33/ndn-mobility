@@ -41,9 +41,10 @@
 #ifndef NNN_ERROR2_H
 #define NNN_ERROR2_H
 
-#include "nnn-common.h"
 #include <boost/exception/all.hpp>
 #include <boost/throw_exception.hpp>
+
+#include "../nnn-common.h"
 
 NNN_NAMESPACE_BEGIN
 

@@ -27,7 +27,7 @@
 #include <ns3-dev/ns3/attribute.h>
 #include <ns3-dev/ns3/attribute-helper.h>
 
-#include "nnn-common.h"
+#include "../nnn-common.h"
 #include "name-component.h"
 
 #define SEP '.'

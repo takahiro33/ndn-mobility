@@ -22,12 +22,11 @@
 #ifndef NNN_DETAIL_URI_H
 #define NNN_DETAIL_URI_H
 
-#include "nnn-common.h"
-
-#include "error.h"
-
 #include <boost/archive/iterators/transform_width.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+
+#include "error.h"
+#include "../nnn-common.h"
 
 NNN_NAMESPACE_BEGIN
 

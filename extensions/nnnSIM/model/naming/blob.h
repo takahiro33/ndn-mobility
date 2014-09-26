@@ -22,9 +22,9 @@
 #ifndef NNN_BLOB_H
 #define NNN_BLOB_H
 
-#include "nnn-common.h"
-
 #include <vector>
+
+#include "../nnn-common.h"
 
 NNN_NAMESPACE_BEGIN
 

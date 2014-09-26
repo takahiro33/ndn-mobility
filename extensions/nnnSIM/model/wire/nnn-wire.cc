@@ -21,13 +21,9 @@
 #include <ns3-dev/ns3/integer.h>
 #include <ns3-dev/ns3/global-value.h>
 
-#include "nnn-common.h"
-#include "nnn-do.h"
-#include "nnn-header-helper.h"
-#include "nnn-so.h"
+#include "../../helper/nnn-header-helper.h"
+#include "nnnsim/nnnsim.h"
 #include "nnn-wire.h"
-
-#include "nnnsim.h"
 #include "wire-nnnsim.h"
 
 NNN_NAMESPACE_BEGIN

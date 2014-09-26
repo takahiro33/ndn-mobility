@@ -23,15 +23,9 @@
 
 #include <ns3-dev/ns3/buffer.h>
 
-#include "nnn-common.h"
-#include "nnn-address.h"
-#include "nnn-nullp.h"
-#include "nnn-so.h"
-#include "nnn-do.h"
-#include "nnn-en.h"
-#include "nnn-aen.h"
-#include "nnn-ren.h"
-#include "nnn-inf.h"
+#include "../nnn-common.h"
+#include "../naming/nnn-address.h"
+#include "../packets/nnn-packets.h"
 
 NNN_NAMESPACE_BEGIN
 

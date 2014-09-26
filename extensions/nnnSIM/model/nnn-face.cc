@@ -32,8 +32,8 @@
 #include <ns3-dev/ns3/pointer.h>
 
 #include "nnn-face.h"
-#include "nnn-header-helper.h"
-#include "nnn-wire.h"
+#include "../helper/nnn-header-helper.h"
+#include "wire/nnn-wire.h"
 
 #include <boost/ref.hpp>
 
@@ -100,13 +100,20 @@ Face::GetNode () const
 }
 
 void
-Face::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler, const DOHandler &DOHandler)
+Face::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
+		const DOHandler &DOHandler, const ENHandler &ENHandler,
+		const AENHandler &AENHandler, const RENHandler &RENHandler,
+		const INFHandler &INFHandler)
 {
 	NS_LOG_FUNCTION_NOARGS ();
 
 	m_upstreamNULLpHandler = NULLpHandler;
 	m_upstreamSOHandler = SOHandler;
 	m_upstreamDOHandler = DOHandler;
+	m_upstreamENHandler = ENHandler;
+	m_upstreamAENHandler = AENHandler;
+	m_upstreamRENHandler = RENHandler;
+	m_upstreamINFHandler = INFHandler;
 }
 
 void

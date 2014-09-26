@@ -19,8 +19,8 @@
  */
 
 // Module headers:
-#include "blob.h"
-#include "error.h"
-#include "nnn-name-format.h"
-#include "name-component.h"
-#include "nnn-address.h"
+#include "naming/blob.h"
+#include "naming/error.h"
+#include "naming/nnn-name-format.h"
+#include "naming/name-component.h"
+#include "naming/nnn-address.h"

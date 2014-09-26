@@ -30,7 +30,7 @@
 #include <ns3-dev/ns3/type-id.h>
 #include <ns3-dev/ns3/traced-callback.h>
 
-#include "nnn-address.h"
+#include "naming/nnn-address.h"
 
 namespace ns3 {
 
