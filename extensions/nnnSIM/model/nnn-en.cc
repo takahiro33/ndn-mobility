@@ -72,6 +72,12 @@ EN::GetPoaType () const
 }
 
 void
+EN::SetPoaType (uint16_t type)
+{
+	m_poa_type = type;
+}
+
+void
 EN::AddPoa (Mac48Address signature)
 {
 	m_poas.push_back(signature);

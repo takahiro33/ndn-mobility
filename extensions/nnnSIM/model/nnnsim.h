@@ -25,6 +25,10 @@
 #include "nnn-nullp.h"
 #include "nnn-do.h"
 #include "nnn-so.h"
+#include "nnn-en.h"
+#include "nnn-aen.h"
+#include "nnn-ren.h"
+#include "nnn-inf.h"
 
 NNN_NAMESPACE_BEGIN
 
@@ -126,6 +130,114 @@ public:
 
 private:
 	Ptr<nnn::DO> m_do_p;
+};
+
+class EN : public Header
+{
+public:
+	EN ();
+	EN (Ptr<nnn::EN> en_p);
+
+	Ptr<nnn::EN>
+	GetEN ();
+
+	static Ptr<Packet>
+	ToWire (Ptr<const nnn::EN> en_p);
+
+	static Ptr<nnn::EN>
+	FromWire (Ptr<Packet> packet);
+
+	// from Header
+	static TypeId GetTypeId (void);
+	virtual TypeId GetInstanceTypeId (void) const;
+	virtual void Print (std::ostream &os) const;
+	virtual uint32_t GetSerializedSize (void) const;
+	virtual void Serialize (Buffer::Iterator start) const;
+	virtual uint32_t Deserialize (Buffer::Iterator start);
+
+private:
+	Ptr<nnn::EN> m_en_p;
+};
+
+class AEN : public Header
+{
+public:
+	AEN ();
+	AEN (Ptr<nnn::AEN> aen_p);
+
+	Ptr<nnn::AEN>
+	GetAEN ();
+
+	static Ptr<Packet>
+	ToWire (Ptr<const nnn::AEN> aen_p);
+
+	static Ptr<nnn::AEN>
+	FromWire (Ptr<Packet> packet);
+
+	// from Header
+	static TypeId GetTypeId (void);
+	virtual TypeId GetInstanceTypeId (void) const;
+	virtual void Print (std::ostream &os) const;
+	virtual uint32_t GetSerializedSize (void) const;
+	virtual void Serialize (Buffer::Iterator start) const;
+	virtual uint32_t Deserialize (Buffer::Iterator start);
+
+private:
+	Ptr<nnn::AEN> m_aen_p;
+};
+
+class REN : public Header
+{
+public:
+	REN ();
+	REN (Ptr<nnn::REN> ren_p);
+
+	Ptr<nnn::REN>
+	GetREN ();
+
+	static Ptr<Packet>
+	ToWire (Ptr<const nnn::REN> ren_p);
+
+	static Ptr<nnn::REN>
+	FromWire (Ptr<Packet> packet);
+
+	// from Header
+	static TypeId GetTypeId (void);
+	virtual TypeId GetInstanceTypeId (void) const;
+	virtual void Print (std::ostream &os) const;
+	virtual uint32_t GetSerializedSize (void) const;
+	virtual void Serialize (Buffer::Iterator start) const;
+	virtual uint32_t Deserialize (Buffer::Iterator start);
+
+private:
+	Ptr<nnn::REN> m_ren_p;
+};
+
+class INF : public Header
+{
+public:
+	INF ();
+	INF (Ptr<nnn::INF> inf_p);
+
+	Ptr<nnn::INF>
+	GetINF ();
+
+	static Ptr<Packet>
+	ToWire (Ptr<const nnn::INF> inf_p);
+
+	static Ptr<nnn::INF>
+	FromWire (Ptr<Packet> packet);
+
+	// from Header
+	static TypeId GetTypeId (void);
+	virtual TypeId GetInstanceTypeId (void) const;
+	virtual void Print (std::ostream &os) const;
+	virtual uint32_t GetSerializedSize (void) const;
+	virtual void Serialize (Buffer::Iterator start) const;
+	virtual uint32_t Deserialize (Buffer::Iterator start);
+
+private:
+	Ptr<nnn::INF> m_inf_p;
 };
 
 } // nnnSIM

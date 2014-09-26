@@ -385,7 +385,7 @@ Wire::FromINF (Ptr<const INF> inf_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/
 		wireFormat = GetWireFormat ();
 
 	if (wireFormat == WIRE_FORMAT_NNNSIM)
-		return wire::nnnSIM::EN::ToWire (inf_p);
+		return wire::nnnSIM::INF::ToWire (inf_p);
 	else
 	{
 		NS_FATAL_ERROR ("Unsupported format requested");
@@ -394,7 +394,7 @@ Wire::FromINF (Ptr<const INF> inf_p, int8_t wireFormat/* = WIRE_FORMAT_DEFAULT*/
 }
 
 Ptr<INF>
-Wire::ToEN (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
+Wire::ToINF (Ptr<Packet> packet, int8_t wireFormat/* = WIRE_FORMAT_AUTODETECT*/)
 {
 	if (wireFormat == WIRE_FORMAT_AUTODETECT)
 	{

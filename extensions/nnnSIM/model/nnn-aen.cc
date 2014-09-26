@@ -68,6 +68,12 @@ AEN::AEN (const AEN &aen_p)
 	NS_LOG_FUNCTION("AEN correct copy constructor");
 }
 
+uint32_t
+AEN::GetPacketId ()
+{
+	return m_packetid;
+}
+
 void
 AEN::SetName (Ptr<NNNAddress> name)
 {

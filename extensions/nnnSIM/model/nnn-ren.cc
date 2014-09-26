@@ -77,6 +77,12 @@ REN::REN (const REN &ren_p)
 	NS_LOG_FUNCTION("REN correct copy constructor");
 }
 
+uint32_t
+REN::GetPacketId ()
+{
+	return m_packetid;
+}
+
 void
 REN::SetName (Ptr<NNNAddress> name)
 {
@@ -106,10 +112,22 @@ REN::GetNamePtr () const
 	return m_name;
 }
 
+void
+REN::SetPoaType (uint16_t type)
+{
+	m_poa_type = type;
+}
+
 uint16_t
 REN::GetPoaType () const
 {
 	return m_poa_type;
+}
+
+void
+REN::AddPoa (Mac48Address signature)
+{
+	m_poas.push_back(signature);
 }
 
 void
