@@ -40,13 +40,14 @@
 #include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/string.h>
 
-#include "nnn-net-device-face.h"
-#include "nnn-l3-protocol.h"
-
-#include "nnn-forwarding-strategy.h"
-#include "nnn-address.h"
-#include "nnn-face-container.h"
 #include "nnn-stack-helper.h"
+
+//#include "nnn-face-container.h"
+
+#include "../model/nnn-net-device-face.h"
+#include "../model/nnn-l3-protocol.h"
+
+#include "../model/fw/nnn-forwarding-strategy.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.NNNStackHelper");
 

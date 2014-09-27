@@ -17,6 +17,7 @@
  *  You should have received a copy of the GNU Affero Public License
  *  along with nnn-face.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <boost/ref.hpp>
 
 #include <ns3-dev/ns3/assert.h>
 #include <ns3-dev/ns3/boolean.h>
@@ -24,18 +25,15 @@
 #include <ns3-dev/ns3/log.h>
 #include <ns3-dev/ns3/node.h>
 #include <ns3-dev/ns3/packet.h>
+#include <ns3-dev/ns3/pointer.h>
+#include <ns3-dev/ns3/random-variable.h>
+#include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/uinteger.h>
 
-
-#include <ns3-dev/ns3/simulator.h>
-#include <ns3-dev/ns3/random-variable.h>
-#include <ns3-dev/ns3/pointer.h>
-
 #include "nnn-face.h"
-#include "../helper/nnn-header-helper.h"
-#include "wire/nnn-nnnsim-wire.h"
+#include "nnn-nnnsim-wire.h"
 
-#include <boost/ref.hpp>
+#include "../helper/nnn-header-helper.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.Face");
 

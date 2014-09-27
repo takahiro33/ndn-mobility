@@ -18,6 +18,8 @@
  *  along with nnn-l3-protocol.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <boost/foreach.hpp>
+
 #include <ns3-dev/ns3/callback.h>
 #include <ns3-dev/ns3/log.h>
 #include <ns3-dev/ns3/node.h>
@@ -29,21 +31,13 @@
 #include <ns3-dev/ns3/trace-source-accessor.h>
 #include <ns3-dev/ns3/uinteger.h>
 
-#include "nnn-l3-protocol.h"
-
-#include "nnn-nnst.h"
-#include "nnn-so.h"
-#include "nnn-do.h"
-#include "nnn-en.h"
-#include "nnn-aen.h"
-#include "nnn-ren.h"
-#include "nnn-inf.h"
-
 #include "nnn-face.h"
-#include "nnn-forwarding-strategy.h"
+#include "nnn-l3-protocol.h"
+#include "nnn-packets.h"
 #include "nnn-net-device-face.h"
 
-#include <boost/foreach.hpp>
+#include "fw/nnn-forwarding-strategy.h"
+#include "nnst/nnn-nnst.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.L3Protocol");
 
