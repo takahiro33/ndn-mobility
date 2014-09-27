@@ -45,7 +45,6 @@ namespace ns3 {
 namespace nnn {
 
 const uint16_t L3Protocol::ETHERNET_FRAME_TYPE = 0x7786;
-//const uint16_t L3Protocol::IP_STACK_PORT = 9695;
 
 NS_OBJECT_ENSURE_REGISTERED (L3Protocol);
 
@@ -113,7 +112,7 @@ L3Protocol::DoDispose (void)
 	m_node = 0;
 
 	// Force delete on objects
-	m_NNNForwardingStrategy = 0; // there is a reference to PIT stored in here
+	m_forwardingStrategy = 0; // there is a reference to PIT stored in here
 
 	Object::DoDispose ();
 }
@@ -126,13 +125,13 @@ L3Protocol::AddFace (const Ptr<Face> &face)
 	face->SetId (m_faceCounter); // sets a unique ID of the face. This ID serves only informational purposes
 
 	// ask face to register in lower-layer stack
-	face->RegisterProtocolHandlers (MakeCallback (&ForwardingStrategy::OnSO, m_NNNForwardingStrategy),
-			MakeCallback (&ForwardingStrategy::OnDO, m_NNNForwardingStrategy));
+	face->RegisterProtocolHandlers (MakeCallback (&ForwardingStrategy::OnSO, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnDO, m_forwardingStrategy));
 
 	m_faces.push_back (face);
 	m_faceCounter++;
 
-	m_NNNForwardingStrategy->AddFace (face); // notify that face is added
+	m_forwardingStrategy->AddFace (face); // notify that face is added
 	return face->GetId ();
 }
 
@@ -171,7 +170,7 @@ L3Protocol::RemoveFace (Ptr<Face> face)
 	m_faces.erase (face_it);
 
 	GetObject<Fib> ()->RemoveFromAll (face);
-	m_NNNForwardingStrategy->RemoveFace (face); // notify that face is removed
+	m_forwardingStrategy->RemoveFace (face); // notify that face is removed
 }
 
 Ptr<Face>
