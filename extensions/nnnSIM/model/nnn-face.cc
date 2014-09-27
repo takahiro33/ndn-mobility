@@ -47,7 +47,7 @@ Face::GetTypeId ()
 {
 	static TypeId tid = TypeId ("ns3::nnn::Face")
     		.SetParent<Object> ()
-    		.SetGroupName ("Nnn")
+    		.SetGroupName ("nnn")
     		.AddAttribute ("Id", "Face id (unique integer for the Nnn stack on this node)",
     				TypeId::ATTR_GET, // allow only getting it.
     				UintegerValue (0),
@@ -63,14 +63,18 @@ Face::GetTypeId ()
  * invoke SetUp on them once an Nnn address and mask have been set.
  */
 Face::Face (Ptr<Node> node)
-: m_node (node)
-, m_upstreamNULLpHandler (MakeNullCallback< void, Ptr<Face>, Ptr<NULLp> > ())
-, m_upstreamSOHandler (MakeNullCallback< void, Ptr<Face>, Ptr<SO> > ())
-, m_upstreamDOHandler (MakeNullCallback< void, Ptr<Face>, Ptr<DO> > ())
-, m_ifup (false)
-, m_id ((uint32_t)-1)
-, m_metric (0)
-, m_flags (0)
+ : m_node (node)
+ , m_upstreamNULLpHandler (MakeNullCallback< void, Ptr<Face>, Ptr<NULLp> > ())
+ , m_upstreamSOHandler    (MakeNullCallback< void, Ptr<Face>, Ptr<SO> > ())
+ , m_upstreamDOHandler    (MakeNullCallback< void, Ptr<Face>, Ptr<DO> > ())
+ , m_upstreamENHandler    (MakeNullCallback< void, Ptr<Face>, Ptr<EN> > ())
+ , m_upstreamAENHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<AEN> > ())
+ , m_upstreamRENHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<REN> > ())
+ , m_upstreamINFHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<INF> > ())
+ , m_ifup (false)
+ , m_id ((uint32_t)-1)
+ , m_metric (0)
+ , m_flags (0)
 {
 	NS_LOG_FUNCTION (this << node);
 
@@ -122,6 +126,10 @@ Face::UnRegisterProtocolHandlers ()
 	m_upstreamNULLpHandler = MakeNullCallback< void, Ptr<Face>, Ptr<NULLp> > ();
 	m_upstreamSOHandler = MakeNullCallback< void, Ptr<Face>, Ptr<SO> > ();
 	m_upstreamDOHandler = MakeNullCallback< void, Ptr<Face>, Ptr<DO> > ();
+	m_upstreamENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<EN> > ();
+	m_upstreamAENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<AEN> > ();
+	m_upstreamRENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<REN> > ();
+	m_upstreamINFHandler = MakeNullCallback< void, Ptr<Face>, Ptr<INF> > ();
 }
 
 bool
@@ -139,32 +147,83 @@ Face::SendNULLp (Ptr<const NULLp> n_o)
 
 
 bool
-Face::SendSO (Ptr<const SO> so_p)
+Face::SendSO (Ptr<const SO> so_o)
 {
-	NS_LOG_FUNCTION (this << boost::cref (*this) << so_p->GetName ());
+	NS_LOG_FUNCTION (this << boost::cref (*this) << so_o);
 
 	if (!IsUp ())
 	{
 		return false;
 	}
 
-	return Send (Wire::FromSO (so_p));
+	return Send (Wire::FromSO (so_o));
 }
 
 bool
-Face::SendDO (Ptr<const DO> do_p)
+Face::SendDO (Ptr<const DO> do_o)
 {
-	NS_LOG_FUNCTION (this << boost::cref (*this) << do_p->GetName ());
+	NS_LOG_FUNCTION (this << boost::cref (*this) << do_o);
 
 	if (!IsUp ())
 	{
 		return false;
 	}
 
-	return Send (Wire::FromDO (do_p));
+	return Send (Wire::FromDO (do_o));
+}
+
+bool
+Face::SendEN (Ptr<const EN> en_o)
+{
+	NS_LOG_FUNCTION (this << en_o);
+
+	if (!IsUp ())
+	{
+		return false;
+	}
+
+	return Send (Wire::FromEN (en_o));
 }
 
 
+bool
+Face::SendAEN (Ptr<const AEN> aen_o)
+{
+	NS_LOG_FUNCTION (this << boost::cref (*this) << aen_o);
+
+	if (!IsUp ())
+	{
+		return false;
+	}
+
+	return Send (Wire::FromAEN (aen_o));
+}
+
+bool
+Face::SendREN (Ptr<const REN> ren_o)
+{
+	NS_LOG_FUNCTION (this << boost::cref (*this) << ren_o);
+
+	if (!IsUp ())
+	{
+		return false;
+	}
+
+	return Send (Wire::FromREN (ren_o));
+}
+
+bool
+Face::SendINF (Ptr<const INF> inf_o)
+{
+	NS_LOG_FUNCTION (this << boost::cref (*this) << inf_o);
+
+	if (!IsUp ())
+	{
+		return false;
+	}
+
+	return Send (Wire::FromINF (inf_o));
+}
 
 bool
 Face::Send (Ptr<Packet> packet)
@@ -195,6 +254,14 @@ Face::Receive (Ptr<const Packet> p)
 			return ReceiveSO (Wire::ToSO (packet, Wire::WIRE_FORMAT_NNNSIM));
 		case HeaderHelper::DO_NNN:
 			return ReceiveDO (Wire::ToDO (packet, Wire::WIRE_FORMAT_NNNSIM));
+		case HeaderHelper::EN_NNN:
+			return ReceiveEN (Wire::ToEN (packet, Wire::WIRE_FORMAT_NNNSIM));
+		case HeaderHelper::AEN_NNN:
+			return ReceiveAEN (Wire::ToAEN (packet, Wire::WIRE_FORMAT_NNNSIM));
+		case HeaderHelper::REN_NNN:
+			return ReceiveREN (Wire::ToREN (packet, Wire::WIRE_FORMAT_NNNSIM));
+		case HeaderHelper::INF_NNN:
+			return ReceiveINF (Wire::ToINF (packet, Wire::WIRE_FORMAT_NNNSIM));
 		default:
 			NS_FATAL_ERROR ("Not supported NNN header");
 			return false;
@@ -212,7 +279,7 @@ Face::Receive (Ptr<const Packet> p)
 }
 
 bool
-Face::ReceiveNULLp (Ptr<NULLp> n_o)
+Face::ReceiveNULLp (Ptr<NULLp> n_i)
 {
 	if (!IsUp ())
 	{
@@ -220,12 +287,12 @@ Face::ReceiveNULLp (Ptr<NULLp> n_o)
 		return false;
 	}
 
-	m_upstreamNULLpHandler (this, n_o);
+	m_upstreamNULLpHandler (this, n_i);
 	return true;
 }
 
 bool
-Face::ReceiveSO (Ptr<SO> so_p)
+Face::ReceiveSO (Ptr<SO> so_i)
 {
 	if (!IsUp ())
 	{
@@ -233,12 +300,12 @@ Face::ReceiveSO (Ptr<SO> so_p)
 		return false;
 	}
 
-	m_upstreamSOHandler (this, so_p);
+	m_upstreamSOHandler (this, so_i);
 	return true;
 }
 
 bool
-Face::ReceiveDO (Ptr<DO> do_p)
+Face::ReceiveDO (Ptr<DO> do_i)
 {
 	if (!IsUp ())
 	{
@@ -246,7 +313,46 @@ Face::ReceiveDO (Ptr<DO> do_p)
 		return false;
 	}
 
-	m_upstreamDOHandler (this, do_p);
+	m_upstreamDOHandler (this, do_i);
+	return true;
+}
+
+bool
+Face::ReceiveEN (Ptr<EN> en_i)
+{
+	if (!IsUp ())
+	{
+		// no tracing here. If we were off while receiving, we shouldn't even know that something was there
+		return false;
+	}
+
+	m_upstreamENHandler (this, en_i);
+	return true;
+}
+
+bool
+Face::ReceiveAEN (Ptr<AEN> aen_i)
+{
+	if (!IsUp ())
+	{
+		// no tracing here. If we were off while receiving, we shouldn't even know that something was there
+		return false;
+	}
+
+	m_upstreamAENHandler (this, aen_i);
+	return true;
+}
+
+bool
+Face::ReceiveREN (Ptr<REN> ren_i)
+{
+	if (!IsUp ())
+	{
+		// no tracing here. If we were off while receiving, we shouldn't even know that something was there
+		return false;
+	}
+
+	m_upstreamRENHandler (this, ren_i);
 	return true;
 }
 

@@ -132,7 +132,7 @@ public:
 	 * @returns true if SO is considered to be send out (enqueued)
 	 */
 	virtual bool
-	SendSO (Ptr<const SO> s_o);
+	SendSO (Ptr<const SO> so_o);
 
 	/**
 	 * @brief Send out DO packet through the Face
@@ -142,10 +142,10 @@ public:
 	 * @returns true if DO packet is considered to be send out (enqueued)
 	 */
 	virtual bool
-	SendDO (Ptr<const DO> d_o);
+	SendDO (Ptr<const DO> do_o);
 
 	virtual bool
-	SendEn (Ptr<const EN> en_o);
+	SendEN (Ptr<const EN> en_o);
 
 	virtual bool
 	SendAEN (Ptr<const AEN> aen_o);
@@ -162,7 +162,7 @@ public:
 	 * By default it is called from inside Receive method, but can be used directly, if appropriate
 	 */
 	virtual bool
-	ReceiveNULLp (Ptr<NULLp> n_o);
+	ReceiveNULLp (Ptr<NULLp> n_i);
 
 	/**
 	 * \brief Receive SO from application or another node and forward it up to the NDN stack
@@ -170,7 +170,7 @@ public:
 	 * By default it is called from inside Receive method, but can be used directly, if appropriate
 	 */
 	virtual bool
-	ReceiveSO (Ptr<SO> s_o);
+	ReceiveSO (Ptr<SO> so_i);
 
 	/**
 	 * \brief Receive DO packet from application or another node and forward it up to the NDN stack
@@ -178,19 +178,19 @@ public:
 	 * By default it is called from inside Receive method, but can be used directly, if appropriate
 	 */
 	virtual bool
-	ReceiveDO (Ptr<DO>  d_o);
+	ReceiveDO (Ptr<DO>  do_i);
 
 	virtual bool
-	ReceiveEn (Ptr<const EN> en_o);
+	ReceiveEN (Ptr<EN> en_i);
 
 	virtual bool
-	ReceiveAEN (Ptr<const AEN> aen_o);
+	ReceiveAEN (Ptr<AEN> aen_i);
 
 	virtual bool
-	ReceiveREN (Ptr<const REN> ren_o);
+	ReceiveREN (Ptr<REN> ren_i);
 
 	virtual bool
-	ReceiveINF (Ptr<const INF> inf_o);
+	ReceiveINF (Ptr<INF> inf_i);
 
 	////////////////////////////////////////////////////////////////////
 
