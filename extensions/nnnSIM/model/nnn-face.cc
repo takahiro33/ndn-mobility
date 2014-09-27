@@ -33,7 +33,7 @@
 
 #include "nnn-face.h"
 #include "../helper/nnn-header-helper.h"
-#include "wire/nnn-wire.h"
+#include "wire/nnn-nnnsim-wire.h"
 
 #include <boost/ref.hpp>
 
