@@ -24,8 +24,8 @@
 #include <ns3-dev/ns3/buffer.h>
 
 #include "../nnn-common.h"
-#include "../naming/nnn-address.h"
-#include "../packets/nnn-packets.h"
+#include "../nnn-naming.h"
+#include "../nnn-packets.h"
 
 NNN_NAMESPACE_BEGIN
 
