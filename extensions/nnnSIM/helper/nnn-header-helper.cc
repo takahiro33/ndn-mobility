@@ -26,7 +26,7 @@
 #include <iomanip>
 #include "nnn-header-helper.h"
 
-#include "../model/packets/nnn-packets.h"
+#include "../model/nnn-packets.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.HeaderHelper");
 

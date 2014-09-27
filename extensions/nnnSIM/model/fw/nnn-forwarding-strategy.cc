@@ -19,31 +19,32 @@
  *          Ilya Moiseenko <iliamo@cs.ucla.edu>
  */
 
-#include "nnn-forwarding-strategy.h"
-
-//#include "ns3/nnn-pit.h"
-//#include "ns3/nnn-pit-entry.h"
-#include "ns3/nnn-so.h"
-#include "ns3/nnn-do.h"
-//#include "ns3/nnn-pit.h"
-#include "ns3/nnn-nnst.h"
-//#include "ns3/nnn-content-store.h"
-#include "ns3/nnn-face.h"
-
-#include "ns3/assert.h"
-#include "ns3/ptr.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-
-//#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
-
 #include <boost/ref.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/tuple/tuple.hpp>
+
+#include <ns3-dev/ns3/assert.h>
+#include <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/log.h>
+#include <ns3-dev/ns3/simulator.h>
+#include <ns3-dev/ns3/boolean.h>
+#include <ns3-dev/ns3/string.h>
+
+#include "nnn-forwarding-strategy.h"
+
+//#include "ns3/nnn-pit.h"
+//#include "ns3/nnn-pit-entry.h"
+//#include "ns3/nnn-pit.h"
+//#include "ns3/nnn-content-store.h"
+
+#include "../nnst/nnn-nnst.h"
+#include "../nnn-packets.h"
+#include "../nnn-face.h"
+
+//#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
+
 namespace ll = boost::lambda;
 
 namespace ns3 {
