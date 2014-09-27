@@ -18,9 +18,23 @@
  *
  */
 
+#ifndef NNNSIM_MODULE_H_
+#define NNNSIM_MODULE_H_
+
 // Module headers:
-#include "naming/blob.h"
-#include "naming/error.h"
-#include "naming/nnn-name-format.h"
-#include "naming/name-component.h"
-#include "naming/nnn-address.h"
+
+// Naming headers
+#include "model/nnn-naming.h"
+
+// Packets
+#include "model/nnn-packets.h"
+
+// Wire definitions
+#include "model/nnn-nnnsim-wire.h"
+
+// Common headers
+#include "model/nnn-face.h"
+#include "model/nnn-l3-protocol.h"
+#include "model/nnn-net-device-face.h"
+
+#endif /* NNNSIM_MODULE_H_ */
