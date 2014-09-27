@@ -51,14 +51,14 @@ class DO;
 //namespace pit { class Entry; }
 class NNSTFaceMetric;
 class NNST;
-namespace NNST { class Entry; }
+namespace nnst { class Entry; }
 //class ContentStore;
 
 /**
  * @ingroup nnn-fw
  * @brief Abstract base class for Nnn forwarding strategies
  */
-class NNNForwardingStrategy :
+class ForwardingStrategy :
     public Object
 {
 public:
@@ -72,8 +72,8 @@ public:
   /**
    * @brief Default constructor
    */
-  NNNForwardingStrategy ();
-  virtual ~NNNForwardingStrategy ();
+  ForwardingStrategy ();
+  virtual ~ForwardingStrategy ();
 
   /**
    * \brief Actual processing of incoming Nnn SOs. Note, SOs do not have payload

@@ -38,7 +38,7 @@ class Header;
 namespace nnn {
 
 class Face;
-class NNNForwardingStrategy;
+class ForwardingStrategy;
 
 /**
  * \defgroup nnn nnnSIM: nnn simulation module
@@ -59,9 +59,9 @@ class NNNForwardingStrategy;
  *
  * In addition, this class defines NNN packet coding constants
  *
- * \see Face, NNNForwardingStrategy
+ * \see Face, ForwardingStrategy
  */
-class NNNL3Protocol :
+class L3Protocol :
 		public Object
 {
 public:
@@ -81,8 +81,8 @@ public:
 	/**
 	 * \brief Default constructor. Creates an empty stack without forwarding strategy set
 	 */
-	NNNL3Protocol ();
-	virtual ~NNNL3Protocol  ();
+	L3Protocol ();
+	virtual ~L3Protocol  ();
 
 	/**
 	 * \brief Add face to Nnn stack
@@ -142,8 +142,8 @@ protected:
 	virtual void NotifyNewAggregate ();
 
 private:
-	NNNL3Protocol (const NNNL3Protocol  &); ///< copy constructor is disabled
-	NNNL3Protocol  &operator = (const NNNL3Protocol  &); ///< copy operator is disabled
+	L3Protocol (const L3Protocol  &); ///< copy constructor is disabled
+	L3Protocol  &operator = (const NNNL3Protocol  &); ///< copy operator is disabled
 
 private:
 	uint32_t m_faceCounter; ///< \brief counter of faces. Increased every time a new face is added to the stack
@@ -151,7 +151,7 @@ private:
 
 	// These objects are aggregated, but for optimization, get them here
 	Ptr<Node> m_node; ///< \brief node on which nnn stack is installed
-	Ptr<NNNForwardingStrategy> m_NNNForwardingStrategy; ///< \brief smart pointer to the selected forwarding strategy
+	Ptr<ForwardingStrategy> m_forwardingStrategy; ///< \brief smart pointer to the selected forwarding strategy
 };
 
 } // namespace nnn

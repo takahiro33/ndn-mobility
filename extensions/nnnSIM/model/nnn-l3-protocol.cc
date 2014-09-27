@@ -44,13 +44,13 @@ NS_LOG_COMPONENT_DEFINE ("nnn.L3Protocol");
 namespace ns3 {
 namespace nnn {
 
-const uint16_t NNNL3Protocol::ETHERNET_FRAME_TYPE = 0x7786;
+const uint16_t L3Protocol::ETHERNET_FRAME_TYPE = 0x7786;
 //const uint16_t L3Protocol::IP_STACK_PORT = 9695;
 
-NS_OBJECT_ENSURE_REGISTERED (NNNL3Protocol);
+NS_OBJECT_ENSURE_REGISTERED (L3Protocol);
 
 TypeId
-NNNL3Protocol::GetTypeId (void)
+L3Protocol::GetTypeId (void)
 {
 	static TypeId tid = TypeId ("ns3::nnn::NNNL3Protocol")
     		.SetGroupName ("nnn")
@@ -58,19 +58,19 @@ NNNL3Protocol::GetTypeId (void)
     		.AddConstructor<NNNL3Protocol> ()
     		.AddAttribute ("FaceList", "List of faces associated with nnn stack",
     				ObjectVectorValue (),
-    				MakeObjectVectorAccessor (&NNNL3Protocol::m_faces),
+    				MakeObjectVectorAccessor (&L3Protocol::m_faces),
     				MakeObjectVectorChecker<Face> ())
     				;
 	return tid;
 }
 
-NNNL3Protocol::NNNL3Protocol ()
+L3Protocol::L3Protocol ()
 : m_faceCounter (0)
 {
 	NS_LOG_FUNCTION (this);
 }
 
-NNNL3Protocol::~NNNL3Protocol ()
+L3Protocol::~L3Protocol ()
 {
 	NS_LOG_FUNCTION (this);
 }
@@ -80,7 +80,7 @@ NNNL3Protocol::~NNNL3Protocol ()
  * by setting the node in the ndn stack
  */
 void
-NNNL3Protocol::NotifyNewAggregate ()
+L3Protocol::NotifyNewAggregate ()
 {
 	// not really efficient, but this will work only once
 	if (m_node == 0)
@@ -88,20 +88,20 @@ NNNL3Protocol::NotifyNewAggregate ()
 		m_node = GetObject<Node> ();
 		if (m_node != 0)
 		{
-			NS_ASSERT_MSG (m_NNNForwardingStrategy != 0,
+			NS_ASSERT_MSG (m_forwardingStrategy != 0,
 					"Forwarding strategy should be aggregated before NNNL3Protocol");
 		}
 	}
-	if (m_NNNForwardingStrategy == 0)
+	if (m_forwardingStrategy == 0)
 	{
-		m_NNNForwardingStrategy = GetObject<ForwardingStrategy> ();
+		m_forwardingStrategy = GetObject<ForwardingStrategy> ();
 	}
 
 	Object::NotifyNewAggregate ();
 }
 
 void
-NNNL3Protocol::DoDispose (void)
+L3Protocol::DoDispose (void)
 {
 	NS_LOG_FUNCTION (this);
 
@@ -119,7 +119,7 @@ NNNL3Protocol::DoDispose (void)
 }
 
 uint32_t
-NNNL3Protocol::AddFace (const Ptr<Face> &face)
+L3Protocol::AddFace (const Ptr<Face> &face)
 {
 	NS_LOG_FUNCTION (this << &face);
 
@@ -137,7 +137,7 @@ NNNL3Protocol::AddFace (const Ptr<Face> &face)
 }
 
 void
-NNNL3Protocol::RemoveFace (Ptr<Face> face)
+L3Protocol::RemoveFace (Ptr<Face> face)
 {
 	NS_LOG_FUNCTION (this << boost::cref (*face));
 	// ask face to register in lower-layer stack
@@ -175,14 +175,14 @@ NNNL3Protocol::RemoveFace (Ptr<Face> face)
 }
 
 Ptr<Face>
-NNNL3Protocol::GetFace (uint32_t index) const
+L3Protocol::GetFace (uint32_t index) const
 {
 	NS_ASSERT (0 <= index && index < m_faces.size ());
 	return m_faces[index];
 }
 
 Ptr<Face>
-NNNL3Protocol::GetFaceById (uint32_t index) const
+L3Protocol::GetFaceById (uint32_t index) const
 {
 	BOOST_FOREACH (const Ptr<Face> &face, m_faces) // this function is not supposed to be called often, so linear search is fine
     		{
@@ -193,7 +193,7 @@ NNNL3Protocol::GetFaceById (uint32_t index) const
 }
 
 Ptr<Face>
-NNNL3Protocol::GetFaceByNetDevice (Ptr<NetDevice> netDevice) const
+L3Protocol::GetFaceByNetDevice (Ptr<NetDevice> netDevice) const
 {
 	BOOST_FOREACH (const Ptr<Face> &face, m_faces) // this function is not supposed to be called often, so linear search is fine
     		{
@@ -207,7 +207,7 @@ NNNL3Protocol::GetFaceByNetDevice (Ptr<NetDevice> netDevice) const
 }
 
 uint32_t
-NNNL3Protocol::GetNFaces (void) const
+L3Protocol::GetNFaces (void) const
 {
 	return m_faces.size ();
 }
