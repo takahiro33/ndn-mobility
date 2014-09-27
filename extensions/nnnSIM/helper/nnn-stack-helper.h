@@ -21,10 +21,14 @@
 #ifndef NNN_STACK_HELPER_H
 #define NNN_STACK_HELPER_H
 
+#include <utility>
+
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/object-factory.h>
 #include <ns3-dev/ns3/packet.h>
 #include <ns3-dev/ns3/ptr.h>
+
+#include "nnn-face-container.h"
 
 namespace ns3 {
 
@@ -35,7 +39,7 @@ namespace nnn {
 class FaceContainer;
 class Face;
 class NetDeviceFace;
-class NNNL3Protocol;
+class L3Protocol;
 
 /**
  * \ingroup nnn
@@ -62,7 +66,7 @@ class NNNStackHelper
 {
 public:
 	/**
-	 * \brief Create a new NnnStackHelper with a default NDN_FLOODING NNNForwarding stategy
+	 * \brief Create a new NnnStackHelper with a default stategy
 	 */
 	NNNStackHelper();
 
@@ -72,7 +76,7 @@ public:
 	virtual ~NNNStackHelper ();
 
 	/**
-	 * @brief Set parameters of NnnL3Protocol
+	 * @brief Set parameters of L3Protocol
 	 */
 	void
 	SetStackAttributes (const std::string &attr1 = "", const std::string &value1 = "",
@@ -82,15 +86,13 @@ public:
 
 
 	/**
-	 * @brief Set NNNForwarding strategy class and its attributes
-	 * @param NNNForwardingStrategyClass string containing name of the NNNForwarding strategy class
+	 * @brief Set Forwarding strategy class and its attributes
+	 * @param NNNForwardingStrategyClass string containing name of the Forwarding strategy class
 	 *
-	 * Valid options are "ns3::NdnFloodingStrategy" (default) and "ns3::NdnBestRouteStrategy"
-	 *
-	 * Other strategies can be implemented, inheriting ns3::NNNForwardingStrategy class
+	 * Other strategies can be implemented, inheriting ns3::ForwardingStrategy class
 	 */
 	void
-	SetNNNForwardingStrategy (const std::string &NNNForwardingStrategyClass,
+	SetForwardingStrategy (const std::string &ForwardingStrategyClass,
 			const std::string &attr1 = "", const std::string &value1 = "",
 			const std::string &attr2 = "", const std::string &value2 = "",
 			const std::string &attr3 = "", const std::string &value3 = "",
@@ -125,7 +127,7 @@ public:
 			const std::string &attr3 = "", const std::string &value3 = "",
 			const std::string &attr4 = "", const std::string &value4 = "");
 
-	typedef Callback< Ptr<NetDeviceFace>, Ptr<Node>, Ptr<NNNL3Protocol>, Ptr<NetDevice> > NetDeviceFaceCreateCallback;
+	typedef Callback< Ptr<NetDeviceFace>, Ptr<Node>, Ptr<L3Protocol>, Ptr<NetDevice> > NetDeviceFaceCreateCallback;
 
 	/**
 	 * @brief Add callback to create and configure instance of the face, based on supplied Ptr<Node> and Ptr<NetDevice>
@@ -221,7 +223,7 @@ void
 	InstallAll () const;
 
 	/**
-	 * \brief Add NNNForwarding entry to NNST
+	 * \brief Add Forwarding entry to NNST
 	 *
 	 * \param nodeName Node name
 	 * \param prefix Routing prefix
@@ -232,7 +234,7 @@ void
 	AddRoute (const std::string &nodeName, const std::string &prefix, uint32_t faceId, int32_t metric);
 
 	/**
-	 * \brief Add NNNForwarding entry to NNST
+	 * \brief Add Forwarding entry to NNST
 	 *
 	 * \param nodeName Node
 	 * \param prefix Routing prefix
@@ -243,7 +245,7 @@ void
 	AddRoute (Ptr<Node> node, const std::string &prefix, uint32_t faceId, int32_t metric);
 
 	/**
-	 * \brief Add NNNForwarding entry to NNST
+	 * \brief Add Forwarding entry to NNST
 	 *
 	 * \param node   Node
 	 * \param prefix Routing prefix
@@ -254,7 +256,7 @@ void
 	AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Face> face, int32_t metric);
 
 	/**
-	 * @brief Add NNNForwarding entry to NNST (work only with point-to-point links)
+	 * @brief Add Forwarding entry to NNST (work only with point-to-point links)
 	 *
 	 * \param node Node
 	 * \param prefix Routing prefix
@@ -265,7 +267,7 @@ void
 	AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Node> otherNode, int32_t metric);
 
 	/**
-	 * @brief Add NNNForwarding entry to NNST (work only with point-to-point links)
+	 * @brief Add Forwarding entry to NNST (work only with point-to-point links)
 	 *
 	 * \param nodeName Node name (refer to ns3::Names)
 	 * \param prefix Routing prefix
@@ -283,10 +285,10 @@ void
 
 private:
 	Ptr<NetDeviceFace>
-	DefaultNetDeviceCallback (Ptr<Node> node, Ptr<NNNL3Protocol> ndn, Ptr<NetDevice> netDevice) const;
+	DefaultNetDeviceCallback (Ptr<Node> node, Ptr<L3Protocol> ndn, Ptr<NetDevice> netDevice) const;
 
 	Ptr<NetDeviceFace>
-	PointToPointNetDeviceCallback (Ptr<Node> node, Ptr<NNNL3Protocol> ndn, Ptr<NetDevice> netDevice) const;
+	PointToPointNetDeviceCallback (Ptr<Node> node, Ptr<L3Protocol> ndn, Ptr<NetDevice> netDevice) const;
 
 private:
 	NNNStackHelper (const NNNStackHelper &);
@@ -306,6 +308,7 @@ private:
 	bool     m_needSetDefaultRoutes;
 
 	typedef std::list< std::pair<TypeId, NetDeviceFaceCreateCallback> > NetDeviceCallbackList;
+
 	NetDeviceCallbackList m_netDeviceCallbacks;
 };
 

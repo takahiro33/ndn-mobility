@@ -49,15 +49,15 @@
 
 #include "../model/fw/nnn-forwarding-strategy.h"
 
-NS_LOG_COMPONENT_DEFINE ("nnn.NNNStackHelper");
+NS_LOG_COMPONENT_DEFINE ("nnn.StackHelper");
 
 namespace ns3 {
 namespace nnn {
 
 NNNStackHelper::NNNStackHelper ()
 {
-  m_nnnFactory.         SetTypeId ("ns3::nnn::NNNL3Protocol");
-  m_nnnforwardingstrategyFactory.    SetTypeId ("ns3::nnn::fw::NNNForwardingStrategy");
+  m_nnnFactory.         SetTypeId ("ns3::nnn::L3Protocol");
+  m_nnnforwardingstrategyFactory.    SetTypeId ("ns3::nnn::fw::ForwardingStrategy");
   m_nnstFactory.         SetTypeId ("ns3::nnn::nnst::Default");
 
   m_netDeviceCallbacks.push_back (std::make_pair (PointToPointNetDevice::GetTypeId (), MakeCallback (&NNNStackHelper::PointToPointNetDeviceCallback, this)));
@@ -85,13 +85,13 @@ NNNStackHelper::SetStackAttributes (const std::string &attr1, const std::string 
 }
 
 void
-NNNStackHelper::SetNNNForwardingStrategy (const std::string &NNNForwardingStrategy,
+NNNStackHelper::SetForwardingStrategy (const std::string &ForwardingStrategy,
                                     const std::string &attr1, const std::string &value1,
                                     const std::string &attr2, const std::string &value2,
                                     const std::string &attr3, const std::string &value3,
                                     const std::string &attr4, const std::string &value4)
 {
-	m_nnnforwardingstrategyFactory.SetTypeId (NNNForwardingStrategy);
+	m_nnnforwardingstrategyFactory.SetTypeId (ForwardingStrategy);
   if (attr1 != "")
 	  m_nnnforwardingstrategyFactory.Set (attr1, StringValue (value1));
   if (attr2 != "")
@@ -150,15 +150,15 @@ NNNStackHelper::Install (Ptr<Node> node) const
   // NS_ASSERT_MSG (m_forwarding, "SetForwardingHelper() should be set prior calling Install() method");
   Ptr<FaceContainer> faces = Create<FaceContainer> ();
 
-  if (node->GetObject<NNNL3Protocol> () != 0)
+  if (node->GetObject<L3Protocol> () != 0)
     {
       NS_FATAL_ERROR ("NNNStackHelper::Install (): Installing "
                       "a NnnStack to a node with an existing Nnn object");
       return 0;
     }
 
-  // Create NNNL3Protocol
-  Ptr<NNNL3Protocol> nnn = m_nnnFactory.Create<NNNL3Protocol> ();
+  // Create L3Protocol
+  Ptr<L3Protocol> nnn = m_nnnFactory.Create<L3Protocol> ();
 
   // Create and aggregate NNST
   Ptr<Nnst> nnst = m_nnstFactory.Create<Nnst> ();
@@ -168,12 +168,12 @@ NNNStackHelper::Install (Ptr<Node> node) const
   //nnn->AggregateObject (m_pitFactory.Create<Pit> ());
 
   // Create and aggregate forwarding strategy
-  nnn->AggregateObject (m_nnnforwardingstrategyFactory.Create<NNNForwardingStrategy> ());
+  nnn->AggregateObject (m_nnnforwardingstrategyFactory.Create<ForwardingStrategy> ());
 
   // Create and aggregate content store
  // nnn->AggregateObject (m_contentStoreFactory.Create<ContentStore> ());
 
-  // Aggregate NNNL3Protocol on node
+  // Aggregate L3Protocol on node
   node->AggregateObject (nnn);
 
   for (uint32_t index=0; index < node->GetNDevices (); index++)
@@ -249,7 +249,7 @@ NNNStackHelper::RemoveNetDeviceFaceCreateCallback (TypeId netDeviceType, NetDevi
 }
 
 Ptr<NetDeviceFace>
-NNNStackHelper::DefaultNetDeviceCallback (Ptr<Node> node, Ptr<NNNL3Protocol> nnn, Ptr<NetDevice> netDevice) const
+NNNStackHelper::DefaultNetDeviceCallback (Ptr<Node> node, Ptr<L3Protocol> nnn, Ptr<NetDevice> netDevice) const
 {
   NS_LOG_DEBUG ("Creating default NetDeviceFace on node " << node->GetId ());
 
@@ -262,7 +262,7 @@ NNNStackHelper::DefaultNetDeviceCallback (Ptr<Node> node, Ptr<NNNL3Protocol> nnn
 }
 
 Ptr<NetDeviceFace>
-NNNStackHelper::PointToPointNetDeviceCallback (Ptr<Node> node, Ptr<NNNL3Protocol> nnn, Ptr<NetDevice> device) const
+NNNStackHelper::PointToPointNetDeviceCallback (Ptr<Node> node, Ptr<L3Protocol> nnn, Ptr<NetDevice> device) const
 {
   NS_LOG_DEBUG ("Creating point-to-point NetDeviceFace on node " << node->GetId ());
 
@@ -331,7 +331,7 @@ NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Face> f
 void
 NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, uint32_t faceId, int32_t metric)
 {
-  Ptr<NNNL3Protocol>     nnn = node->GetObject<NNNL3Protocol> ();
+  Ptr<L3Protocol>     nnn = node->GetObject<L3Protocol> ();
   NS_ASSERT_MSG (nnn != 0, "Nnn stack should be installed on the node");
 
   Ptr<Face> face = nnn->GetFace (faceId);
@@ -346,7 +346,7 @@ NNNStackHelper::AddRoute (const std::string &nodeName, const std::string &prefix
   Ptr<Node> node = Names::Find<Node> (nodeName);
   NS_ASSERT_MSG (node != 0, "Node [" << nodeName << "] does not exist");
 
-  Ptr<NNNL3Protocol>     nnn = node->GetObject<NNNL3Protocol> ();
+  Ptr<L3Protocol>     nnn = node->GetObject<L3Protocol> ();
   NS_ASSERT_MSG (nnn != 0, "nnn stack should be installed on the node");
 
   Ptr<Face> face = nnn->GetFace (faceId);
@@ -371,7 +371,7 @@ NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Node> o
       if (channel->GetDevice (0)->GetNode () == otherNode ||
           channel->GetDevice (1)->GetNode () == otherNode)
         {
-          Ptr<NNNL3Protocol> nnn = node->GetObject<NNNL3Protocol> ();
+          Ptr<L3Protocol> nnn = node->GetObject<L3Protocol> ();
           NS_ASSERT_MSG (nnn != 0, "Nnn stack should be installed on the node");
 
           Ptr<Face> face = nnn->GetFaceByNetDevice (netDevice);

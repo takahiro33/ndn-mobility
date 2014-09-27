@@ -42,7 +42,7 @@ NetDeviceFace::GetTypeId ()
 {
 	static TypeId tid = TypeId ("ns3::nnn::NetDeviceFace")
     		.SetParent<Face> ()
-    		.SetGroupName ("Nnn")
+    		.SetGroupName ("nnn")
     		;
 	return tid;
 }
@@ -90,7 +90,7 @@ NetDeviceFace::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const
 			ENHandler, AENHandler, RENHandler, INFHandler);
 
 	m_node->RegisterProtocolHandler (MakeCallback (&NetDeviceFace::ReceiveFromNetDevice, this),
-			NNNL3Protocol::ETHERNET_FRAME_TYPE, m_netDevice, true/*promiscuous mode*/);
+			L3Protocol::ETHERNET_FRAME_TYPE, m_netDevice, true/*promiscuous mode*/);
 }
 
 void
@@ -117,7 +117,7 @@ NetDeviceFace::Send (Ptr<Packet> packet)
 
 	// Here is where I think we can use anything other than broadcast
 	bool ok = m_netDevice->Send (packet, m_netDevice->GetBroadcast (),
-			NNNL3Protocol::ETHERNET_FRAME_TYPE);
+			L3Protocol::ETHERNET_FRAME_TYPE);
 	return ok;
 }
 

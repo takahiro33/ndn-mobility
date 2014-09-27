@@ -39,9 +39,9 @@
 //#include "ns3/nnn-pit.h"
 //#include "ns3/nnn-content-store.h"
 
-#include "../nnst/nnn-nnst.h"
 #include "../nnn-packets.h"
 #include "../nnn-face.h"
+#include "../nnst/nnn-nnst.h"
 
 //#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
 
@@ -50,72 +50,73 @@ namespace ll = boost::lambda;
 namespace ns3 {
 namespace nnn {
 
-NS_OBJECT_ENSURE_REGISTERED (NNNForwardingStrategy);
+NS_OBJECT_ENSURE_REGISTERED (ForwardingStrategy);
 
-NS_LOG_COMPONENT_DEFINE (NNNForwardingStrategy::GetLogName ().c_str ());
+NS_LOG_COMPONENT_DEFINE (ForwardingStrategy::GetLogName ().c_str ());
 
 std::string
-NNNForwardingStrategy::GetLogName ()
+ForwardingStrategy::GetLogName ()
 {
   return "nnn.fw";
 }
 
-TypeId NNNForwardingStrategy::GetTypeId (void)
+TypeId ForwardingStrategy::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::nnn::fw::NNNForwardingStrategy")
-    .SetGroupName ("Nnn")
+  static TypeId tid = TypeId ("ns3::nnn::fw::ForwardingStrategy")
+    .SetGroupName ("nnn")
     .SetParent<Object> ()
 
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 /*
-    .AddTraceSource ("OutSOs",  "OutSOs",  MakeTraceSourceAccessor (&NNNForwardingStrategy::m_outSOs))
-    .AddTraceSource ("InSOs",   "InSOs",   MakeTraceSourceAccessor (&NNNForwardingStrategy::m_inSOs))
-    .AddTraceSource ("DropSOs", "DropSOs", MakeTraceSourceAccessor (&NNNForwardingStrategy::m_dropSOs))
+    .AddTraceSource ("OutSOs",  "OutSOs",  MakeTraceSourceAccessor (&ForwardingStrategy::m_outSOs))
+    .AddTraceSource ("InSOs",   "InSOs",   MakeTraceSourceAccessor (&ForwardingStrategy::m_inSOs))
+    .AddTraceSource ("DropSOs", "DropSOs", MakeTraceSourceAccessor (&ForwardingStrategy::m_dropSOs))
 
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    .AddTraceSource ("OutDO",  "OutDO",  MakeTraceSourceAccessor (&NNNForwardingStrategy::m_outDO))
-    .AddTraceSource ("InDO",   "InDO",   MakeTraceSourceAccessor (&NNNForwardingStrategy::m_inDO))
-    .AddTraceSource ("DropDO", "DropDO", MakeTraceSourceAccessor (&NNNForwardingStrategy::m_dropDO))
+    .AddTraceSource ("OutDO",  "OutDO",  MakeTraceSourceAccessor (&ForwardingStrategy::m_outDO))
+    .AddTraceSource ("InDO",   "InDO",   MakeTraceSourceAccessor (&ForwardingStrategy::m_inDO))
+    .AddTraceSource ("DropDO", "DropDO", MakeTraceSourceAccessor (&ForwardingStrategy::m_dropDO))
 
     ////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
 
-    .AddTraceSource ("SatisfiedSOs",  "SatisfiedSOs",  MakeTraceSourceAccessor (&NNNForwardingStrategy::m_satisfiedSOs))
-    .AddTraceSource ("TimedOutSOs",   "TimedOutSOs",   MakeTraceSourceAccessor (&NNNForwardingStrategy::m_timedOutSOs))
+    .AddTraceSource ("SatisfiedSOs",  "SatisfiedSOs",  MakeTraceSourceAccessor (&ForwardingStrategy::m_satisfiedSOs))
+    .AddTraceSource ("TimedOutSOs",   "TimedOutSOs",   MakeTraceSourceAccessor (&ForwardingStrategy::m_timedOutSOs))
 
     .AddAttribute ("CacheUnsolicitedSOFromApps", "Cache unsolicited DO that has been pushed from applications",
                    BooleanValue (true),
-                   MakeBooleanAccessor (&NNNForwardingStrategy::m_cacheUnsolicitedDOFromApps),
+                   MakeBooleanAccessor (&ForwardingStrategy::m_cacheUnsolicitedDOFromApps),
                    MakeBooleanChecker ())
     
     .AddAttribute ("CacheUnsolicitedDO", "Cache overheard DO that have not been requested",
                    BooleanValue (false),
-                   MakeBooleanAccessor (&NNNForwardingStrategy::m_cacheUnsolicitedDO),
+                   MakeBooleanAccessor (&ForwardingStrategy::m_cacheUnsolicitedDO),
                    MakeBooleanChecker ())
 
     .AddAttribute ("DetectRetransmissions", "If non-duplicate SO is received on the same face more than once, "
                                             "it is considered a retransmission",
                    BooleanValue (true),
-                   MakeBooleanAccessor (&NNNForwardingStrategy::m_detectRetransmissions),
+                   MakeBooleanAccessor (&ForwardingStrategy::m_detectRetransmissions),
                    MakeBooleanChecker ())
     ;
 */
+    ;
   return tid;
 }
 
-NNNForwardingStrategy::NNNForwardingStrategy ()
+ForwardingStrategy::ForwardingStrategy ()
 {
 }
 
-NNNForwardingStrategy::~NNNForwardingStrategy ()
+ForwardingStrategy::~ForwardingStrategy ()
 {
 }
 
 void
-NNNForwardingStrategy::NotifyNewAggregate ()
+ForwardingStrategy::NotifyNewAggregate ()
 {
 /*  if (m_pit == 0)
     {
@@ -134,7 +135,7 @@ NNNForwardingStrategy::NotifyNewAggregate ()
 }
 
 void
-NNNForwardingStrategy::DoDispose ()
+ForwardingStrategy::DoDispose ()
 {
 //  m_pit = 0;
 //  m_contentStore = 0;
@@ -145,7 +146,7 @@ NNNForwardingStrategy::DoDispose ()
 
 /*
 void
-NNNForwardingStrategy::OnSO (Ptr<Face> inFace,
+ForwardingStrategy::OnSO (Ptr<Face> inFace,
                                 Ptr<SO> so_p)
 {
   NS_LOG_FUNCTION (inFace << so_p->GetName ());
@@ -192,6 +193,7 @@ NNNForwardingStrategy::OnSO (Ptr<Face> inFace,
         }
 
       pitEntry->AddIncoming (inFace/*, Seconds (1.0)*/);
+     */
 
       // Do data plane performance measurements
      // WillSatisfyPendingSO (0, pitEntry);
@@ -200,33 +202,32 @@ NNNForwardingStrategy::OnSO (Ptr<Face> inFace,
       //SatisfyPendingSO (0, contentObject, pitEntry);
      // return;
    // }
+//
+//  if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
+//    {
+//      pitEntry->AddIncoming (inFace/*, so->GetSOLifetime ()*/);
+//      // update PIT entry lifetime
+//      pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
+//
+//      // Suppress this SO if we're still expecting Data from some other face
+//      NS_LOG_DEBUG ("Suppress SOs");
+//      m_dropSOs (so_p, inFace);
+//
+//      DidSuppressSimilarSO (inFace, so_p, pitEntry);
+//      return;
+//    }
+//
+//  if (similarSO)
+//    {
+//      DidForwardSimilarSO (inFace, so_p, pitEntry);
+//    }
+//
+//  PropagateSO (inFace, so_p, pitEntry);
+//}
 
-
-  if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
-    {
-      pitEntry->AddIncoming (inFace/*, so->GetSOLifetime ()*/);
-      // update PIT entry lifetime
-      pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
-
-      // Suppress this SO if we're still expecting Data from some other face
-      NS_LOG_DEBUG ("Suppress SOs");
-      m_dropSOs (so_p, inFace);
-
-      DidSuppressSimilarSO (inFace, so_p, pitEntry);
-      return;
-    }
-
-  if (similarSO)
-    {
-      DidForwardSimilarSO (inFace, so_p, pitEntry);
-    }
-
-  PropagateSO (inFace, so_p, pitEntry);
-}
-*/
 /*
 void
-NNNForwardingStrategy::OnDO (Ptr<Face> inFace,
+ForwardingStrategy::OnDO (Ptr<Face> inFace,
                             Ptr<DO> do_p)
 {
   NS_LOG_FUNCTION (inFace << do_p->GetName ());
@@ -275,21 +276,21 @@ NNNForwardingStrategy::OnDO (Ptr<Face> inFace,
 }
 
 void
-NNNForwardingStrategy::DidCreatePitEntry (Ptr<Face> inFace,
+ForwardingStrategy::DidCreatePitEntry (Ptr<Face> inFace,
                                        Ptr<const SO> so_p,
                                        Ptr<pit::Entry> pitEntrypitEntry)
 {
 }
 
 void
-NNNForwardingStrategy::FailedToCreatePitEntry (Ptr<Face> inFace,
+ForwardingStrategy::FailedToCreatePitEntry (Ptr<Face> inFace,
                                             Ptr<const SO> so_p)
 {
   m_dropSOs (so_p, inFace);
 }
 
 void
-NNNForwardingStrategy::DidReceiveDuplicateSO (Ptr<Face> inFace,
+ForwardingStrategy::DidReceiveDuplicateSO (Ptr<Face> inFace,
                                                  Ptr<const SO> so_p,
                                                  Ptr<pit::Entry> pitEntry)
 {
@@ -304,13 +305,13 @@ NNNForwardingStrategy::DidReceiveDuplicateSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidSuppressSimilarSO (Ptr<Face> face,
+ForwardingStrategy::DidSuppressSimilarSO (Ptr<Face> face,
                                                 Ptr<const SO> so_p                                            Ptr<pit::Entry> pitEntry)
 {
 }
 
 void
-NNNForwardingStrategy::DidForwardSimilarSO (Ptr<Face> inFace,
+ForwardingStrategy::DidForwardSimilarSO (Ptr<Face> inFace,
                                                Ptr<const SO> so_p,
                                                Ptr<pit::Entry> pitEntry)
 {
@@ -318,7 +319,7 @@ NNNForwardingStrategy::DidForwardSimilarSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidExhaustForwardingOptions (Ptr<Face> inFace,
+ForwardingStrategy::DidExhaustForwardingOptions (Ptr<Face> inFace,
                                                  Ptr<const SO> so_p,
                                                  Ptr<pit::Entry> pitEntry)
 {
@@ -341,7 +342,7 @@ NNNForwardingStrategy::DidExhaustForwardingOptions (Ptr<Face> inFace,
 
 
 bool
-NNNForwardingStrategy::DetectRetransmittedSO (Ptr<Face> inFace,
+ForwardingStrategy::DetectRetransmittedSO (Ptr<Face> inFace,
                                                  Ptr<const SO> so_p                                             Ptr<pit::Entry> pitEntry)
 {
   pit::Entry::in_iterator existingInFace = pitEntry->GetIncoming ().find (inFace);
@@ -359,7 +360,7 @@ NNNForwardingStrategy::DetectRetransmittedSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
+ForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
                                             Ptr<const DO> do_p,
                                             Ptr<pit::Entry> pitEntry)
 {
@@ -393,7 +394,7 @@ NNNForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
+ForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
                                              Ptr<const DO> do_p,
                                              bool didCreateCacheEntry)
 {
@@ -402,7 +403,7 @@ NNNForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
+ForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
                                                Ptr<const DO> do_p,
                                                bool didCreateCacheEntry)
 {
@@ -411,7 +412,7 @@ NNNForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
+ForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
                                                 Ptr<pit::Entry> pitEntry)
 {
   pit::Entry::out_iterator out = pitEntry->GetOutgoing ().find (inFace);
@@ -427,7 +428,7 @@ NNNForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
 */
 /*
 bool
-NNNForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
+ForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
                                                     Ptr<const SO> so_p,
                                                     Ptr<pit::Entry> pitEntry)
 {
@@ -449,7 +450,7 @@ NNNForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
 
       // ?? not sure if we need to do that ?? ...
 
-      // pitEntry->GetNNSTEntry ()->UpdateStatus (inFace, NNST::FaceMetric::NNN_NNST_YELLOW);
+      // pitEntry->GetNNSTEntry ()->UpdateStatus (inFace, NNST::FaceMetric::_NNST_YELLOW);
     }
   else
     if (!isNew && !isRetransmitted)
@@ -462,7 +463,7 @@ NNNForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::PropagateSO (Ptr<Face> inFace,
+ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
                                        Ptr<const SO> so_p,
                                        Ptr<pit::Entry> pitEntry)
 {
@@ -491,9 +492,9 @@ NNNForwardingStrategy::PropagateSO (Ptr<Face> inFace,
   //     NS_LOG_DEBUG ("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
   //   }
 
-  // NNNForwardingStrategy will try its best to forward packet to at least one interface.
+  // ForwardingStrategy will try its best to forward packet to at least one interface.
   // If no so was propagated, then there is not other option for forwarding or
-  // NNNForwardingStrategy failed to find it.
+  // ForwardingStrategy failed to find it.
   if (!propagated && pitEntry->AreAllOutgoingInVain ())
     {
       DidExhaustForwardingOptions (inFace, so_p, pitEntry);
@@ -502,7 +503,7 @@ NNNForwardingStrategy::PropagateSO (Ptr<Face> inFace,
 */
 /*
 bool
-NNNForwardingStrategy::CanSendOutSO (Ptr<Face> inFace,
+ForwardingStrategy::CanSendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
                                         Ptr<const SO> so_p,
                                         Ptr<pit::Entry> pitEntry)
@@ -532,7 +533,7 @@ NNNForwardingStrategy::CanSendOutSO (Ptr<Face> inFace,
 */
 /*
 bool
-NNNForwardingStrategy::TrySendOutSO (Ptr<Face> inFace,
+ForwardingStrategy::TrySendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
                                         Ptr<const SO> so_p,
                                         Ptr<pit::Entry> pitEntry)
@@ -558,7 +559,7 @@ NNNForwardingStrategy::TrySendOutSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidSendOutSO (Ptr<Face> inFace,
+ForwardingStrategy::DidSendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
                                         Ptr<const SO> so_p,
                                         Ptr<pit::Entry> pitEntry)
@@ -568,7 +569,7 @@ NNNForwardingStrategy::DidSendOutSO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::DidSendOutDO (Ptr<Face> inFace,
+ForwardingStrategy::DidSendOutDO (Ptr<Face> inFace,
                                     Ptr<Face> outFace,
                                     Ptr<const DO> do_p,
                                     Ptr<pit::Entry> pitEntry)
@@ -578,34 +579,34 @@ NNNForwardingStrategy::DidSendOutDO (Ptr<Face> inFace,
 */
 /*
 void
-NNNForwardingStrategy::WillEraseTimedOutPendingSO (Ptr<pit::Entry> pitEntry)
+ForwardingStrategy::WillEraseTimedOutPendingSO (Ptr<pit::Entry> pitEntry)
 {
   m_timedOutSOs (pitEntry);
 }
 */
 void
-NNNForwardingStrategy::AddFace (Ptr<Face> face)
+ForwardingStrategy::AddFace (Ptr<Face> face)
 {
   // do nothing here
 }
 
 void
-NNNForwardingStrategy::RemoveFace (Ptr<Face> face)
+ForwardingStrategy::RemoveFace (Ptr<Face> face)
 {
   // do nothing here
 }
 
-void
-NNNForwardingStrategy::DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
-{
-  // do nothing here
-}
-
-void
-NNNForwardingStrategy::WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
-{
-  // do nothing here
-}
+//void
+//ForwardingStrategy::DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+//{
+//  // do nothing here
+//}
+//
+//void
+//ForwardingStrategy::WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+//{
+//  // do nothing here
+//}
 
 
 } // namespace nnn

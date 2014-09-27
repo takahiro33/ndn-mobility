@@ -143,7 +143,7 @@ protected:
 
 private:
 	L3Protocol (const L3Protocol  &); ///< copy constructor is disabled
-	L3Protocol  &operator = (const NNNL3Protocol  &); ///< copy operator is disabled
+	L3Protocol  &operator = (const L3Protocol  &); ///< copy operator is disabled
 
 private:
 	uint32_t m_faceCounter; ///< \brief counter of faces. Increased every time a new face is added to the stack

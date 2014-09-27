@@ -51,10 +51,10 @@ NS_OBJECT_ENSURE_REGISTERED (L3Protocol);
 TypeId
 L3Protocol::GetTypeId (void)
 {
-	static TypeId tid = TypeId ("ns3::nnn::NNNL3Protocol")
+	static TypeId tid = TypeId ("ns3::nnn::L3Protocol")
     		.SetGroupName ("nnn")
     		.SetParent<Object> ()
-    		.AddConstructor<NNNL3Protocol> ()
+    		.AddConstructor<L3Protocol> ()
     		.AddAttribute ("FaceList", "List of faces associated with nnn stack",
     				ObjectVectorValue (),
     				MakeObjectVectorAccessor (&L3Protocol::m_faces),
@@ -125,8 +125,15 @@ L3Protocol::AddFace (const Ptr<Face> &face)
 	face->SetId (m_faceCounter); // sets a unique ID of the face. This ID serves only informational purposes
 
 	// ask face to register in lower-layer stack
-	face->RegisterProtocolHandlers (MakeCallback (&ForwardingStrategy::OnSO, m_forwardingStrategy),
-			MakeCallback (&ForwardingStrategy::OnDO, m_forwardingStrategy));
+	face->RegisterProtocolHandlers (
+			MakeCallback (&ForwardingStrategy::OnNULLp, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnSO, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnDO, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnEN, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnAEN, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnREN, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnINF, m_forwardingStrategy)
+			);
 
 	m_faces.push_back (face);
 	m_faceCounter++;
