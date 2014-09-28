@@ -32,6 +32,7 @@
 
 namespace ns3 {
 namespace nnn {
+namespace nnst {
 
 //class NULLp;
 //typedef NULLp NULLpHeader;
@@ -61,38 +62,20 @@ public:
 
 	~NNST();
 
-	uint32_t
-	GetSize () const = 0;
-
-	Ptr<Entry>
-	GetPoA (NNNAddress &name);
-
-	Face
-	GetFace (NNNAddress &name);
-
-	void
-	AddNNN (NNNAddress &name, Mac48Address &mac, Face face);
-
-	void
-	RemoveNNN (NNNAddress &name);
-
-	static TypeId GetTypeId ();
-
+	virtual Ptr<Entry>
+	ClosestSector (const NNNAddress &interest);
 
 	virtual Ptr<Entry>
-	LongestPrefixMatch (const Interest &interest);
-
-	virtual Ptr<fib::Entry>
-	Find (const Name &prefix);
+	Find (const NNNAddress &prefix);
 
 	virtual Ptr<Entry>
-	Add (const Name &prefix, Ptr<Face> face, int32_t metric);
+	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
 
 	virtual Ptr<Entry>
-	Add (const Ptr<const Name> &prefix, Ptr<Face> face, int32_t metric);
+	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
 
 	virtual void
-	Remove (const Ptr<const Name> &prefix);
+	Remove (const Ptr<const NNNAddress> &prefix);
 
 	virtual void
 	InvalidateAll ();
@@ -135,16 +118,10 @@ private:
 	 * entry will be removed
 	 */
 	void
-	RemoveFace (super::parent_trie &item, Ptr<Face> face);
-
-private:
-	// Maintain the NNNAddress to Mac48Address mapping
-	std::multimap <NNNAddress, Mac48Address> m_nvp;
-	// At the same time, keep track of the names and their interfaces
-	std::multimap <Mac48Address, Face> m_nvf;
-
+	RemoveFace (Ptr<Face> face);
 };
 
+} /* namespace nnst */
 } /* namespace nnn */
 } /* namespace ns3 */
 

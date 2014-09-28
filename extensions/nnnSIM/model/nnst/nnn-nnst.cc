@@ -42,49 +42,7 @@ NNST::~NNST() {
 	// TODO Auto-generated destructor stub
 }
 
-uint32_t
-NNST::GetSize () const
-{
-	return m_nvp.size ();
-}
 
-Mac48Address
-NNST::GetPoA (NNNAddress &name)
-{
-
-}
-
-Face
-NNST::GetFace (NNNAddress &name)
-{
-	std::pair<std::multimap<NNNAddress, Face>::iterator,
-		std::multimap<NNNAddress,Face>::iterator> res;
-
-	res = m_nvp.equal_range(name);
-
-	if (res.first != res.second)
-	{
-		std::multimap<NNNAddress,Face>::iterator it = res.second;
-
-		return (*it).second;
-	} else
-	{
-
-	}
-}
-
-void
-NNST::AddNNN (NNNAddress &name, Mac48Address &mac, Face face)
-{
-	m_nvp.insert(std::pair <NNNAddress, Mac48Address> (name, mac));
-	m_nvf.insert(std::pair <NNNAddress, Face> (name, face));
-}
-
-void
-NNST::RemoveNNN (NNNAddress &name)
-{
-
-}
 
 } /* namespace nnst */
 } /* namespace nnn */
