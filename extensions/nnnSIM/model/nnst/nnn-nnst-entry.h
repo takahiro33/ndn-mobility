@@ -21,13 +21,13 @@
 #define NNN_NNST_ENTRY_H_
 
 #include <boost/multi_index_container.hpp>
-#include <boost/multi_index/tag.hpp>
-#include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/random_access_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/random_access_index.hpp>
+#include <boost/multi_index/tag.hpp>
 
 #include <ns3-dev/ns3/ptr.h>
 #include <ns3-dev/ns3/mac48-address.h>
@@ -38,6 +38,32 @@
 #include "../nnn-face.h"
 #include "../../helper/nnn-face-container.h"
 
+using namespace ::boost;
+using namespace ::boost::multi_index;
+
+template<class KeyExtractor1,class KeyExtractor2>
+struct key_from_key
+{
+public:
+	typedef typename KeyExtractor1::result_type result_type;
+
+	key_from_key(
+			const KeyExtractor1& key1_=KeyExtractor1(),
+			const KeyExtractor2& key2_=KeyExtractor2()):
+				key1(key1_),key2(key2_)
+	{}
+
+	template<typename Arg>
+	result_type operator()(Arg& arg)const
+	{
+		return key1(key2(arg));
+	}
+
+private:
+	KeyExtractor1 key1;
+	KeyExtractor2 key2;
+};
+
 namespace ns3 {
 namespace nnn {
 
@@ -45,6 +71,41 @@ class NNNAddress;
 class NNST;
 
 namespace nnst {
+
+class PoAMetric
+{
+public:
+
+	PoAMetric (Mac48Address mac, Ptr<Face> face)
+	: m_poa         (mac)
+	, m_face        (face)
+	, m_timesSeen     (0)
+	{
+	}
+
+	void
+	UpdateTS (int count)
+	{
+		m_timesSeen += count;
+	}
+
+	Ptr<Face>
+	GetFace () const { return m_face; }
+
+	uint32_t
+	TimesSeen () const
+	{
+		return m_timesSeen;
+	}
+
+	Mac48Address
+	GetPoA () const { return m_poa; }
+
+private:
+	Mac48Address m_poa; ///< Address
+	Ptr<Face> m_face; ///< Face
+	uint32_t m_timesSeen; ///< Times seen
+};
 
 class FaceMetric
 {
@@ -154,7 +215,6 @@ public:
 
 private:
 	Ptr<Face> m_face; ///< Face
-
 	TracedValue<Status> m_status; ///< \brief Status of next hop
 	Time m_sRtt;                   ///< \brief Round-trip time variation
 	Time m_rttVar;       ///< \brief round-trip time variation
@@ -165,6 +225,7 @@ private:
 class i_face {};
 class i_metric {};
 class i_nth {};
+class i_poa {};
 /// @endcond
 
 /**
@@ -177,34 +238,59 @@ class i_nth {};
  */
 struct FaceMetricContainer
 {
-  /// @cond include_hidden
-  typedef boost::multi_index::multi_index_container<
-    FaceMetric,
-    boost::multi_index::indexed_by<
-      // For fast access to elements using Face
-      boost::multi_index::ordered_unique<
-        boost::multi_index::tag<i_face>,
-        boost::multi_index::const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
-      >,
+	/// @cond include_hidden
+	typedef multi_index_container<
+			FaceMetric,
+			indexed_by<
+			// For fast access to elements using Face
+			ordered_unique<
+			tag<i_face>,
+			const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
+	>,
 
-      // List of available faces ordered by (status, m_routingCost)
-      boost::multi_index::ordered_non_unique<
-        boost::multi_index::tag<i_metric>,
-        boost::multi_index::composite_key<
-          FaceMetric,
-          boost::multi_index::const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
-          boost::multi_index::const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-        >
-      >,
+	// List of available faces ordered by (status, m_routingCost)
+	ordered_non_unique<
+	tag<i_metric>,
+	composite_key<
+	FaceMetric,
+	const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
+	const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+	>
+	>,
 
-      // To optimize nth candidate selection (sacrifice a little bit space to gain speed)
-      boost::multi_index::random_access<
-        boost::multi_index::tag<i_nth>
-      >
-    >
-   > type;
-  /// @endcond
+	// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
+	random_access<
+	tag<i_nth>
+	>
+	>
+	> typeFace;
+	/// @endcond
 };
+
+struct PoAMetricContainer
+{
+	typedef multi_index_container<
+		PoAMetric,
+			indexed_by<
+				ordered_unique<
+					tag<i_poa>,
+					const_mem_fun<PoAMetric,Mac48Address,&PoAMetric::GetPoA>
+				>,
+				ordered_non_unique<
+					key_from_key<
+						member<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>,
+						member<PoAMetric,Ptr<Face>,&PoAMetric::GetFace>
+					>
+				>,
+				ordered_non_unique<
+					tag<i_metric>,
+					member<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+				>
+			>
+		> typePoa;
+
+};
+
 
 class Entry : public SimpleRefCount<Entry>
 {
@@ -213,19 +299,14 @@ public:
 
 	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name);
 
+	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name, Ptr<const Mac48Address> &poa);
+
 	virtual ~Entry();
 
-	uint32_t
-	GetSize () const;
+	void UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
 
 	void
 	Invalidate ();
-
-	Ptr<Entry>
-	SignatureMatch (const Mac48Address &poa);
-
-	Ptr<Entry>
-	NNMatch (const NNNAddress &name);
 
 	const NNNAddress&
 	GetSector () const { return m_name; }
@@ -246,11 +327,9 @@ public:
 	GetNNST ();
 
 public:
-
 	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
 	Ptr<const NNNAddress> m_name; ///< \brief Name recorded in NNST
-	std::list<Ptr<const Mac48Address> > m_poas; ///< \brief List of PoA Addresses linked to a Name
-	FaceMetricContainer::type m_faces;
+	FaceMetricContainer::typeFace m_faces;
 
 };
 

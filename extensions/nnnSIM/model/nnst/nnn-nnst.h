@@ -20,7 +20,17 @@
 #ifndef NNN_NNST_H_
 #define NNN_NNST_H_
 
-#include <map>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/tag.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/composite_key.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/random_access_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/mem_fun.hpp>
+
+using namespace ::boost;
+using namespace ::boost::multi_index;
 
 #include <ns3-dev/ns3/event-id.h>
 #include <ns3-dev/ns3/node.h>
@@ -33,6 +43,13 @@
 namespace ns3 {
 namespace nnn {
 namespace nnst {
+
+class i_face {};
+class i_metric {};
+class i_nth {};
+class i_name{};
+
+class L3Protocol;
 
 //class NULLp;
 //typedef NULLp NULLpHeader;
@@ -64,6 +81,9 @@ public:
 
 	virtual Ptr<Entry>
 	ClosestSector (const NNNAddress &interest);
+
+	Ptr<Entry>
+	SignatureMatch (const Mac48Address &poa);
 
 	virtual Ptr<Entry>
 	Find (const NNNAddress &prefix);
@@ -107,6 +127,12 @@ public:
 	virtual Ptr<Entry>
 	Next (Ptr<Entry> item);
 
+	virtual uint32_t
+	GetSize () const = 0;
+
+	Ptr<NNST>
+	GetNNST (Ptr<Object> node);
+
 protected:
 	// inherited from Object class
 	virtual void NotifyNewAggregate (); ///< @brief Notify when object is aggregated
@@ -120,6 +146,12 @@ private:
 	void
 	RemoveFace (Ptr<Face> face);
 };
+
+Ptr<NNST>
+NNST::GetNNST (Ptr<Object> node)
+{
+	return node->GetObject<NNST> ();
+}
 
 } /* namespace nnst */
 } /* namespace nnn */

@@ -68,6 +68,19 @@ FaceMetric::UpdateRtt (const Time &rttSample)
 	}
 }
 
+Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
+	: m_nnst        (nnst)
+	, m_name        (name)
+{
+
+}
+
+Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name, Ptr<const Mac48Address> &poa)
+  : m_nnst        (nnst)
+  , m_name        (name)
+{
+}
+
 void
 Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
 {
@@ -99,25 +112,51 @@ Entry::Invalidate ()
     }
 }
 
-Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
-	: m_nnst        (nnst)
-	, m_name        (name)
-	, m_poas        (std::list<Ptr<const Mac48Address> > ())
-{
-
-}
-
 Entry::~Entry() {
 	// TODO Auto-generated destructor stub
 }
+
+void
+Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
+{
+	NS_LOG_FUNCTION (this << boost::cref(*face) << status);
+
+	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
+	if (record == m_faces.get<i_face> ().end ())
+	{
+		return;
+	}
+
+	m_faces.modify (record,
+			ll::bind (&FaceMetric::SetStatus, ll::_1, status));
+
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+}
+
+void
+Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
+{
+	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
+	if (record == m_faces.get<i_face> ().end ())
+	{
+		return;
+	}
+
+	m_faces.modify (record,
+			ll::bind (&FaceMetric::UpdateRtt, ll::_1, sample));
+
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+}
+
+
 
 Ptr<NNST>
 Entry::GetNNST ()
 {
 	return m_nnst;
 }
-
-
 
 } /* namespace nnst */
 } /* namespace nnn */
