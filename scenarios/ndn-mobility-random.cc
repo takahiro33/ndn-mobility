@@ -146,6 +146,8 @@ int main (int argc, char *argv[])
 	char posFile[250] = "./Data/rand-hex.txt";    // File including the positioning of the nodes
 	double endTime = 800;                         // Number of seconds to run the simulation
 	double MBps = 0.15;                           // MB/s data rate desired for applications
+						      // 0.15 MB/s equals to 1.2 Mb/s which is the bitrate for
+						      // 480p livestream video according to Adobe
 	int contentSize = -1;                         // Size of content to be retrieved
 	int maxSeq = -1;                              // Maximum number of Data packets to request
 	double retxtime = 0.05;                       // How frequent Interest retransmission timeouts should be checked (seconds)
