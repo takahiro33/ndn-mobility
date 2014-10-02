@@ -23,9 +23,13 @@
 
 #include <iostream>
 
-#include <ns3-dev/ns3/simple-ref-count.h>
+
+#include <ns3-dev/ns3/address.h>
+#include <ns3-dev/ns3/assert.h>
+#include <ns3-dev/ns3/buffer.h>
 #include <ns3-dev/ns3/attribute.h>
 #include <ns3-dev/ns3/attribute-helper.h>
+#include <ns3-dev/ns3/simple-ref-count.h>
 
 #include "../nnn-common.h"
 #include "name-component.h"
@@ -305,6 +309,14 @@ public:
 	NNNAddress
 	operator + (const NNNAddress &name) const;
 
+	static uint8_t
+	GetType (void);
+
+	Address
+	ConvertTo (void) const;
+
+	NNNAddress
+	ConvertFrom (const Address &address);
 
 public:
 	// Data Members (public):

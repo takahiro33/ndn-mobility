@@ -26,6 +26,8 @@
 #include "nnn-address.h"
 #include "error.h"
 
+#include "../wire/wire-nnnsim.h"
+
 using namespace std;
 
 NNN_NAMESPACE_BEGIN
@@ -273,6 +275,61 @@ inline size_t
 NNNAddress::size () const
 {
   return m_address_comp.size ();
+}
+
+uint8_t
+NNNAddress::GetType (void)
+{
+	static uint8_t type = Address::Register () ;
+	return type;
+}
+
+Address
+NNNAddress::ConvertTo (void) const
+{
+	// We use the functions existing in Wire to Serialize and pass to Address
+	Buffer buf;
+	size_t nameBytes = wire::NnnSim::SerializedSizeName(*this);
+	buf.AddAtStart(nameBytes);
+	// Create a uint8_t array, required by Address
+	uint8_t namebuf[nameBytes];
+	// Begin the buffer iterator
+	Buffer::Iterator i = buf.Begin ();
+
+	// Serialize it to our buffer
+	wire::NnnSim::SerializeName (i, *this);
+
+	i.Write (namebuf, nameBytes);
+
+	return Address(GetType (), namebuf, nameBytes);
+}
+
+NNNAddress
+NNNAddress::ConvertFrom (const Address &address)
+{
+
+	// Get the length of the address
+	uint8_t len = address.GetLength ();
+
+	// Create a 8 bit array of the length obtained
+	uint8_t namebuf[len];
+
+	// Copy the address information to the array
+	address.CopyTo(namebuf);
+
+
+	// Create a Buffer class
+	Buffer buf;
+	buf.AddAtStart(len);
+
+	Buffer::Iterator i = buf.Begin ();
+	// Read the array into the Buffer class
+	i.Read(namebuf, len);
+
+	// Deserialize the information
+	Ptr<NNNAddress> tmp = wire::NnnSim::DeserializeName(i);
+
+	return NNNAddress(tmp->toDotHex());
 }
 
 NNN_NAMESPACE_END
