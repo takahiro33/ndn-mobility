@@ -21,9 +21,9 @@
 #include <boost/lambda/bind.hpp>
 namespace ll = boost::lambda;
 
-#define NDN_RTO_ALPHA 0.125
-#define NDN_RTO_BETA 0.25
-#define NDN_RTO_K 4
+#define NNN_RTO_ALPHA 0.125
+#define NNN_RTO_BETA 0.25
+#define NNN_RTO_K 4
 
 #include <ns3-dev/ns3/log.h>
 #include <ns3-dev/ns3/node.h>
@@ -42,8 +42,7 @@ namespace nnst {
 
 struct FaceMetricByFace
 {
-	typedef FaceMetricContainer::type::index<i_face>::type
-			type;
+	typedef FaceMetricContainer::type::index<i_face>::type type;
 };
 
 
@@ -63,61 +62,14 @@ FaceMetric::UpdateRtt (const Time &rttSample)
 	}
 	else
 	{
-		m_rttVar = Time ((1 - NDN_RTO_BETA) * m_rttVar + 1.0 * NDN_RTO_BETA * Abs(m_sRtt - rttSample));
-		m_sRtt = Time ((1 - NDN_RTO_ALPHA) * m_sRtt + 1.0 * NDN_RTO_ALPHA * rttSample);
+		m_rttVar = Time ((1 - NNN_RTO_BETA) * m_rttVar + 1.0 * NNN_RTO_BETA * Abs(m_sRtt - rttSample));
+		m_sRtt = Time ((1 - NNN_RTO_ALPHA) * m_sRtt + 1.0 * NNN_RTO_ALPHA * rttSample);
 	}
 }
 
-Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
-	: m_nnst        (nnst)
-	, m_name        (name)
-{
-
-}
-
-Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name, Ptr<const Mac48Address> &poa)
-  : m_nnst        (nnst)
-  , m_name        (name)
-{
-}
-
+///////////////////////////////////////////////////////////////////////////////
 void
-Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
-{
-	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
-	if (record == m_faces.get<i_face> ().end ())
-	{
-		return;
-	}
-
-	m_faces.modify (record,
-			ll::bind (&FaceMetric::UpdateRtt, ll::_1, sample));
-
-	// reordering random access index same way as by metric index
-	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
-}
-
-void
-Entry::Invalidate ()
-{
-  for (FaceMetricByFace::type::iterator face = m_faces.begin ();
-       face != m_faces.end ();
-       face++)
-    {
-      m_faces.modify (face,
-                      ll::bind (&FaceMetric::SetRoutingCost, ll::_1, std::numeric_limits<uint16_t>::max ()));
-
-      m_faces.modify (face,
-                      ll::bind (&FaceMetric::SetStatus, ll::_1, FaceMetric::NNN_NNST_RED));
-    }
-}
-
-Entry::~Entry() {
-	// TODO Auto-generated destructor stub
-}
-
-void
-Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
+NNNEntry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 {
 	NS_LOG_FUNCTION (this << boost::cref(*face) << status);
 
@@ -135,7 +87,22 @@ Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 }
 
 void
-Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
+NNNEntry::Invalidate ()
+{
+	for (FaceMetricByFace::type::iterator face = m_faces.begin ();
+			face != m_faces.end ();
+			face++)
+	{
+		m_faces.modify (face,
+				ll::bind (&FaceMetric::SetRoutingCost, ll::_1, std::numeric_limits<uint16_t>::max ()));
+
+		m_faces.modify (face,
+				ll::bind (&FaceMetric::SetStatus, ll::_1, FaceMetric::NNN_NNST_RED));
+	}
+}
+
+void
+NNNEntry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
 {
 	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
 	if (record == m_faces.get<i_face> ().end ())
@@ -150,13 +117,22 @@ Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
 	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
 }
 
-
-
-Ptr<NNST>
-Entry::GetNNST ()
+const FaceMetric &
+NNNEntry::FindBestCandidate (uint32_t skip/* = 0*/) const
 {
-	return m_nnst;
+	if (m_faces.size () == 0) throw NNNEntry::NoFaces ();
+	skip = skip % m_faces.size();
+	return m_faces.get<i_nth> () [skip];
 }
+
+void
+NNNEntry::AddPoa (Address address)
+{
+	Ptr<PoAEntry> poa_ent = Create<PoAEntry> (m_nnst, address);
+
+	m_poa_addrs.push_back(poa_ent);
+}
+
 
 } /* namespace nnst */
 } /* namespace nnn */

@@ -72,41 +72,6 @@ class NNST;
 
 namespace nnst {
 
-class PoAMetric
-{
-public:
-
-	PoAMetric (Mac48Address mac, Ptr<Face> face)
-	: m_poa         (mac)
-	, m_face        (face)
-	, m_timesSeen     (0)
-	{
-	}
-
-	void
-	UpdateTS (int count)
-	{
-		m_timesSeen += count;
-	}
-
-	Ptr<Face>
-	GetFace () const { return m_face; }
-
-	uint32_t
-	TimesSeen () const
-	{
-		return m_timesSeen;
-	}
-
-	Mac48Address
-	GetPoA () const { return m_poa; }
-
-private:
-	Mac48Address m_poa; ///< Address
-	Ptr<Face> m_face; ///< Face
-	uint32_t m_timesSeen; ///< Times seen
-};
-
 class FaceMetric
 {
 public:
@@ -175,20 +140,6 @@ public:
 	}
 
 	/**
-	 * @brief Invalidate face
-	 *
-	 * Set routing metric on all faces to max and status to RED
-	 */
-	void
-	Invalidate ();
-
-	/**
-	 * @brief Update RTT averages for the face
-	 */
-	void
-	UpdateFaceRtt (Ptr<Face> face, const Time &sample);
-
-	/**
 	 * @brief Get current estimate for smoothed RTT value
 	 */
 	Time
@@ -225,7 +176,6 @@ private:
 class i_face {};
 class i_metric {};
 class i_nth {};
-class i_poa {};
 /// @endcond
 
 /**
@@ -242,53 +192,29 @@ struct FaceMetricContainer
 	typedef multi_index_container<
 			FaceMetric,
 			indexed_by<
-			// For fast access to elements using Face
-			ordered_unique<
-			tag<i_face>,
-			const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
-	>,
-
-	// List of available faces ordered by (status, m_routingCost)
-	ordered_non_unique<
-	tag<i_metric>,
-	composite_key<
-	FaceMetric,
-	const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
-	const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-	>
-	>,
-
-	// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
-	random_access<
-	tag<i_nth>
-	>
-	>
-	> typeFace;
-	/// @endcond
-};
-
-struct PoAMetricContainer
-{
-	typedef multi_index_container<
-		PoAMetric,
-			indexed_by<
+				// For fast access to elements using Face
 				ordered_unique<
-					tag<i_poa>,
-					const_mem_fun<PoAMetric,Mac48Address,&PoAMetric::GetPoA>
-				>,
-				ordered_non_unique<
-					key_from_key<
-						member<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>,
-						member<PoAMetric,Ptr<Face>,&PoAMetric::GetFace>
-					>
-				>,
-				ordered_non_unique<
-					tag<i_metric>,
-					member<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-				>
-			>
-		> typePoa;
+				tag<i_face>,
+				const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
+			>,
 
+			// List of available faces ordered by (status, m_routingCost)
+			ordered_non_unique<
+				tag<i_metric>,
+				composite_key<
+					FaceMetric,
+					const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
+					const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+				>
+			>,
+
+			// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
+			random_access<
+				tag<i_nth>
+			>
+		>
+	> type;
+	/// @endcond
 };
 
 
@@ -297,25 +223,50 @@ class Entry : public SimpleRefCount<Entry>
 public:
 	Entry();
 
-	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name);
-
-	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name, Ptr<const Mac48Address> &poa);
+	Entry(Ptr<NNST> nnst, const Ptr<const Address> &name)
+	  : m_nnst        (nnst)
+	  , m_address     (name)
+	{
+	}
 
 	virtual ~Entry();
 
-	void UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
+	Ptr<NNST>
+	GetNNST ()
+	{
+		return m_nnst;
+	}
+
+	Ptr<Address>
+	GetAddress ()
+	{
+		return m_address;
+	}
+
+private:
+	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
+	Ptr<Address> m_address;       ///< \brief Address used for the NNST Entry
+};
+
+class PoAEntry : public Entry
+{
+};
+
+class NNNEntry : public Entry
+{
+	class NoFaces {};
+
+	void
+	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
 
 	void
 	Invalidate ();
 
-	const NNNAddress&
-	GetSector () const { return m_name; }
-
-	/**
-	 * @brief Update RTT averages for the face
-	 */
 	void
 	UpdateFaceRtt (Ptr<Face> face, const Time &sample);
+
+	const FaceMetric &
+	FindBestCandidate (uint32_t skip = 0) const;
 
 	void
 	RemoveFace (const Ptr<Face> &face)
@@ -323,15 +274,27 @@ public:
 		m_faces.erase (face);
 	}
 
-	Ptr<NNST>
-	GetNNST ();
+	void
+	AddPoa (Address address);
 
-public:
-	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
-	Ptr<const NNNAddress> m_name; ///< \brief Name recorded in NNST
-	FaceMetricContainer::typeFace m_faces;
+	std::vector<Ptr<PoAEntry> >
+	GetPoas ()
+	{
+		return m_poa_addrs;
+	}
 
+	size_t
+	GetPoasN ()
+	{
+		return m_poa_addrs.size ();
+	}
+
+private:
+	std::vector<Ptr<PoAEntry> > m_poa_addrs;
+	FaceMetricContainer::type m_faces;
 };
+
+
 
 } /* namespace nnst */
 } /* namespace nnn */
