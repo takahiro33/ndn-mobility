@@ -33,21 +33,20 @@ using namespace ::boost;
 using namespace ::boost::multi_index;
 
 #include <ns3-dev/ns3/event-id.h>
+#include <ns3-dev/ns3/log.h>
 #include <ns3-dev/ns3/node.h>
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/object.h>
 
+#include "nnn-nnst-entry.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
+#include "../../utils/trie/trie.h"
+#include "../../utils/trie/counting-policy.h"
 
 namespace ns3 {
 namespace nnn {
 namespace nnst {
-
-class i_face {};
-class i_metric {};
-class i_nth {};
-class i_name{};
 
 class L3Protocol;
 
@@ -70,8 +69,16 @@ class L3Protocol;
  * @ingroup nnn
  * @defgroup nnn NNST
  */
-class NNST {
+class NNST : public Object,
+				protected nnnSIM::trie_with_policy<NNNAddress,
+								nnnSIM::smart_pointer_payload_traits<Entry>,
+								nnnSIM::counting_policy_traits>
+{
 public:
+
+	typedef nnnSIM::trie_with_policy<NNNAddress,
+			nnnSIM::smart_pointer_payload_traits<Entry>,
+			nnnSIM::counting_policy_traits > super;
 
 	static TypeId GetTypeId ();
 
@@ -79,55 +86,58 @@ public:
 
 	~NNST();
 
-	virtual Ptr<Entry>
-	ClosestSector (const NNNAddress &interest);
+	Ptr<Entry>
+	ClosestSector (const NNNAddress &nnnaddr);
 
 	Ptr<Entry>
-	SignatureMatch (const Mac48Address &poa);
+	SignatureMatch (const Address &poa);
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	Find (const NNNAddress &prefix);
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
 
-	virtual void
+	void
 	Remove (const Ptr<const NNNAddress> &prefix);
 
-	virtual void
+	void
 	InvalidateAll ();
 
-	virtual void
+	void
+	RemoveFace ();
+
+	void
 	RemoveFromAll (Ptr<Face> face);
 
-	virtual void
+	void
 	Print (std::ostream &os) const;
 
-	virtual uint32_t
+	uint32_t
 	GetSize () const;
 
 	virtual Ptr<const Entry>
 	Begin () const;
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	Begin ();
 
-	virtual Ptr<const Entry>
+	Ptr<const Entry>
 	End () const;
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	End ();
 
-	virtual Ptr<const Entry>
+	Ptr<const Entry>
 	Next (Ptr<const Entry> item) const;
 
-	virtual Ptr<Entry>
+	Ptr<Entry>
 	Next (Ptr<Entry> item);
 
-	virtual uint32_t
+	uint32_t
 	GetSize () const = 0;
 
 	Ptr<NNST>
@@ -144,7 +154,7 @@ private:
 	 * entry will be removed
 	 */
 	void
-	RemoveFace (Ptr<Face> face);
+	RemoveFace (super::parent_trie &item, Ptr<Face> face);
 };
 
 Ptr<NNST>

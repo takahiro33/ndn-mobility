@@ -52,12 +52,10 @@ class AEN;
 class REN;
 class INF;
 
-//class Pit;
-//namespace pit { class Entry; }
 class NNSTFaceMetric;
 class NNST;
 namespace nnst { class Entry; }
-//class ContentStore;
+namespace nnpt { class Entry; }
 
 /**
  * @ingroup nnn-fw
@@ -180,19 +178,33 @@ public:
 	virtual void
 	RemoveFace (Ptr<Face> face);
 
-//	/**
-//	 * @brief Event fired every time a NNST entry is added to NNST
-//	 * @param NNSTEntry NNST entry that was added
-//	 */
-//	virtual void
-//	DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry);
-//
-//	/**
-//	 * @brief Fired just before NNST entry will be removed from NNST
-//	 * @param nnstEntry NNST entry that will be removed
-//	 */
-//	virtual void
-//	WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry);
+	/**
+	 * @brief Event fired every time a NNST entry is added to NNST
+	 * @param NNSTEntry NNST entry that was added
+	 */
+	virtual void
+	DidAddNNSTEntry (Ptr<nnst::Entry> NNSTEntry);
+
+	/**
+	 * @brief Fired just before NNST entry will be removed from NNST
+	 * @param NNSTEntry NNST entry that will be removed
+	 */
+	virtual void
+	WillRemoveNNSTEntry (Ptr<nnst::Entry> NNSTEntry);
+
+	/**
+	 * @brief Event fired every time a NNPT entry is added to NNPT
+	 * @param NNPTEntry NNPT entry that was added
+	 */
+	virtual void
+	DidAddNNPTEntry (Ptr<nnpt::Entry> NNPTEntry);
+
+	/**
+	 * @brief Fired just before NNPT entry will be removed from NNST
+	 * @param NNPTEntry NNPT entry that will be removed
+	 */
+	virtual void
+	WillRemoveNNPTEntry (Ptr<nnpt::Entry> NNPTEntry);
 
 protected:
 	/**

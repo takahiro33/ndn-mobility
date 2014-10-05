@@ -69,7 +69,7 @@ FaceMetric::UpdateRtt (const Time &rttSample)
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-NNNEntry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
+Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 {
 	NS_LOG_FUNCTION (this << boost::cref(*face) << status);
 
@@ -87,7 +87,35 @@ NNNEntry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 }
 
 void
-NNNEntry::Invalidate ()
+Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric)
+{
+	NS_LOG_FUNCTION (this);
+	NS_ASSERT_MSG (face != NULL, "Trying to Add or Update NULL face");
+
+	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
+	if (record == m_faces.get<i_face> ().end ())
+	{
+		m_faces.insert (FaceMetric (face, metric));
+	}
+	else
+	{
+		// don't update metric to higher value
+		if (record->GetRoutingCost () > metric || record->GetStatus () == FaceMetric::NNN_NNST_RED)
+		{
+			m_faces.modify (record,
+					ll::bind (&FaceMetric::SetRoutingCost, ll::_1, metric));
+
+			m_faces.modify (record,
+					ll::bind (&FaceMetric::SetStatus, ll::_1, FaceMetric::NNN_NNST_YELLOW));
+		}
+	}
+
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+}
+
+void
+Entry::Invalidate ()
 {
 	for (FaceMetricByFace::type::iterator face = m_faces.begin ();
 			face != m_faces.end ();
@@ -102,7 +130,7 @@ NNNEntry::Invalidate ()
 }
 
 void
-NNNEntry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
+Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
 {
 	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
 	if (record == m_faces.get<i_face> ().end ())
@@ -118,19 +146,18 @@ NNNEntry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
 }
 
 const FaceMetric &
-NNNEntry::FindBestCandidate (uint32_t skip/* = 0*/) const
+Entry::FindBestCandidate (uint32_t skip/* = 0*/) const
 {
-	if (m_faces.size () == 0) throw NNNEntry::NoFaces ();
+	if (m_faces.size () == 0) throw Entry::NoFaces ();
 	skip = skip % m_faces.size();
 	return m_faces.get<i_nth> () [skip];
 }
 
 void
-NNNEntry::AddPoa (Address address)
+Entry::AddPoa (Address address)
 {
-	Ptr<PoAEntry> poa_ent = Create<PoAEntry> (m_nnst, address);
-
-	m_poa_addrs.push_back(poa_ent);
+	Ptr<Address> addr = Create<Address> (address);
+	m_poa_addrs.push_back(addr);
 }
 
 

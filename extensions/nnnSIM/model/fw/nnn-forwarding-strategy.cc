@@ -1,22 +1,23 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil -*- */
+/* -*- Mode:C++; c-file-style:"gnu" -*- */
 /*
- * Copyright (c) 2011 University of California, Los Angeles
+ * Copyright 2014 Waseda University, Sato Laboratory
+ *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
+ *   Original template by University of California written by
+ *   Alexander Afanasyev <alexander.afanasyev@ucla.edu>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  nnn-forwarding-strategy.cc is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  nnn-forwarding-strategy.cc is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero Public License for more details.
  *
- * Author:  Alexander Afanasyev <alexander.afanasyev@ucla.edu>
- *          Ilya Moiseenko <iliamo@cs.ucla.edu>
+ *  You should have received a copy of the GNU Affero Public License
+ *  along with nnn-forwarding-strategy.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <boost/ref.hpp>
@@ -57,18 +58,18 @@ NS_LOG_COMPONENT_DEFINE (ForwardingStrategy::GetLogName ().c_str ());
 std::string
 ForwardingStrategy::GetLogName ()
 {
-  return "nnn.fw";
+	return "nnn.fw";
 }
 
 TypeId ForwardingStrategy::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::nnn::fw::ForwardingStrategy")
-    .SetGroupName ("nnn")
-    .SetParent<Object> ()
+	static TypeId tid = TypeId ("ns3::nnn::fw::ForwardingStrategy")
+    		.SetGroupName ("nnn")
+    		.SetParent<Object> ()
 
-    ////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-/*
+    		////////////////////////////////////////////////////////////////////
+    		////////////////////////////////////////////////////////////////////
+    		/*
     .AddTraceSource ("OutSOs",  "OutSOs",  MakeTraceSourceAccessor (&ForwardingStrategy::m_outSOs))
     .AddTraceSource ("InSOs",   "InSOs",   MakeTraceSourceAccessor (&ForwardingStrategy::m_inSOs))
     .AddTraceSource ("DropSOs", "DropSOs", MakeTraceSourceAccessor (&ForwardingStrategy::m_dropSOs))
@@ -90,7 +91,7 @@ TypeId ForwardingStrategy::GetTypeId (void)
                    BooleanValue (true),
                    MakeBooleanAccessor (&ForwardingStrategy::m_cacheUnsolicitedDOFromApps),
                    MakeBooleanChecker ())
-    
+
     .AddAttribute ("CacheUnsolicitedDO", "Cache overheard DO that have not been requested",
                    BooleanValue (false),
                    MakeBooleanAccessor (&ForwardingStrategy::m_cacheUnsolicitedDO),
@@ -102,9 +103,9 @@ TypeId ForwardingStrategy::GetTypeId (void)
                    MakeBooleanAccessor (&ForwardingStrategy::m_detectRetransmissions),
                    MakeBooleanChecker ())
     ;
-*/
-    ;
-  return tid;
+    		 */
+    		;
+	return tid;
 }
 
 ForwardingStrategy::ForwardingStrategy ()
@@ -118,30 +119,30 @@ ForwardingStrategy::~ForwardingStrategy ()
 void
 ForwardingStrategy::NotifyNewAggregate ()
 {
-/*  if (m_pit == 0)
+	/*  if (m_pit == 0)
     {
       m_pit = GetObject<Pit> ();
     }*/
-  if (m_nnst == 0)
-    {
-      m_nnst = GetObject<NNST> ();
-    }
-/*  if (m_contentStore == 0)
+	if (m_nnst == 0)
+	{
+		m_nnst = GetObject<NNST> ();
+	}
+	/*  if (m_contentStore == 0)
     {
       m_contentStore = GetObject<ContentStore> ();
     }*/
 
-  Object::NotifyNewAggregate ();
+	Object::NotifyNewAggregate ();
 }
 
 void
 ForwardingStrategy::DoDispose ()
 {
-//  m_pit = 0;
-//  m_contentStore = 0;
-  m_nnst = 0;
+	//  m_pit = 0;
+	//  m_contentStore = 0;
+	m_nnst = 0;
 
-  Object::DoDispose ();
+	Object::DoDispose ();
 }
 
 /*
@@ -193,39 +194,39 @@ ForwardingStrategy::OnSO (Ptr<Face> inFace,
         }
 
       pitEntry->AddIncoming (inFace/*, Seconds (1.0)*/);
-     */
+      */
 
       // Do data plane performance measurements
-     // WillSatisfyPendingSO (0, pitEntry);
+      // WillSatisfyPendingSO (0, pitEntry);
 
       // Actually satisfy pending SO
       //SatisfyPendingSO (0, contentObject, pitEntry);
-     // return;
-   // }
-//
-//  if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
-//    {
-//      pitEntry->AddIncoming (inFace/*, so->GetSOLifetime ()*/);
-//      // update PIT entry lifetime
-//      pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
-//
-//      // Suppress this SO if we're still expecting Data from some other face
-//      NS_LOG_DEBUG ("Suppress SOs");
-//      m_dropSOs (so_p, inFace);
-//
-//      DidSuppressSimilarSO (inFace, so_p, pitEntry);
-//      return;
-//    }
-//
-//  if (similarSO)
-//    {
-//      DidForwardSimilarSO (inFace, so_p, pitEntry);
-//    }
-//
-//  PropagateSO (inFace, so_p, pitEntry);
-//}
+      // return;
+      // }
+      //
+      //  if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
+      //    {
+      //      pitEntry->AddIncoming (inFace/*, so->GetSOLifetime ()*/);
+      //      // update PIT entry lifetime
+      //      pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
+      //
+      //      // Suppress this SO if we're still expecting Data from some other face
+      //      NS_LOG_DEBUG ("Suppress SOs");
+      //      m_dropSOs (so_p, inFace);
+      //
+      //      DidSuppressSimilarSO (inFace, so_p, pitEntry);
+      //      return;
+      //    }
+      //
+      //  if (similarSO)
+      //    {
+      //      DidForwardSimilarSO (inFace, so_p, pitEntry);
+      //    }
+      //
+      //  PropagateSO (inFace, so_p, pitEntry);
+      //}
 
-/*
+      /*
 void
 ForwardingStrategy::OnDO (Ptr<Face> inFace,
                             Ptr<DO> do_p)
@@ -302,8 +303,8 @@ ForwardingStrategy::DidReceiveDuplicateSO (Ptr<Face> inFace,
   pitEntry->AddIncoming (inFace);
   m_dropSOs (so_p, inFace);
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::DidSuppressSimilarSO (Ptr<Face> face,
                                                 Ptr<const SO> so_p                                            Ptr<pit::Entry> pitEntry)
@@ -316,8 +317,8 @@ ForwardingStrategy::DidForwardSimilarSO (Ptr<Face> inFace,
                                                Ptr<pit::Entry> pitEntry)
 {
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::DidExhaustForwardingOptions (Ptr<Face> inFace,
                                                  Ptr<const SO> so_p,
@@ -357,8 +358,8 @@ ForwardingStrategy::DetectRetransmittedSO (Ptr<Face> inFace,
 
   return isRetransmitted;
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
                                             Ptr<const DO> do_p,
@@ -391,8 +392,8 @@ ForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
   // Set pruning timout on PIT entry (instead of deleting the record)
   m_pit->MarkErased (pitEntry);
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
                                              Ptr<const DO> do_p,
@@ -400,8 +401,8 @@ ForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
 {
   // do nothing
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
                                                Ptr<const DO> do_p,
@@ -409,8 +410,8 @@ ForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
 {
   // do nothing
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
                                                 Ptr<pit::Entry> pitEntry)
@@ -425,8 +426,8 @@ ForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
 
   m_satisfiedSOs (pitEntry);
 }
-*/
-/*
+       */
+      /*
 bool
 ForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
                                                     Ptr<const SO> so_p,
@@ -460,8 +461,8 @@ ForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
 
   return false;
 }
-*/
-/*
+       */
+      /*
 void
 ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
                                        Ptr<const SO> so_p,
@@ -472,7 +473,7 @@ ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
 
   pitEntry->AddIncoming (inFace/*, so_p->GetSOLifetime ()*/);
   /// @todo Make lifetime per incoming interface       */
-/*  pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
+  /*  pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
 
   bool propagated = DoPropagateSO (inFace, so_p, pitEntry);
 
@@ -500,8 +501,8 @@ ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
       DidExhaustForwardingOptions (inFace, so_p, pitEntry);
     }
 }
-*/
-/*
+   */
+  /*
 bool
 ForwardingStrategy::CanSendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
@@ -530,8 +531,8 @@ ForwardingStrategy::CanSendOutSO (Ptr<Face> inFace,
 
   return true;
 }
-*/
-/*
+   */
+  /*
 bool
 ForwardingStrategy::TrySendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
@@ -556,8 +557,8 @@ ForwardingStrategy::TrySendOutSO (Ptr<Face> inFace,
 
   return true;
 }
-*/
-/*
+   */
+  /*
 void
 ForwardingStrategy::DidSendOutSO (Ptr<Face> inFace,
                                         Ptr<Face> outFace,
@@ -566,8 +567,8 @@ ForwardingStrategy::DidSendOutSO (Ptr<Face> inFace,
 {
   m_outSOs (so_p, outFace);
 }
-*/
-/*
+   */
+  /*
 void
 ForwardingStrategy::DidSendOutDO (Ptr<Face> inFace,
                                     Ptr<Face> outFace,
@@ -576,37 +577,37 @@ ForwardingStrategy::DidSendOutDO (Ptr<Face> inFace,
 {
   m_outDO (do_p, inFace == 0, outFace);
 }
-*/
-/*
+   */
+  /*
 void
 ForwardingStrategy::WillEraseTimedOutPendingSO (Ptr<pit::Entry> pitEntry)
 {
   m_timedOutSOs (pitEntry);
 }
-*/
-void
-ForwardingStrategy::AddFace (Ptr<Face> face)
-{
-  // do nothing here
-}
+   */
+  void
+  ForwardingStrategy::AddFace (Ptr<Face> face)
+  {
+	  // do nothing here
+  }
 
-void
-ForwardingStrategy::RemoveFace (Ptr<Face> face)
-{
-  // do nothing here
-}
+  void
+  ForwardingStrategy::RemoveFace (Ptr<Face> face)
+  {
+	  // do nothing here
+  }
 
-//void
-//ForwardingStrategy::DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
-//{
-//  // do nothing here
-//}
-//
-//void
-//ForwardingStrategy::WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
-//{
-//  // do nothing here
-//}
+  //void
+  //ForwardingStrategy::DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+  //{
+  //  // do nothing here
+  //}
+  //
+  //void
+  //ForwardingStrategy::WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+  //{
+  //  // do nothing here
+  //}
 
 
 } // namespace nnn

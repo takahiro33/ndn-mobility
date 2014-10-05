@@ -22,6 +22,7 @@
 
 namespace ns3 {
 namespace nnn {
+namespace nnpt {
 
 class NNPT {
 public:
@@ -29,6 +30,7 @@ public:
 	virtual ~NNPT();
 };
 
+} /* namespace nnpt */
 } /* namespace nnn */
 } /* namespace ns3 */
 

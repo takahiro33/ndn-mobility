@@ -36,33 +36,12 @@
 
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
+#include "../../utils/trie/trie.h"
+#include "../../utils/trie/counting-policy.h"
 #include "../../helper/nnn-face-container.h"
 
 using namespace ::boost;
 using namespace ::boost::multi_index;
-
-template<class KeyExtractor1,class KeyExtractor2>
-struct key_from_key
-{
-public:
-	typedef typename KeyExtractor1::result_type result_type;
-
-	key_from_key(
-			const KeyExtractor1& key1_=KeyExtractor1(),
-			const KeyExtractor2& key2_=KeyExtractor2()):
-				key1(key1_),key2(key2_)
-	{}
-
-	template<typename Arg>
-	result_type operator()(Arg& arg)const
-	{
-		return key1(key2(arg));
-	}
-
-private:
-	KeyExtractor1 key1;
-	KeyExtractor2 key2;
-};
 
 namespace ns3 {
 namespace nnn {
@@ -221,11 +200,20 @@ struct FaceMetricContainer
 class Entry : public SimpleRefCount<Entry>
 {
 public:
+	class NoFaces {};
+
+	typedef nnnSIM::trie_with_policy<
+			NNNAddress,
+			nnnSIM::smart_pointer_payload_traits<Entry>,
+			nnnSIM::counting_policy_traits
+			> trie;
+
 	Entry();
 
-	Entry(Ptr<NNST> nnst, const Ptr<const Address> &name)
+	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
 	  : m_nnst        (nnst)
 	  , m_address     (name)
+	  , item_         (0)
 	{
 	}
 
@@ -237,27 +225,34 @@ public:
 		return m_nnst;
 	}
 
-	Ptr<Address>
-	GetAddress ()
+	Ptr<NNNAddress>
+	GetPtrAddress ()
 	{
 		return m_address;
 	}
 
-private:
-	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
-	Ptr<Address> m_address;       ///< \brief Address used for the NNST Entry
-};
+	const NNNAddress&
+	GetAddress () const
+	{
+		return *m_address;
+	}
 
-class PoAEntry : public Entry
-{
-};
 
-class NNNEntry : public Entry
-{
-	class NoFaces {};
+	void
+	SetTrie (trie::iterator item)
+	{
+		item_ = item;
+	}
 
 	void
 	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
+
+	/**
+	 * \brief Add or update routing metric of FIB next hop
+	 *
+	 * Initial status of the next hop is set to YELLOW
+	 */
+	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
 
 	void
 	Invalidate ();
@@ -277,7 +272,7 @@ class NNNEntry : public Entry
 	void
 	AddPoa (Address address);
 
-	std::vector<Ptr<PoAEntry> >
+	std::vector<Ptr<Address>>
 	GetPoas ()
 	{
 		return m_poa_addrs;
@@ -289,12 +284,16 @@ class NNNEntry : public Entry
 		return m_poa_addrs.size ();
 	}
 
+	trie::iterator to_iterator () { return item_; }
+	trie::const_iterator to_iterator ()  const { return item_; }
+
 private:
-	std::vector<Ptr<PoAEntry> > m_poa_addrs;
+	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
+	Ptr<NNNAddress> m_address;       ///< \brief Address used for the NNST Entry
+	std::vector<Ptr<Address> > m_poa_addrs;
 	FaceMetricContainer::type m_faces;
+	trie::iterator item_;
 };
-
-
 
 } /* namespace nnst */
 } /* namespace nnn */
