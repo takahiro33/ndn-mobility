@@ -17,10 +17,6 @@
  *  You should have received a copy of the GNU Affero Public License
  *  along with nnn-stack-helper.h.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp>
-#include <limits>
-#include <map>
 
 #include <ns3-dev/ns3/assert.h>
 #include <ns3-dev/ns3/callback.h>
@@ -46,8 +42,15 @@
 
 #include "../model/nnn-net-device-face.h"
 #include "../model/nnn-l3-protocol.h"
+#include "../model/nnst/nnn-nnst.h"
+#include "../model/nnst/nnn-nnpt.h"
 
 #include "../model/fw/nnn-forwarding-strategy.h"
+
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
+#include <limits>
+#include <map>
 
 NS_LOG_COMPONENT_DEFINE ("nnn.StackHelper");
 
@@ -103,7 +106,7 @@ NNNStackHelper::SetForwardingStrategy (const std::string &ForwardingStrategy,
 }
 
 void
-NNNStackHelper::SetNnst (const std::string &nnstClass,
+NNNStackHelper::SetNNST (const std::string &nnstClass,
                      const std::string &attr1, const std::string &value1,
                      const std::string &attr2, const std::string &value2,
                      const std::string &attr3, const std::string &value3,
@@ -161,7 +164,7 @@ NNNStackHelper::Install (Ptr<Node> node) const
   Ptr<L3Protocol> nnn = m_nnnFactory.Create<L3Protocol> ();
 
   // Create and aggregate NNST
-  Ptr<Nnst> nnst = m_nnstFactory.Create<Nnst> ();
+  Ptr<NNST> nnst = m_nnstFactory.Create<NNST> ();
   nnn->AggregateObject (nnst);
 
   // Create and aggregate PIT
@@ -321,7 +324,7 @@ NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Face> f
 {
   NS_LOG_LOGIC ("[" << node->GetId () << "]$ route add " << prefix << " via " << *face << " metric " << metric);
 
-  Ptr<Nnst>  nnst  = node->GetObject<Nnst> ();
+  Ptr<NNST>  nnst  = node->GetObject<NNST> ();
 
   NameValue prefixValue;
   prefixValue.DeserializeFromString (prefix, MakeNameChecker ());

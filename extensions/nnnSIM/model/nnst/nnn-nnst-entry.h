@@ -237,12 +237,8 @@ public:
 		return *m_address;
 	}
 
-
 	void
-	SetTrie (trie::iterator item)
-	{
-		item_ = item;
-	}
+	SetTrie (trie::iterator item);
 
 	void
 	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);

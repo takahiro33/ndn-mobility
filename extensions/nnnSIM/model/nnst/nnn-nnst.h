@@ -50,20 +50,20 @@ namespace nnst {
 
 class L3Protocol;
 
-//class NULLp;
-//typedef NULLp NULLpHeader;
-//class SO;
-//typedef SO SOHeader;
-//class DO;
-//typedef DO DOHeader;
-//class EN;
-//typedef EN ENHeader;
-//class AEN;
-//typedef AEN AENHeader;
-//class REN;
-//typedef REN RENHeader;
-//class INF;
-//typedef INF INFHeader;
+class NULLp;
+typedef NULLp NULLpHeader;
+class SO;
+typedef SO SOHeader;
+class DO;
+typedef DO DOHeader;
+class EN;
+typedef EN ENHeader;
+class AEN;
+typedef AEN AENHeader;
+class REN;
+typedef REN RENHeader;
+class INF;
+typedef INF INFHeader;
 
 /**
  * @ingroup nnn

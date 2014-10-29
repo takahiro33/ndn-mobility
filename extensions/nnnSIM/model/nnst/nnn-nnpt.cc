@@ -21,6 +21,7 @@
 
 namespace ns3 {
 namespace nnn {
+namespace nnpt {
 
 NNPT::NNPT() {
 	// TODO Auto-generated constructor stub
@@ -31,5 +32,6 @@ NNPT::~NNPT() {
 	// TODO Auto-generated destructor stub
 }
 
+} /* namespace nnpt */
 } /* namespace nnn */
 } /* namespace ns3 */

@@ -184,7 +184,7 @@ NNST::RemoveFromAll (Ptr<Face> face)
 			NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
 			this->GetObject<ForwardingStrategy> ()->WillRemoveNNSTEntry (entry);
 
-			super::erase (StaticCast<Entry> (entry)->to_iterator ());
+			super::erase (entry->to_iterator ());
 			entry = nextEntry;
 		}
 		else

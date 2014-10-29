@@ -160,6 +160,12 @@ Entry::AddPoa (Address address)
 	m_poa_addrs.push_back(addr);
 }
 
+void
+Entry::SetTrie (trie::iterator item)
+{
+	item_ = item;
+}
+
 
 } /* namespace nnst */
 } /* namespace nnn */
