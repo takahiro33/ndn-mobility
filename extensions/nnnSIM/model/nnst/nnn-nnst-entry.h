@@ -213,7 +213,7 @@ public:
 
 	Entry();
 
-	Entry(Ptr<NNST> nnst, const Ptr<NNNAddress> &name)
+	Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name)
 	  : m_nnst        (nnst)
 	  , m_address     (name)
 	  , item_         (0)
@@ -228,7 +228,7 @@ public:
 		return m_nnst;
 	}
 
-	Ptr<NNNAddress>
+	Ptr<const NNNAddress>
 	GetPtrAddress ()
 	{
 		return m_address;
@@ -271,7 +271,7 @@ public:
 	void
 	AddPoa (Address address);
 
-	std::vector<Ptr<Address> >
+	std::vector<Address>
 	GetPoas ()
 	{
 		return m_poa_addrs;
@@ -288,8 +288,8 @@ public:
 
 private:
 	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
-	Ptr<NNNAddress> m_address;       ///< \brief Address used for the NNST Entry
-	std::vector<Ptr<Address> > m_poa_addrs;
+	Ptr<const NNNAddress> m_address;       ///< \brief Address used for the NNST Entry
+	std::vector<Address> m_poa_addrs;
 	FaceMetricContainer::type m_faces;
 	trie::iterator item_;
 };

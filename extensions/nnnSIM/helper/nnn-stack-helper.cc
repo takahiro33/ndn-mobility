@@ -168,7 +168,7 @@ NNNStackHelper::Install (Ptr<Node> node) const
 	Ptr<L3Protocol> nnn = m_nnnFactory.Create<L3Protocol> ();
 
 	// Create and aggregate NNST
-	Ptr<NNST> nnst = m_nnstFactory.Create<NNST> ();
+	Ptr<nnst::NNST> nnst = m_nnstFactory.Create<nnst::NNST> ();
 	nnn->AggregateObject (nnst);
 
 	// Create and aggregate PIT
@@ -330,7 +330,7 @@ NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Face> f
 
 	Ptr<Object> node2 = DynamicCast<Object> (node);
 
-	Ptr<NNST>  nnst  = node2->GetObject<NNST> ();
+	Ptr<nnst::NNST>  nnst  = node2->GetObject<nnst::NNST> ();
 
 	NNNAddress prefixValue;
 

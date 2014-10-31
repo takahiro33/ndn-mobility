@@ -155,8 +155,7 @@ Entry::FindBestCandidate (uint32_t skip/* = 0*/) const
 void
 Entry::AddPoa (Address address)
 {
-	Ptr<Address> addr = Create<Address> (address);
-	m_poa_addrs.push_back(addr);
+	m_poa_addrs.push_back(address);
 }
 
 void
