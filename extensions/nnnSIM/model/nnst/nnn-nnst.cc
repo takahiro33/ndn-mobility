@@ -298,8 +298,6 @@ NNST::Next (Ptr<Entry> from)
 		return item->payload ();
 }
 
-
-
 } /* namespace nnst */
 } /* namespace nnn */
 } /* namespace ns3 */

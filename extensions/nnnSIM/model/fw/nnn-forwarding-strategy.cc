@@ -40,10 +40,6 @@
 //#include "ns3/nnn-pit.h"
 //#include "ns3/nnn-content-store.h"
 
-#include "../nnn-packets.h"
-#include "../nnn-face.h"
-#include "../nnst/nnn-nnst.h"
-
 //#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
 
 namespace ll = boost::lambda;
@@ -64,12 +60,12 @@ ForwardingStrategy::GetLogName ()
 TypeId ForwardingStrategy::GetTypeId (void)
 {
 	static TypeId tid = TypeId ("ns3::nnn::fw::ForwardingStrategy")
-    		.SetGroupName ("nnn")
-    		.SetParent<Object> ()
+    				.SetGroupName ("nnn")
+					.SetParent<Object> ()
 
-    		////////////////////////////////////////////////////////////////////
-    		////////////////////////////////////////////////////////////////////
-    		/*
+					////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////
+					/*
     .AddTraceSource ("OutSOs",  "OutSOs",  MakeTraceSourceAccessor (&ForwardingStrategy::m_outSOs))
     .AddTraceSource ("InSOs",   "InSOs",   MakeTraceSourceAccessor (&ForwardingStrategy::m_inSOs))
     .AddTraceSource ("DropSOs", "DropSOs", MakeTraceSourceAccessor (&ForwardingStrategy::m_dropSOs))
@@ -103,8 +99,8 @@ TypeId ForwardingStrategy::GetTypeId (void)
                    MakeBooleanAccessor (&ForwardingStrategy::m_detectRetransmissions),
                    MakeBooleanChecker ())
     ;
-    		 */
-    		;
+					 */
+					;
 	return tid;
 }
 
@@ -125,7 +121,7 @@ ForwardingStrategy::NotifyNewAggregate ()
     }*/
 	if (m_nnst == 0)
 	{
-		m_nnst = GetObject<NNST> ();
+		m_nnst = GetObject<nnst::NNST> ();
 	}
 	/*  if (m_contentStore == 0)
     {
@@ -193,40 +189,40 @@ ForwardingStrategy::OnSO (Ptr<Face> inFace,
           contentObject->GetPayload ()->AddPacketTag (hopCountTag);
         }
 
-      pitEntry->AddIncoming (inFace/*, Seconds (1.0)*/);
-      */
+      pitEntry->AddIncoming (inFace ); // Seconds (1.0)
 
-      // Do data plane performance measurements
-      // WillSatisfyPendingSO (0, pitEntry);
+       Do data plane performance measurements
+       WillSatisfyPendingSO (0, pitEntry);
 
-      // Actually satisfy pending SO
-      //SatisfyPendingSO (0, contentObject, pitEntry);
-      // return;
-      // }
-      //
-      //  if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
-      //    {
-      //      pitEntry->AddIncoming (inFace/*, so->GetSOLifetime ()*/);
-      //      // update PIT entry lifetime
-      //      pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
-      //
-      //      // Suppress this SO if we're still expecting Data from some other face
-      //      NS_LOG_DEBUG ("Suppress SOs");
-      //      m_dropSOs (so_p, inFace);
-      //
-      //      DidSuppressSimilarSO (inFace, so_p, pitEntry);
-      //      return;
-      //    }
-      //
-      //  if (similarSO)
-      //    {
-      //      DidForwardSimilarSO (inFace, so_p, pitEntry);
-      //    }
-      //
-      //  PropagateSO (inFace, so_p, pitEntry);
-      //}
+       Actually satisfy pending SO
+      SatisfyPendingSO (0, contentObject, pitEntry);
+       return;
+       }
 
-      /*
+        if (similarSO && ShouldSuppressIncomingSO (inFace, so_p, pitEntry))
+          {
+            pitEntry->AddIncoming (inFace, so->GetSOLifetime ());
+            // update PIT entry lifetime
+            pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
+
+            // Suppress this SO if we're still expecting Data from some other face
+            NS_LOG_DEBUG ("Suppress SOs");
+            m_dropSOs (so_p, inFace);
+
+            DidSuppressSimilarSO (inFace, so_p, pitEntry);
+            return;
+          }
+
+        if (similarSO)
+          {
+            DidForwardSimilarSO (inFace, so_p, pitEntry);
+          }
+
+        PropagateSO (inFace, so_p, pitEntry);
+      }
+ */
+
+/*
 void
 ForwardingStrategy::OnDO (Ptr<Face> inFace,
                             Ptr<DO> do_p)
@@ -303,8 +299,8 @@ ForwardingStrategy::DidReceiveDuplicateSO (Ptr<Face> inFace,
   pitEntry->AddIncoming (inFace);
   m_dropSOs (so_p, inFace);
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::DidSuppressSimilarSO (Ptr<Face> face,
                                                 Ptr<const SO> so_p                                            Ptr<pit::Entry> pitEntry)
@@ -317,8 +313,8 @@ ForwardingStrategy::DidForwardSimilarSO (Ptr<Face> inFace,
                                                Ptr<pit::Entry> pitEntry)
 {
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::DidExhaustForwardingOptions (Ptr<Face> inFace,
                                                  Ptr<const SO> so_p,
@@ -358,8 +354,8 @@ ForwardingStrategy::DetectRetransmittedSO (Ptr<Face> inFace,
 
   return isRetransmitted;
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
                                             Ptr<const DO> do_p,
@@ -392,8 +388,8 @@ ForwardingStrategy::SatisfyPendingSO (Ptr<Face> inFace,
   // Set pruning timout on PIT entry (instead of deleting the record)
   m_pit->MarkErased (pitEntry);
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
                                              Ptr<const DO> do_p,
@@ -401,8 +397,8 @@ ForwardingStrategy::DidReceiveSolicitedDO (Ptr<Face> inFace,
 {
   // do nothing
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
                                                Ptr<const DO> do_p,
@@ -410,8 +406,8 @@ ForwardingStrategy::DidReceiveUnsolicitedDO (Ptr<Face> inFace,
 {
   // do nothing
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
                                                 Ptr<pit::Entry> pitEntry)
@@ -426,8 +422,8 @@ ForwardingStrategy::WillSatisfyPendingSO (Ptr<Face> inFace,
 
   m_satisfiedSOs (pitEntry);
 }
-       */
-      /*
+ */
+/*
 bool
 ForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
                                                     Ptr<const SO> so_p,
@@ -461,8 +457,8 @@ ForwardingStrategy::ShouldSuppressIncomingSO (Ptr<Face> inFace,
 
   return false;
 }
-       */
-      /*
+ */
+/*
 void
 ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
                                        Ptr<const SO> so_p,
@@ -471,7 +467,7 @@ ForwardingStrategy::PropagateSO (Ptr<Face> inFace,
   bool isRetransmitted = m_detectRetransmissions && // a small guard
                          DetectRetransmittedSO (inFace, so_p, pitEntry);
 
-  pitEntry->AddIncoming (inFace/*, so_p->GetSOLifetime ()*/);
+  pitEntry->AddIncoming (inFace); //, so_p->GetSOLifetime ());
   /// @todo Make lifetime per incoming interface       */
   /*  pitEntry->UpdateLifetime (so_p->GetSOLifetime ());
 

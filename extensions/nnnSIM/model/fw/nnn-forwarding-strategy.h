@@ -26,6 +26,13 @@
 #include <ns3-dev/ns3/packet.h>
 #include <ns3-dev/ns3/traced-callback.h>
 
+#include "../nnn-packets.h"
+#include "../nnn-face.h"
+#include "../nnst/nnn-nnst.h"
+#include "../nnst/nnn-nnst-entry.h"
+#include "../nnst/nnn-nnpt.h"
+#include "../nnst/nnn-nnpt-entry.h"
+
 namespace ns3 {
 namespace nnn {
 
@@ -52,10 +59,7 @@ class AEN;
 class REN;
 class INF;
 
-class NNSTFaceMetric;
-class NNST;
-namespace nnst { class Entry; }
-namespace nnpt { class Entry; }
+//class NNSTFaceMetric;
 
 /**
  * @ingroup nnn-fw
@@ -525,7 +529,7 @@ protected:
 
 		protected:
 	// Ptr<Pit> m_pit; ///< \brief Reference to PIT to which this forwarding strategy is associated
-	Ptr<NNST> m_nnst; ///< \brief NNST
+	Ptr<nnst::NNST> m_nnst; ///< \brief NNST
 	// Ptr<ContentStore> m_contentStore; ///< \brief Content store (for caching purposes only)
 
 	//  bool m_cacheUnsolicitedDOFromApps;

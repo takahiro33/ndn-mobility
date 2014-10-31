@@ -30,7 +30,6 @@ namespace ll = boost::lambda;
 #include <ns3-dev/ns3/simulator.h>
 
 #include "nnn-nnst-entry.h"
-#include "nnn-nnst.h"
 
 #include "../nnn-naming.h"
 

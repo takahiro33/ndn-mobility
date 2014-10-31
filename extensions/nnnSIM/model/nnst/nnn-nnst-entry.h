@@ -34,10 +34,12 @@
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/traced-value.h>
 
+#include "nnn-nnst.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
 #include "../../utils/trie/trie.h"
 #include "../../utils/trie/counting-policy.h"
+#include "../../utils/trie/trie-with-policy.h"
 #include "../../helper/nnn-face-container.h"
 
 using namespace ::boost;
@@ -47,9 +49,10 @@ namespace ns3 {
 namespace nnn {
 
 class NNNAddress;
-class NNST;
 
 namespace nnst {
+
+class NNST;
 
 class FaceMetric
 {
@@ -210,7 +213,7 @@ public:
 
 	Entry();
 
-	Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
+	Entry(Ptr<NNST> nnst, const Ptr<NNNAddress> &name)
 	  : m_nnst        (nnst)
 	  , m_address     (name)
 	  , item_         (0)
@@ -268,7 +271,7 @@ public:
 	void
 	AddPoa (Address address);
 
-	std::vector<Ptr<Address>>
+	std::vector<Ptr<Address> >
 	GetPoas ()
 	{
 		return m_poa_addrs;

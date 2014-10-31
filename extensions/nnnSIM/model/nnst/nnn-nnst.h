@@ -43,10 +43,10 @@ using namespace ::boost::multi_index;
 #include "../nnn-face.h"
 #include "../../utils/trie/trie.h"
 #include "../../utils/trie/counting-policy.h"
+#include "../../utils/trie/trie-with-policy.h"
 
 namespace ns3 {
 namespace nnn {
-namespace nnst {
 
 class L3Protocol;
 
@@ -64,6 +64,11 @@ class REN;
 typedef REN RENHeader;
 class INF;
 typedef INF INFHeader;
+
+
+namespace nnst {
+
+class Entry;
 
 /**
  * @ingroup nnn
@@ -116,9 +121,6 @@ public:
 	void
 	Print (std::ostream &os) const;
 
-	uint32_t
-	GetSize () const;
-
 	virtual Ptr<const Entry>
 	Begin () const;
 
@@ -138,7 +140,7 @@ public:
 	Next (Ptr<Entry> item);
 
 	uint32_t
-	GetSize () const = 0;
+	GetSize ();
 
 	Ptr<NNST>
 	GetNNST (Ptr<Object> node);
