@@ -26,13 +26,6 @@
 #include <ns3-dev/ns3/packet.h>
 #include <ns3-dev/ns3/traced-callback.h>
 
-#include "../nnn-packets.h"
-#include "../nnn-face.h"
-#include "../nnst/nnn-nnst.h"
-#include "../nnst/nnn-nnst-entry.h"
-#include "../nnst/nnn-nnpt.h"
-#include "../nnst/nnn-nnpt-entry.h"
-
 namespace ns3 {
 namespace nnn {
 
@@ -58,6 +51,12 @@ class EN;
 class AEN;
 class REN;
 class INF;
+
+class NNST;
+class NNPT;
+
+namespace nnst { class Entry; }
+namespace nnpt { class Entry; }
 
 //class NNSTFaceMetric;
 
@@ -212,25 +211,15 @@ public:
 
 protected:
 	/**
-	 * @brief An event that is fired every time a new PIT entry is created
-	 *
-	 * Note that if NNN node is receiving a similar SO (SO for the same name),
-	 * then either DidReceiveDuplicateSO, DidSuppressSimilarSO, or DidForwardSimilarSO
-	 * will be called
-	 *
-	 * Suppression of similar SOs is controlled using ShouldSuppressIncomingSO virtual method
+	 * @brief An event that is fired every time a new NNST entry is created
 	 *
 	 * @param inFace  incoming face
 	 * @param header  deserialized SO header
-	 * @param pitEntry created PIT entry (incoming and outgoing face sets are empty)
+	 * @param nnstEntry created PIT entry (incoming and outgoing face sets are empty)
 	 *
-	 * @see DidReceiveDuplicateSO, DidSuppressSimilarSO, DidForwardSimilarSO, ShouldSuppressIncomingSO
-
-  virtual void
-  DidCreatePitEntry (Ptr<Face> inFace,
-                     Ptr<const SO> so_p,
-                     Ptr<pit::Entry> pitEntry);
 	 */
+	 virtual void
+	 DidCreateNNSTEntry (Ptr<Face> inFace, Ptr<const SO> so_p, Ptr<nnst::Entry> nnstEntry);
 
 	/**
 	 * @brief An event that is fired every time a new PIT entry cannot be created (e.g., PIT container imposes a limit)
@@ -529,7 +518,7 @@ protected:
 
 		protected:
 	// Ptr<Pit> m_pit; ///< \brief Reference to PIT to which this forwarding strategy is associated
-	Ptr<nnst::NNST> m_nnst; ///< \brief NNST
+	Ptr<NNST> m_nnst; ///< \brief NNST
 	// Ptr<ContentStore> m_contentStore; ///< \brief Content store (for caching purposes only)
 
 	//  bool m_cacheUnsolicitedDOFromApps;

@@ -52,8 +52,6 @@ class NNNAddress;
 
 namespace nnst {
 
-class NNST;
-
 class FaceMetric
 {
 public:
@@ -63,12 +61,12 @@ public:
 		NNN_NNST_RED = 3
 	};
 
-	FaceMetric (Ptr<Face> face)
+	FaceMetric (Ptr<Face> face, int32_t cost)
 	: m_face   (face)
 	, m_status (NNN_NNST_GREEN)
+	, m_routingCost (cost)
 	, m_sRtt   (Seconds (0))
 	, m_rttVar (Seconds (0))
-	, m_routingCost (0)
 	{
 
 	}
@@ -147,6 +145,9 @@ public:
 	UpdateRtt (const Time &rttSample);
 
 private:
+  friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
+
+private:
 	Ptr<Face> m_face; ///< Face
 	TracedValue<Status> m_status; ///< \brief Status of next hop
 	Time m_sRtt;                   ///< \brief Round-trip time variation
@@ -213,14 +214,9 @@ public:
 
 	Entry();
 
-	Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name)
-	  : m_nnst        (nnst)
-	  , m_address     (name)
-	  , item_         (0)
-	{
-	}
+	Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name);
 
-	virtual ~Entry();
+	~Entry();
 
 	Ptr<NNST>
 	GetNNST ()
@@ -286,13 +282,19 @@ public:
 	trie::iterator to_iterator () { return item_; }
 	trie::const_iterator to_iterator ()  const { return item_; }
 
-private:
+public:
 	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
 	Ptr<const NNNAddress> m_address;       ///< \brief Address used for the NNST Entry
-	std::vector<Address> m_poa_addrs;
 	FaceMetricContainer::type m_faces;
+
+private:
+
+	std::vector<Address> m_poa_addrs;
 	trie::iterator item_;
 };
+
+std::ostream& operator<< (std::ostream& os, const Entry &entry);
+std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
 } /* namespace nnst */
 } /* namespace nnn */

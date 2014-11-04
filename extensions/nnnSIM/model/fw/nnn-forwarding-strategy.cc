@@ -20,6 +20,15 @@
  *  along with nnn-forwarding-strategy.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "nnn-forwarding-strategy.h"
+
+#include "../nnn-face.h"
+#include "../nnn-packets.h"
+#include "../nnst/nnn-nnst.h"
+#include "../nnst/nnn-nnst-entry.h"
+#include "../nnst/nnn-nnpt.h"
+#include "../nnst/nnn-nnpt-entry.h"
+
 #include <boost/ref.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -32,13 +41,6 @@
 #include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/boolean.h>
 #include <ns3-dev/ns3/string.h>
-
-#include "nnn-forwarding-strategy.h"
-
-//#include "ns3/nnn-pit.h"
-//#include "ns3/nnn-pit-entry.h"
-//#include "ns3/nnn-pit.h"
-//#include "ns3/nnn-content-store.h"
 
 //#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
 
@@ -59,7 +61,7 @@ ForwardingStrategy::GetLogName ()
 
 TypeId ForwardingStrategy::GetTypeId (void)
 {
-	static TypeId tid = TypeId ("ns3::nnn::fw::ForwardingStrategy")
+	static TypeId tid = TypeId ("ns3::nnn::ForwardingStrategy")
     				.SetGroupName ("nnn")
 					.SetParent<Object> ()
 
@@ -121,7 +123,7 @@ ForwardingStrategy::NotifyNewAggregate ()
     }*/
 	if (m_nnst == 0)
 	{
-		m_nnst = GetObject<nnst::NNST> ();
+		m_nnst = GetObject<NNST> ();
 	}
 	/*  if (m_contentStore == 0)
     {
@@ -139,6 +141,79 @@ ForwardingStrategy::DoDispose ()
 	m_nnst = 0;
 
 	Object::DoDispose ();
+}
+
+void
+ForwardingStrategy::DidCreateNNSTEntry (Ptr<Face> inFace, Ptr<const SO> so_p, Ptr<nnst::Entry> nnstEntry)
+{
+
+}
+
+void
+ForwardingStrategy::OnSO (Ptr<Face> face, Ptr<SO> so_p)
+{
+
+}
+
+
+void
+ForwardingStrategy::OnDO (Ptr<Face> face, Ptr<DO> do_p)
+{
+
+}
+
+void
+ForwardingStrategy::OnNULLp (Ptr<Face> face, Ptr<NULLp> null_p)
+{
+
+}
+
+void
+ForwardingStrategy::OnEN (Ptr<Face> face, Ptr<EN> en_p)
+{
+
+}
+
+void
+ForwardingStrategy::OnAEN (Ptr<Face> face, Ptr<AEN> aen_p)
+{
+
+}
+
+void
+ForwardingStrategy::OnREN (Ptr<Face> face, Ptr<REN> ren_p)
+{
+
+}
+
+void
+ForwardingStrategy::OnINF (Ptr<Face> face, Ptr<INF> do_p)
+{
+
+}
+
+void
+ForwardingStrategy::DidAddNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
+{
+
+}
+
+void
+ForwardingStrategy::WillRemoveNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
+{
+
+}
+
+void
+ForwardingStrategy::DidAddNNPTEntry (Ptr<nnpt::Entry> NNPTEntry)
+{
+
+}
+
+void
+ForwardingStrategy::WillRemoveNNPTEntry (Ptr<nnpt::Entry> NNPTEntry)
+{
+
 }
 
 /*
@@ -594,13 +669,13 @@ ForwardingStrategy::WillEraseTimedOutPendingSO (Ptr<pit::Entry> pitEntry)
   }
 
   //void
-  //ForwardingStrategy::DidAddNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+  //ForwardingStrategy::DidAddNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
   //{
   //  // do nothing here
   //}
   //
   //void
-  //ForwardingStrategy::WillRemoveNNSTEntry (Ptr<NNST::Entry> NNSTEntry)
+  //ForwardingStrategy::WillRemoveNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
   //{
   //  // do nothing here
   //}

@@ -45,7 +45,9 @@
 #include "../model/nnn-l3-protocol.h"
 #include "../model/nnn-naming.h"
 #include "../model/nnst/nnn-nnst.h"
+#include "../model/nnst/nnn-nnst-entry.h"
 #include "../model/nnst/nnn-nnpt.h"
+#include "../model/nnst/nnn-nnpt-entry.h"
 
 #include "../model/fw/nnn-forwarding-strategy.h"
 
@@ -168,7 +170,7 @@ NNNStackHelper::Install (Ptr<Node> node) const
 	Ptr<L3Protocol> nnn = m_nnnFactory.Create<L3Protocol> ();
 
 	// Create and aggregate NNST
-	Ptr<nnst::NNST> nnst = m_nnstFactory.Create<nnst::NNST> ();
+	Ptr<NNST> nnst = m_nnstFactory.Create<NNST> ();
 	nnn->AggregateObject (nnst);
 
 	// Create and aggregate PIT
@@ -330,11 +332,12 @@ NNNStackHelper::AddRoute (Ptr<Node> node, const std::string &prefix, Ptr<Face> f
 
 	Ptr<Object> node2 = DynamicCast<Object> (node);
 
-	Ptr<nnst::NNST>  nnst  = node2->GetObject<nnst::NNST> ();
+	Ptr<NNST>  nnst  = node2->GetObject<NNST> ();
 
-	NNNAddress prefixValue;
+	// NS-3 Attribute system usage
+	NNNAddressValue prefixValue;
 
-	prefixValue.DeserializeFromString (prefix, MakeNameChecker ());
+	prefixValue.DeserializeFromString (prefix, MakeNNNAddressChecker ());
 	nnst->Add (prefixValue.Get (), face, metric);
 }
 

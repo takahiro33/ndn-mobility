@@ -356,6 +356,19 @@ Face::ReceiveREN (Ptr<REN> ren_i)
 	return true;
 }
 
+bool
+Face::ReceiveINF (Ptr<INF> inf_i)
+{
+	if (!IsUp ())
+	{
+		// no tracing here. If we were off while receiving, we shouldn't even know that something was there
+		return false;
+	}
+
+	m_upstreamINFHandler (this, inf_i);
+	return true;
+}
+
 void
 Face::SetMetric (uint16_t metric)
 {

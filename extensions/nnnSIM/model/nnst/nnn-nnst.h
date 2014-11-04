@@ -34,13 +34,14 @@ using namespace ::boost::multi_index;
 
 #include <ns3-dev/ns3/event-id.h>
 #include <ns3-dev/ns3/log.h>
+#include <ns3-dev/ns3/names.h>
 #include <ns3-dev/ns3/node.h>
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/object.h>
 
-#include "nnn-nnst-entry.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
+#include "../fw/nnn-forwarding-strategy.h"
 #include "../../utils/trie/trie.h"
 #include "../../utils/trie/counting-policy.h"
 #include "../../utils/trie/trie-with-policy.h"
@@ -70,19 +71,21 @@ namespace nnst {
 
 class Entry;
 
+}
+
 /**
  * @ingroup nnn
  * @defgroup nnn NNST
  */
 class NNST : public Object,
 				protected nnnSIM::trie_with_policy<NNNAddress,
-								nnnSIM::smart_pointer_payload_traits<Entry>,
+								nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
 								nnnSIM::counting_policy_traits>
 {
 public:
 
 	typedef nnnSIM::trie_with_policy<NNNAddress,
-			nnnSIM::smart_pointer_payload_traits<Entry>,
+			nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
 			nnnSIM::counting_policy_traits > super;
 
 	static TypeId GetTypeId ();
@@ -91,19 +94,19 @@ public:
 
 	~NNST();
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	ClosestSector (const NNNAddress &nnnaddr);
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	SignatureMatch (const Address &poa);
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	Find (const NNNAddress &prefix);
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
 
 	void
@@ -121,23 +124,23 @@ public:
 	void
 	Print (std::ostream &os) const;
 
-	virtual Ptr<const Entry>
+	virtual Ptr<const nnst::Entry>
 	Begin () const;
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	Begin ();
 
-	Ptr<const Entry>
+	Ptr<const nnst::Entry>
 	End () const;
 
-	Ptr<Entry>
+	Ptr<nnst::Entry>
 	End ();
 
-	Ptr<const Entry>
-	Next (Ptr<const Entry> item) const;
+	Ptr<const nnst::Entry>
+	Next (Ptr<const nnst::Entry> item) const;
 
-	Ptr<Entry>
-	Next (Ptr<Entry> item);
+	Ptr<nnst::Entry>
+	Next (Ptr<nnst::Entry> item);
 
 	uint32_t
 	GetSize ();
@@ -159,13 +162,10 @@ private:
 	RemoveFace (super::parent_trie &item, Ptr<Face> face);
 };
 
-Ptr<NNST>
-NNST::GetNNST (Ptr<Object> node)
-{
-	return node->GetObject<NNST> ();
-}
+std::ostream& operator<< (std::ostream& os, const NNST &nnst);
 
-} /* namespace nnst */
+
+
 } /* namespace nnn */
 } /* namespace ns3 */
 

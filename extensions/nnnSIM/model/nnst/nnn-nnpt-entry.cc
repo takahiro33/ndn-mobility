@@ -32,6 +32,11 @@ Entry::~Entry() {
 	// TODO Auto-generated destructor stub
 }
 
+std::ostream& operator<< (std::ostream& os, const Entry &entry)
+{
+	return os;
+}
+
 
 } /* namespace nnpt */
 } /* namespace nnn */

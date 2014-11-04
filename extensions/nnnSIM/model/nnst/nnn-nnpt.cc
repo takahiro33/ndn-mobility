@@ -21,7 +21,16 @@
 
 namespace ns3 {
 namespace nnn {
-namespace nnpt {
+
+TypeId
+NNPT::GetTypeId (void)
+{
+	static TypeId tid = TypeId ("ns3::nnn::NNPT") // cheating ns3 object system
+    		.SetParent<Object> ()
+    		.SetGroupName ("nnn")
+    		;
+	return tid;
+}
 
 NNPT::NNPT() {
 	// TODO Auto-generated constructor stub
@@ -32,6 +41,11 @@ NNPT::~NNPT() {
 	// TODO Auto-generated destructor stub
 }
 
-} /* namespace nnpt */
+std::ostream&
+operator<< (std::ostream& os, const NNPT &nnpt)
+{
+  return os;
+}
+
 } /* namespace nnn */
 } /* namespace ns3 */

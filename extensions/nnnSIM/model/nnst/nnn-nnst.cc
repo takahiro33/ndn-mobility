@@ -25,17 +25,17 @@
 namespace ll = boost::lambda;
 
 #include "nnn-nnst.h"
+#include "nnn-nnst-entry.h"
 
 NS_LOG_COMPONENT_DEFINE ("nnn.nnst.impl");
 
 namespace ns3 {
 namespace nnn {
-namespace nnst {
 
 TypeId
 NNST::GetTypeId (void)
 {
-	static TypeId tid = TypeId ("ns3::nnn::nnst") // cheating ns3 object system
+	static TypeId tid = TypeId ("ns3::nnn::NNST") // cheating ns3 object system
     		.SetParent<Object> ()
     		.SetGroupName ("nnn")
     		;
@@ -63,7 +63,7 @@ NNST::DoDispose (void)
 	Object::DoDispose ();
 }
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::ClosestSector (const NNNAddress &nnnaddr)
 {
 	super::iterator item = super::longest_prefix_match (nnnaddr);
@@ -75,7 +75,7 @@ NNST::ClosestSector (const NNNAddress &nnnaddr)
 		return item->payload ();
 }
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::Find (const NNNAddress &name)
 {
 	super::iterator item = super::find_exact (name);
@@ -87,13 +87,13 @@ NNST::Find (const NNNAddress &name)
 }
 
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::Add (const NNNAddress &name, Ptr<Face> face, int32_t metric)
 {
 	return Add (Create<NNNAddress> (name), face, metric);
 }
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::Add (const Ptr<const NNNAddress> &name, Ptr<Face> face, int32_t metric)
 {
 	NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId () << boost::cref(*name) << boost::cref(*face) << metric);
@@ -104,13 +104,13 @@ NNST::Add (const Ptr<const NNNAddress> &name, Ptr<Face> face, int32_t metric)
 	{
 		if (result.second)
 		{
-			Ptr<Entry> newEntry = Create<Entry> (this, name);
+			Ptr<nnst::Entry> newEntry = Create<nnst::Entry> (this, name);
 			newEntry->SetTrie (result.first);
 			result.first->set_payload (newEntry);
 		}
 
 		super::modify (result.first,
-				ll::bind (&Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
+				ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
 
 		if (result.second)
 		{
@@ -153,7 +153,7 @@ NNST::InvalidateAll ()
 		if (item->payload () == 0) continue;
 
 		super::modify (&(*item),
-				ll::bind (&Entry::Invalidate, ll::_1));
+				ll::bind (&nnst::Entry::Invalidate, ll::_1));
 	}
 }
 
@@ -164,7 +164,7 @@ NNST::RemoveFace (super::parent_trie &item, Ptr<Face> face)
 	NS_LOG_FUNCTION (this);
 
 	super::modify (&item,
-			ll::bind (&Entry::RemoveFace, ll::_1, face));
+			ll::bind (&nnst::Entry::RemoveFace, ll::_1, face));
 }
 
 void
@@ -172,13 +172,13 @@ NNST::RemoveFromAll (Ptr<Face> face)
 {
 	NS_LOG_FUNCTION (this);
 
-	Ptr<Entry> entry = Begin ();
+	Ptr<nnst::Entry> entry = Begin ();
 	while (entry != End ())
 	{
 		entry->RemoveFace (face);
 		if (entry->m_faces.size () == 0)
 		{
-			Ptr<Entry> nextEntry = Next (entry);
+			Ptr<nnst::Entry> nextEntry = Next (entry);
 
 			// notify forwarding strategy about soon be removed NNST entry
 			NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
@@ -209,12 +209,12 @@ NNST::Print (std::ostream &os) const
 }
 
 uint32_t
-NNST::GetSize () const
+NNST::GetSize ()
 {
 	return super::getPolicy ().size ();
 }
 
-Ptr<const Entry>
+Ptr<const nnst::Entry>
 NNST::Begin () const
 {
 	super::parent_trie::const_recursive_iterator item (super::getTrie ());
@@ -231,18 +231,18 @@ NNST::Begin () const
 		return item->payload ();
 }
 
-Ptr<const Entry>
+Ptr<const nnst::Entry>
 NNST::End () const
 {
 	return 0;
 }
 
-Ptr<const Entry>
-NNST::Next (Ptr<const Entry> from) const
+Ptr<const nnst::Entry>
+NNST::Next (Ptr<const nnst::Entry> from) const
 {
 	if (from == 0) return 0;
 
-	super::parent_trie::const_recursive_iterator item (*StaticCast<const Entry> (from)->to_iterator ());
+	super::parent_trie::const_recursive_iterator item (*StaticCast<const nnst::Entry> (from)->to_iterator ());
 	super::parent_trie::const_recursive_iterator end (0);
 	for (item++; item != end; item++)
 	{
@@ -256,7 +256,7 @@ NNST::Next (Ptr<const Entry> from) const
 		return item->payload ();
 }
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::Begin ()
 {
 	super::parent_trie::recursive_iterator item (super::getTrie ());
@@ -273,18 +273,18 @@ NNST::Begin ()
 		return item->payload ();
 }
 
-Ptr<Entry>
+Ptr<nnst::Entry>
 NNST::End ()
 {
 	return 0;
 }
 
-Ptr<Entry>
-NNST::Next (Ptr<Entry> from)
+Ptr<nnst::Entry>
+NNST::Next (Ptr<nnst::Entry> from)
 {
 	if (from == 0) return 0;
 
-	super::parent_trie::recursive_iterator item (*StaticCast<Entry> (from)->to_iterator ());
+	super::parent_trie::recursive_iterator item (*StaticCast<nnst::Entry> (from)->to_iterator ());
 	super::parent_trie::recursive_iterator end (0);
 	for (item++; item != end; item++)
 	{
@@ -298,6 +298,22 @@ NNST::Next (Ptr<Entry> from)
 		return item->payload ();
 }
 
-} /* namespace nnst */
+Ptr<NNST>
+NNST::GetNNST (Ptr<Object> node)
+{
+	return node->GetObject<NNST> ();
+}
+
+std::ostream&
+operator<< (std::ostream& os, const NNST &nnst)
+{
+  os << "Node " << Names::FindName (nnst.GetObject<Node>()) << "\n";
+  os << "  Dest prefix      Interfaces(Costs)                  \n";
+  os << "+-------------+--------------------------------------+\n";
+
+  nnst.Print (os);
+  return os;
+}
+
 } /* namespace nnn */
 } /* namespace ns3 */

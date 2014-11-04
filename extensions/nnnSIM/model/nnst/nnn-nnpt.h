@@ -20,17 +20,25 @@
 #ifndef NNN_NNPT_H_
 #define NNN_NNPT_H_
 
+#include <ns3-dev/ns3/simple-ref-count.h>
+#include <ns3-dev/ns3/node.h>
+
+#include <ostream>
+
 namespace ns3 {
 namespace nnn {
-namespace nnpt {
 
 class NNPT {
 public:
+	static TypeId GetTypeId ();
+
 	NNPT();
+
 	virtual ~NNPT();
 };
 
-} /* namespace nnpt */
+std::ostream& operator<< (std::ostream& os, const NNPT &nnpt);
+
 } /* namespace nnn */
 } /* namespace ns3 */
 

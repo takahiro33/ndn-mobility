@@ -20,6 +20,27 @@
 #ifndef NNN_NNPT_ENTRY_H_
 #define NNN_NNPT_ENTRY_H_
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/composite_key.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/random_access_index.hpp>
+#include <boost/multi_index/tag.hpp>
+
+#include <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/nstime.h>
+#include <ns3-dev/ns3/traced-value.h>
+
+#include "nnn-nnpt.h"
+#include "../nnn-naming.h"
+#include "../nnn-face.h"
+#include "../../utils/trie/trie.h"
+#include "../../utils/trie/counting-policy.h"
+#include "../../utils/trie/trie-with-policy.h"
+#include "../../helper/nnn-face-container.h"
+
 namespace ns3 {
 namespace nnn {
 
@@ -32,6 +53,8 @@ public:
 	Entry();
 	virtual ~Entry();
 };
+
+std::ostream& operator<< (std::ostream& os, const Entry &entry);
 
 } /* namespace nnpt */
 } /* namespace nnn */

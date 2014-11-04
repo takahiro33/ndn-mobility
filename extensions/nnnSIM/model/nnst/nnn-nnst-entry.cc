@@ -15,7 +15,7 @@
  *
  *  You should have received a copy of the GNU Affero Public License
  *  along with nnn-nnst-entry.cc.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 #include <boost/ref.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
@@ -67,6 +67,24 @@ FaceMetric::UpdateRtt (const Time &rttSample)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+Entry::Entry()
+{
+
+}
+
+Entry::Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name)
+  : m_nnst        (nnst)
+  , m_address     (name)
+  , item_         (0)
+{
+}
+
+Entry::~Entry()
+{
+
+}
+
+
 void
 Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 {
@@ -162,6 +180,29 @@ void
 Entry::SetTrie (trie::iterator item)
 {
 	item_ = item;
+}
+
+std::ostream& operator<< (std::ostream& os, const Entry &entry)
+{
+	for (FaceMetricContainer::type::index<i_nth>::type::iterator metric =
+			entry.m_faces.get<i_nth> ().begin ();
+			metric != entry.m_faces.get<i_nth> ().end ();
+			metric++)
+	{
+		if (metric != entry.m_faces.get<i_nth> ().begin ())
+			os << ", ";
+
+		os << *metric;
+	}
+	return os;
+}
+
+std::ostream& operator<< (std::ostream& os, const FaceMetric &metric)
+{
+	static const std::string statusString[] = {"","g","y","r"};
+
+	os << *metric.m_face << "(" << metric.m_routingCost << ","<< statusString [metric.m_status] << "," << metric.m_face->GetMetric () << ")";
+	return os;
 }
 
 
