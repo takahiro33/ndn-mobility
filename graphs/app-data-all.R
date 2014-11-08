@@ -52,6 +52,10 @@ allcombineddata = do.call(rbind.fill, combinedlist)
 
 satTime = subset(allcombineddata, Type %in% c("FullDelay"))
 
+# Set the theme for graph output
+theme_set(theme_grey(base_size = 24) + 
+    theme(axis.text = element_text(colour = "black")))
+
 g.all <- ggplot (satTime, aes(colour=Variable)) +
   geom_line (aes (x=TimeSec, y=DelayS.mean), size=1) +
   ggtitle ("Average Delay time for 4 mobile nodes") +

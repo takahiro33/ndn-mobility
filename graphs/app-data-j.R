@@ -61,6 +61,10 @@ if (nchar(opt$node) > 0) {
   data = subset (data, Node %in% filnodes)
 }
 
+# Set the theme for graph output
+theme_set(theme_grey(base_size = 24) + 
+    theme(axis.text = element_text(colour = "black")))
+
 # Get the basename of the file
 tmpname = strsplit(opt$file, "/")[[1]]
 filename = tmpname[length(tmpname)]

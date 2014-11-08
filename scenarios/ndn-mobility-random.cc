@@ -146,6 +146,8 @@ int main (int argc, char *argv[])
 	char posFile[250] = "./Data/rand-hex.txt";    // File including the positioning of the nodes
 	double endTime = 800;                         // Number of seconds to run the simulation
 	double MBps = 0.15;                           // MB/s data rate desired for applications
+						      // 0.15 MB/s equals to 1.2 Mb/s which is the bitrate for
+						      // 480p livestream video according to Adobe
 	int contentSize = -1;                         // Size of content to be retrieved
 	int maxSeq = -1;                              // Maximum number of Data packets to request
 	double retxtime = 0.05;                       // How frequent Interest retransmission timeouts should be checked (seconds)
@@ -559,7 +561,8 @@ string bounds = string(buffer);
 
 	// Use the Wifi Helper to define the wireless interfaces for APs
 	WifiHelper wifi;
-	wifi.SetStandard(WIFI_PHY_STANDARD_80211g);
+	// Using the G standard makes the network slower than using the default
+	//wifi.SetStandard(WIFI_PHY_STANDARD_80211g);
 	// The N standard is apparently not completely supported in NS-3
 	//wifi.setStandard(WIFI_PHY_STANDARD_80211n_2_4GHZ);
 	// The ConstantRateWifiManager only works with one rate, making issues

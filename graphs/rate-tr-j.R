@@ -58,6 +58,10 @@ filename = tmpname[length(tmpname)]
 # Get rid of the extension
 noext = gsub("\\..*", "", filename)
 
+# Set the theme for graph output
+theme_set(theme_grey(base_size = 24) + 
+    theme(axis.text = element_text(colour = "black")))
+
 # Print the Interest information if the data is from CCN  
 intdata.combined = ""
 g.int = ""
