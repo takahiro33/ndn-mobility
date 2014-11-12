@@ -213,12 +213,18 @@ NNNAddress::compare (const NNNAddress &name) const
 NNNAddress
 NNNAddress::getSectorName () const
 {
-	// Copy the old name
-	std::vector<name::Component> sectorName (m_address_comp);
-	// Eliminate the last position
-	sectorName.pop_back();
+	if (isEmpty()) {
+		return NNNAddress ();
+	} else
+	{
+		// Copy the old name
+		std::vector<name::Component> sectorName (m_address_comp);
 
-	return NNNAddress (sectorName);
+		// Eliminate the last position
+		sectorName.pop_back();
+
+		return NNNAddress (sectorName);
+	}
 }
 
 bool
@@ -269,6 +275,13 @@ NNNAddress::getClosestSector (const NNNAddress &name) const
 	{
 		return getClosestSector (name.getSectorName ());
 	}
+}
+
+int
+NNNAddress::distance (const NNNAddress &name) const
+{
+	std::cout << "Comparing " << *this << " with " << name << std::endl;
+
 }
 
 inline size_t

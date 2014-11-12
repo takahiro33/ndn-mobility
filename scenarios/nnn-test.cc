@@ -140,15 +140,28 @@ int main (int argc, char *argv[])
 	NNNAddress dest ("A.34");
 	NNNAddress maxd ("0.1.2.3.4.5.6.7.8.9.A.B.C.D.E.F");
 	NNNAddress tests ("111111111111111.A");
+	NNNAddress samesecM ("ae.34.26");
+	NNNAddress samesecL ("ae.34.24");
+
+	NNNAddress lowerStart ("ad");
+	NNNAddress higherStart ("af");
+
+	NNNAddress higherSub ("ae.35");
 
 	cout << "Working address is: " << working << endl;
 
 	NNNAddress workingSector = working.getSectorName();
+	NNNAddress samesecSector = samesecM.getSectorName();
 
 	cout << "Sector is: " << workingSector << endl;
 
+	cout << "Second working address is: " << samesecM << endl;
+
+	cout << "Sector is: " << samesecSector << endl;
+
 	NNNAddress closestSector = working.getClosestSector(workingSector);
 	NNNAddress closestSector2 = workingSector.getClosestSector(working);
+	NNNAddress closestSector5 = working.getClosestSector(samesecM);
 
 	cout << "Closest working sector between " << working << " and " << workingSector << " is " << closestSector << endl;
 	cout << "Closest working sector between " << workingSector << " and " << working << " is " << closestSector2 << endl;
@@ -162,6 +175,52 @@ int main (int argc, char *argv[])
 	NNNAddress closestSector4 = dest.getClosestSector(working);
 
 	cout << "Closest working sector between " << dest << " and " << working << " is " << closestSector4 << endl;
+
+	cout << "--------------------" << endl;
+	cout << "Closest working sector between " << working << " and " << samesecM << " is " << closestSector5 << endl;
+	cout << "--------------------" << endl;
+
+	cout << "Is " << working << " same as " << working << "?: " << working.compare(working) << endl;
+	cout << "Is " << working << " same as " << samesecL << "?: " << working.compare(samesecL) << endl;
+	cout << "Is " << working << " same as " << samesecM << "?: " << working.compare(samesecM) << endl;
+	cout << "--------------------" << endl;
+
+	cout << "Is " << working << " same as " << higherStart << "?: " << working.compare(higherStart) << endl;
+	cout << "Is " << working << " same as " << lowerStart << "?: " << working.compare(lowerStart) << endl;
+
+	cout << "--------------------" << endl;
+	cout << "Is " << working << " same as " << workingSector << "?: " << working.compare(workingSector) << endl;
+	cout << "Is " << working << " same as " << higherSub << "?: " << working.compare(higherSub) << endl;
+
+	cout << "--------------------" << endl;
+
+	NNNAddress start ("a.1.23");
+	NNNAddress test0 ("a.1.24");
+	NNNAddress test1 ("a.1");
+	NNNAddress test2 ("a.3");
+	NNNAddress test3 ("a");
+	NNNAddress test4 ("b");
+	NNNAddress test5 ("b.1");
+	NNNAddress test6 ("b.1.1");
+
+	cout << "Closest working sector between " << start << " and " << test0 << " is " <<  start.getClosestSector(test0) << endl;
+	cout << "Closest working sector between " << start << " and " << test1 << " is " <<  start.getClosestSector(test1) << endl;
+	cout << "Closest working sector between " << start << " and " << test2 << " is " <<  start.getClosestSector(test2) << endl;
+	cout << "Closest working sector between " << start << " and " << test3 << " is " <<  start.getClosestSector(test3) << endl;
+	cout << "Closest working sector between " << start << " and " << test4 << " is " <<  start.getClosestSector(test4) << endl;
+	cout << "Closest working sector between " << start << " and " << test5 << " is " <<  start.getClosestSector(test5) << endl;
+	cout << "Closest working sector between " << start << " and " << test6 << " is " <<  start.getClosestSector(test6) << endl;
+
+	cout << "Distance between " << start << " and " << test0 << " is " << start.distance(test0) << endl;
+	cout << "Distance between " << start << " and " << test1 << " is " << start.distance(test1) << endl;
+	cout << "Distance between " << start << " and " << test2 << " is " << start.distance(test2) << endl;
+	cout << "Distance between " << start << " and " << test3 << " is " << start.distance(test3) << endl;
+	cout << "Distance between " << start << " and " << test4 << " is " << start.distance(test4) << endl;
+	cout << "Distance between " << start << " and " << test5 << " is " << start.distance(test5) << endl;
+	cout << "Distance between " << start << " and " << test6 << " is " << start.distance(test6) << endl;
+
+
+	cout << "--------------------" << endl;
 
 	Buffer buf;
 

@@ -318,6 +318,9 @@ public:
 	NNNAddress
 	ConvertFrom (const Address &address);
 
+	int
+	distance (const NNNAddress &name) const;
+
 public:
 	// Data Members (public):
 	///  Value returned by various member functions when they fail.
