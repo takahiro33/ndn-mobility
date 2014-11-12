@@ -148,7 +148,7 @@ INF::Deserialize (Buffer::Iterator start)
 	Buffer::Iterator i = start;
 
 	// Read packet id
-	if (i.ReadU32 () != 1)
+	if (i.ReadU32 () != 7)
 		throw new INFException ();
 
 	// Read length of packet

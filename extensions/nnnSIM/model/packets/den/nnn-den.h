@@ -81,7 +81,6 @@ public:
 	uint32_t
 	GetPacketId ();
 
-
 	/**
 	 * \brief Set interest name
 	 *
@@ -135,12 +134,6 @@ public:
 	Time
 	GetLifetime () const;
 
-	void
-	SetRemainLease (Time ex_lease);
-
-	Time
-	GetRemainLease () const;
-
 	/**
 	 * @brief Get wire formatted packet
 	 *
@@ -169,7 +162,6 @@ private:
 private:
 	uint32_t m_packetid;      ///< @brief Packet Identifier (5 for REN)
 	Time m_ttl;               ///< @brief Packet life time (TTL)
-	Time m_re_lease;          ///< @brief Packet Remaining lease time
 	Ptr<NNNAddress> m_name;   ///< @brief Destination NNN Address used in the packet
 
 

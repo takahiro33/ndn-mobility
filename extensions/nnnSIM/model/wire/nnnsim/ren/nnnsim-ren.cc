@@ -107,7 +107,7 @@ REN::GetSerializedSize (void) const
 	}
 
 	size_t size =
-			4 +                                  /* Packetid */
+			4 +  									/* Packetid */
 			2 +                                  /* Length of packet */
 			2 +                                  /* Timestamp */
 			2 +                                  /* PoA Type */
@@ -186,8 +186,8 @@ REN::Deserialize (Buffer::Iterator start)
 	Buffer::Iterator i = start;
 
 	// Read packet id
-	if (i.ReadU32 () != 1)
-		throw new INFException ();
+	if (i.ReadU32 () != 5)
+		throw new RENException ();
 
 	// Read length of packet
 	uint16_t packet_len = i.ReadU16 ();
@@ -230,7 +230,7 @@ REN::Deserialize (Buffer::Iterator start)
 		}
 	}
 
-	// Read the least time
+	// Read the lease time
 	m_ren_p->SetRemainLease (Seconds (i.ReadU16 ()));
 
 	// Deserialize the old name
