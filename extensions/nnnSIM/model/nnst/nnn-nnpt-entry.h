@@ -42,7 +42,7 @@
 #include "../../helper/nnn-face-container.h"
 
 namespace ns3 {
-namespace nnn {UpdateLifetime (const Time &lifetime);
+namespace nnn {
 virtual void
 class NNPT;
 
