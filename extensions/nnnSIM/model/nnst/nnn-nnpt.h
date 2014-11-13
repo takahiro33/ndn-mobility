@@ -35,6 +35,23 @@ public:
 	NNPT();
 
 	virtual ~NNPT();
+
+	virtual void
+	AddPair();
+
+	virtual void
+	DeletePair();
+
+	virtual void
+	SearchOldName();
+
+	virtual void
+	SearchNewName();
+
+private:
+
+protected:
+
 };
 
 std::ostream& operator<< (std::ostream& os, const NNPT &nnpt);

@@ -29,7 +29,7 @@
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/multi_index/tag.hpp>
 
-#include <ns3-dev/ns3/ptr.h>
+#include <ns3-dev/ns3/ptr.h>UpdateLifetime (const Time &lifetime);
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/traced-value.h>
 
@@ -42,16 +42,30 @@
 #include "../../helper/nnn-face-container.h"
 
 namespace ns3 {
-namespace nnn {
-
+namespace nnn {UpdateLifetime (const Time &lifetime);
+virtual void
 class NNPT;
+
 
 namespace nnpt {
 
-class Entry {
+class Entry {virtual void
 public:
 	Entry();
 	virtual ~Entry();
+
+	virtual void
+	UpdateLifetime (const Time &lifetime);
+
+	virtual void
+	OffsetLifetime (const Time &offsetTime);
+
+private:
+
+protected:
+
+
+
 };
 
 std::ostream& operator<< (std::ostream& os, const Entry &entry);
