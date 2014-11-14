@@ -281,7 +281,59 @@ int
 NNNAddress::distance (const NNNAddress &name) const
 {
 	std::cout << "Comparing " << *this << " with " << name << std::endl;
+	int res = compare(name);
 
+	if (res == 0)
+		return 0;
+	else
+	{
+		NNNAddress::const_iterator i = this->begin ();
+		NNNAddress::const_iterator j = name.begin ();
+		if (isToplvlSector())
+		{
+			int fin = name.size ();
+			if (i->compare(*j) == 0)
+				return fin - 1;
+			else
+				return fin;
+		}
+
+		if (name.isToplvlSector())
+		{
+			int fin = size ();
+			if (i->compare(*j) == 0)
+				return fin - 1;
+			else
+				return fin;
+		}
+
+		int s1 = size ();
+		int s2 = name.size ();
+		if (s1 == s2)
+		{
+			if (isSameSector(name))
+			{
+				return 2;
+			}
+
+			if (res == 1)
+			{
+				return getSectorName ().distance(name) + 1;
+			}
+			else
+			{
+				return distance(name.getSectorName ()) + 1;
+			}
+		}
+		else if (s1 > s2)
+		{
+			return getSectorName ().distance(name) + 1;
+		}
+		else
+		{
+			return distance(name.getSectorName ()) + 1;
+		}
+	}
 }
 
 inline size_t

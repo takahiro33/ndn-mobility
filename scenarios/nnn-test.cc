@@ -211,6 +211,7 @@ int main (int argc, char *argv[])
 	cout << "Closest working sector between " << start << " and " << test5 << " is " <<  start.getClosestSector(test5) << endl;
 	cout << "Closest working sector between " << start << " and " << test6 << " is " <<  start.getClosestSector(test6) << endl;
 
+	cout << "Distance between " << start << " and " << start << " is " << start.distance(start) << endl;
 	cout << "Distance between " << start << " and " << test0 << " is " << start.distance(test0) << endl;
 	cout << "Distance between " << start << " and " << test1 << " is " << start.distance(test1) << endl;
 	cout << "Distance between " << start << " and " << test2 << " is " << start.distance(test2) << endl;
