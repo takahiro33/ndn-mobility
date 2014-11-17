@@ -4,18 +4,18 @@
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
  *   			  Zhu Li <philipszhuli1990@ruri.waseda.jp>
  *
- *  nnnsim-en.h is free software: you can redistribute it and/or modify
+ *  nnnsim-den.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnnsim-en.h is distributed in the hope that it will be useful,
+ *  nnnsim-den.h is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
  *
  *  You should have received a copy of the GNU Affero Public License
- *  along with nnnsim-en.h.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with nnnsim-den.h.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "../nnnsim-common.h"

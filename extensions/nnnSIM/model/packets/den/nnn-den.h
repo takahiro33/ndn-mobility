@@ -4,18 +4,18 @@
  *   Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
  *	             Zhu Li <philipszhuli1990@ruri.waseda.jp>
  *
- *  nnn-ren.h is free software: you can redistribute it and/or modify
+ *  nnn-den.h is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  nnn-ren.h is distributed in the hope that it will be useful,
+ *  nnn-den.h is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Affero Public License for more details.
  *
  *  You should have received a copy of the GNU Affero Public License
- *  along with nnn-do.h.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with nnn-den.h.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _NNN_DEN_HEADER_H_
@@ -39,7 +39,7 @@ namespace nnn {
 
 /**
  * @ingroup nnn
- * @brief NNN REN packet (wire formats are defined in wire)
+ * @brief NNN DEN packet (wire formats are defined in wire)
  **/
 class DEN : public SimpleRefCount<DEN>
 {
@@ -62,7 +62,7 @@ public:
 	/**
 	 * \brief Constructor
 	 *
-	 * Creates a REN packet with payload
+	 * Creates a DEN packet with payload
 	 *
 	 * @param name NNN Address
 	 * @param payload Packet Ptr
