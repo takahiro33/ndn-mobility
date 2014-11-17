@@ -187,6 +187,12 @@ ForwardingStrategy::OnREN (Ptr<Face> face, Ptr<REN> ren_p)
 }
 
 void
+ForwardingStrategy::OnDEN (Ptr<Face> face, Ptr<DEN> den_p)
+{
+
+}
+
+void
 ForwardingStrategy::OnINF (Ptr<Face> face, Ptr<INF> do_p)
 {
 

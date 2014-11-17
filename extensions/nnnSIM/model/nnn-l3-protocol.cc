@@ -132,6 +132,7 @@ L3Protocol::AddFace (const Ptr<Face> &face)
 			MakeCallback (&ForwardingStrategy::OnEN, m_forwardingStrategy),
 			MakeCallback (&ForwardingStrategy::OnAEN, m_forwardingStrategy),
 			MakeCallback (&ForwardingStrategy::OnREN, m_forwardingStrategy),
+			MakeCallback (&ForwardingStrategy::OnDEN, m_forwardingStrategy),
 			MakeCallback (&ForwardingStrategy::OnINF, m_forwardingStrategy)
 			);
 

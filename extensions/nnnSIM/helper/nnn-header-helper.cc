@@ -69,6 +69,8 @@ HeaderHelper::GetNnnHeaderType (Ptr<const Packet> packet)
 	case 5:
 		return HeaderHelper::REN_NNN;
 	case 6:
+		return HeaderHelper::DEN_NNN;
+	case 7:
 		return HeaderHelper::INF_NNN;
 	}
 

@@ -43,6 +43,7 @@ class DO;
 class EN;
 class AEN;
 class REN;
+class DEN;
 class INF;
 
 /**
@@ -77,6 +78,7 @@ public:
 	typedef Callback<void, Ptr<Face>, Ptr<EN> > ENHandler;
 	typedef Callback<void, Ptr<Face>, Ptr<AEN> > AENHandler;
 	typedef Callback<void, Ptr<Face>, Ptr<REN> > RENHandler;
+	typedef Callback<void, Ptr<Face>, Ptr<DEN> > DENHandler;
 	typedef Callback<void, Ptr<Face>, Ptr<INF> > INFHandler;
 
 	/**
@@ -102,7 +104,7 @@ public:
 	RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
 			const DOHandler &DOHandler, const ENHandler &ENHandler,
 			const AENHandler &AENHandler, const RENHandler &RENHandler,
-			const INFHandler &INFHandler);
+			const DENHandler &DENHandler, const INFHandler &INFHandler);
 
 	/**
 	 * \brief Un-Register callback to call when new packet arrives on the Face
@@ -152,6 +154,9 @@ public:
 	SendREN (Ptr<const REN> ren_o);
 
 	virtual bool
+	SendDEN (Ptr<const DEN> den_o);
+
+	virtual bool
 	SendINF (Ptr<const INF> inf_o);
 
 	/**
@@ -186,6 +191,9 @@ public:
 
 	virtual bool
 	ReceiveREN (Ptr<REN> ren_i);
+
+	virtual bool
+	ReceiveDEN (Ptr<DEN> den_i);
 
 	virtual bool
 	ReceiveINF (Ptr<INF> inf_i);
@@ -330,6 +338,7 @@ private:
 	ENHandler m_upstreamENHandler;
 	AENHandler m_upstreamAENHandler;
 	RENHandler m_upstreamRENHandler;
+	DENHandler m_upstreamDENHandler;
 	INFHandler m_upstreamINFHandler;
 	bool m_ifup;
 	uint32_t m_id; ///< \brief id of the interNN_Face in NNN stack (per-node uniqueness)
