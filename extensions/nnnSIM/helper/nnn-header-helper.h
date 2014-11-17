@@ -53,7 +53,7 @@ public:
      @brief enum for Nnn packet types
 	 */
 	enum Type {NULL_NNN, SO_NNN, DO_NNN,
-		EN_NNN, AEN_NNN, REN_NNN, INF_NNN};
+		EN_NNN, AEN_NNN, REN_NNN, DEN_NNN, INF_NNN};
 
 	static Type
 	GetNnnHeaderType (Ptr<const Packet> packet);

@@ -20,10 +20,11 @@
 
 // Main header to include all packet headers used in NNN
 
-#include "packets/aen/nnn-aen.h"
+#include "packets/nullp/nnn-nullp.h"
+#include "packets/so/nnn-so.h"
 #include "packets/do/nnn-do.h"
 #include "packets/en/nnn-en.h"
-#include "packets/inf/nnn-inf.h"
-#include "packets/nullp/nnn-nullp.h"
+#include "packets/aen/nnn-aen.h"
 #include "packets/ren/nnn-ren.h"
-#include "packets/so/nnn-so.h"
+#include "packets/den/nnn-den.h"
+#include "packets/inf/nnn-inf.h"

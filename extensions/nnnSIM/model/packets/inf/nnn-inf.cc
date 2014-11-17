@@ -29,7 +29,7 @@ namespace ns3 {
 namespace nnn {
 
 INF::INF ()
- : m_packetid (5)
+ : m_packetid (7)
  , m_ttl      (Seconds (0))
  , m_wire     (0)
 {
@@ -37,7 +37,7 @@ INF::INF ()
 }
 
 INF::INF (Ptr<NNNAddress> oldname,  Ptr<NNNAddress> newname)
- : m_packetid (5)
+ : m_packetid (7)
  , m_ttl      (Seconds (1))
  , m_old_name (oldname)
  , m_new_name (newname)
@@ -48,7 +48,7 @@ INF::INF (Ptr<NNNAddress> oldname,  Ptr<NNNAddress> newname)
 }
 
 INF::INF (const NNNAddress &oldname, const NNNAddress &newname)
- : m_packetid (5)
+ : m_packetid (7)
  , m_ttl      (Seconds (1))
  , m_old_name (Create<NNNAddress> (oldname))
  , m_new_name (Create<NNNAddress> (newname))
@@ -60,7 +60,7 @@ INF::INF (const NNNAddress &oldname, const NNNAddress &newname)
 
 
 INF::INF (const INF &inf_p)
- : m_packetid (5)
+ : m_packetid (7)
  , m_ttl      (inf_p.m_ttl)
  , m_old_name (Create<NNNAddress> (inf_p.GetOldName()))
  , m_new_name (Create<NNNAddress> (inf_p.GetNewName()))
