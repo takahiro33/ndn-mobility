@@ -64,7 +64,7 @@ public:
 	RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
 			const DOHandler &DOHandler, const ENHandler &ENHandler,
 			const AENHandler &AENHandler, const RENHandler &RENHandler,
-			const INFHandler &INFHandler);
+			const DENHandler &DENHandler, const INFHandler &INFHandler);
 
 	virtual void
 	UnRegisterProtocolHandlers ();
