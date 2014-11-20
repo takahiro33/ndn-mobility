@@ -22,6 +22,7 @@
 
 #include <ns3-dev/ns3/ptr.h>
 #include <ns3-dev/ns3/node.h>
+#include <ns3-dev/ns3/object.h>
 #include <ns3-dev/ns3/simple-ref-count.h>
 
 #include "nnn-names-container-entry.h"
@@ -30,14 +31,26 @@
 namespace ns3 {
 namespace nnn {
 
+struct address {};
+struct lease {};
+struct renew {};
+
+
+
 class NamesContainer : public SimpleRefCount<NamesContainer>
 {
 
 public:
+	/**
+	 * \brief Interface ID
+	 *
+	 * \return interface ID
+	 */
+	static TypeId GetTypeId ();
+
 	NamesContainer();
+
 	virtual ~NamesContainer();
-
-
 
 };
 
