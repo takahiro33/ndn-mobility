@@ -70,6 +70,7 @@ Face::Face (Ptr<Node> node)
  , m_upstreamENHandler    (MakeNullCallback< void, Ptr<Face>, Ptr<EN> > ())
  , m_upstreamAENHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<AEN> > ())
  , m_upstreamRENHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<REN> > ())
+ , m_upstreamDENHandler	(MakeNullCallback< void, Ptr<Face>, Ptr<DEN> > ())
  , m_upstreamINFHandler   (MakeNullCallback< void, Ptr<Face>, Ptr<INF> > ())
  , m_ifup (false)
  , m_id ((uint32_t)-1)
@@ -105,7 +106,7 @@ void
 Face::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
 		const DOHandler &DOHandler, const ENHandler &ENHandler,
 		const AENHandler &AENHandler, const RENHandler &RENHandler,
-		const INFHandler &INFHandler)
+		const DENHandler &DENHandler, const INFHandler &INFHandler)
 {
 	NS_LOG_FUNCTION_NOARGS ();
 
@@ -115,6 +116,7 @@ Face::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandle
 	m_upstreamENHandler = ENHandler;
 	m_upstreamAENHandler = AENHandler;
 	m_upstreamRENHandler = RENHandler;
+	m_upstreamDENHandler = DENHandler;
 	m_upstreamINFHandler = INFHandler;
 }
 
@@ -129,6 +131,7 @@ Face::UnRegisterProtocolHandlers ()
 	m_upstreamENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<EN> > ();
 	m_upstreamAENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<AEN> > ();
 	m_upstreamRENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<REN> > ();
+	m_upstreamDENHandler = MakeNullCallback< void, Ptr<Face>, Ptr<DEN> > ();
 	m_upstreamINFHandler = MakeNullCallback< void, Ptr<Face>, Ptr<INF> > ();
 }
 
@@ -213,6 +216,18 @@ Face::SendREN (Ptr<const REN> ren_o)
 }
 
 bool
+Face::SendDEN (Ptr<const DEN> den_o)
+{
+	NS_LOG_FUNCTION (this << boost::cref (*this) << den_o);
+
+	if (!IsUp ())
+	{
+		return false;
+	}
+
+	return Send (Wire::FromDEN (den_o));
+}
+bool
 Face::SendINF (Ptr<const INF> inf_o)
 {
 	NS_LOG_FUNCTION (this << boost::cref (*this) << inf_o);
@@ -260,6 +275,8 @@ Face::Receive (Ptr<const Packet> p)
 			return ReceiveAEN (Wire::ToAEN (packet, Wire::WIRE_FORMAT_NNNSIM));
 		case HeaderHelper::REN_NNN:
 			return ReceiveREN (Wire::ToREN (packet, Wire::WIRE_FORMAT_NNNSIM));
+		case HeaderHelper::DEN_NNN:
+			return ReceiveDEN (Wire::ToDEN (packet, Wire::WIRE_FORMAT_NNNSIM));
 		case HeaderHelper::INF_NNN:
 			return ReceiveINF (Wire::ToINF (packet, Wire::WIRE_FORMAT_NNNSIM));
 		default:
@@ -353,6 +370,19 @@ Face::ReceiveREN (Ptr<REN> ren_i)
 	}
 
 	m_upstreamRENHandler (this, ren_i);
+	return true;
+}
+
+bool
+Face::ReceiveDEN (Ptr<DEN> den_i)
+{
+	if (!IsUp ())
+	{
+		// no tracing here. If we were off while receiving, we shouldn't even know that something was there
+		return false;
+	}
+
+	m_upstreamDENHandler (this, den_i);
 	return true;
 }
 

@@ -82,12 +82,12 @@ void
 NetDeviceFace::RegisterProtocolHandlers (const NULLpHandler &NULLpHandler, const SOHandler &SOHandler,
 		const DOHandler &DOHandler, const ENHandler &ENHandler,
 		const AENHandler &AENHandler, const RENHandler &RENHandler,
-		const INFHandler &INFHandler)
+		const DENHandler &DENHandler, const INFHandler &INFHandler)
 {
 	NS_LOG_FUNCTION (this);
 
 	Face::RegisterProtocolHandlers (NULLpHandler, SOHandler, DOHandler,
-			ENHandler, AENHandler, RENHandler, INFHandler);
+			ENHandler, AENHandler, RENHandler, DENHandler, INFHandler);
 
 	m_node->RegisterProtocolHandler (MakeCallback (&NetDeviceFace::ReceiveFromNetDevice, this),
 			L3Protocol::ETHERNET_FRAME_TYPE, m_netDevice, true/*promiscuous mode*/);

@@ -34,6 +34,7 @@ class FaceContainer: public SimpleRefCount<FaceContainer>
 {
 private:
 	typedef std::vector< Ptr<Face> > Container;
+
 public:
 	typedef Container::const_iterator Iterator;
 

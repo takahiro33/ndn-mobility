@@ -76,6 +76,12 @@ struct Wire
 	ToREN (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
 
 	static Ptr<Packet>
+	FromDEN (Ptr<const DEN> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<DEN>
+	ToDEN (Ptr<Packet> packet, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static Ptr<Packet>
 	FromINF (Ptr<const INF> n_o, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
 
 	static Ptr<INF>
@@ -117,6 +123,12 @@ struct Wire
 
 	static Ptr<REN>
 	ToRENStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
+
+	static std::string
+	FromDENStr (Ptr<const DEN> den_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);
+
+	static Ptr<DEN>
+	ToDENStr (const std::string &wire, int8_t type = WIRE_FORMAT_AUTODETECT);
 
 	static std::string
 	FromINFStr (Ptr<const INF> inf_p, int8_t wireFormat = WIRE_FORMAT_DEFAULT);

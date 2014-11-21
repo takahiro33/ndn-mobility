@@ -50,6 +50,7 @@ class DO;
 class EN;
 class AEN;
 class REN;
+class DEN;
 class INF;
 
 class NNST;
@@ -103,11 +104,11 @@ public:
 			Ptr<DO> do_p);
 
 	/**
-	 * \brief Actual processing of incoming Nnn SOs.
+	 * \brief Actual processing of incoming Nnn NULLps.
 	 *
-	 * Processing SO packets
+	 * Processing NULLp packets
 	 * @param face     incoming face
-	 * @param so_p SO packet
+	 * @param null_p NULLp packet
 	 */
 	virtual void
 	OnNULLp (Ptr<Face> face,
@@ -116,46 +117,57 @@ public:
 	/**
 	 * \brief Actual processing of incoming Nnn content objects
 	 *
-	 * Processing DO packets
+	 * Processing EN packets
 	 * @param face    incoming face
-	 * @param do_p    DO packet
+	 * @param en_p    EN packet
 	 */
 	virtual void
 	OnEN (Ptr<Face> face,
 			Ptr<EN> en_p);
 
 	/**
-	 * \brief Actual processing of incoming Nnn SOs.
+	 * \brief Actual processing of incoming Nnn AENs.
 	 *
-	 * Processing SO packets
+	 * Processing AEN packets
 	 * @param face     incoming face
-	 * @param so_p SO packet
+	 * @param aen_p AEN packet
 	 */
 	virtual void
 	OnAEN (Ptr<Face> face,
 			Ptr<AEN> aen_p);
 
 	/**
-	 * \brief Actual processing of incoming Nnn content objects
+	 * \brief Actual processing of incoming Nnn RENs
 	 *
-	 * Processing DO packets
+	 * Processing REN packets
 	 * @param face    incoming face
-	 * @param do_p    DO packet
+	 * @param ren_p    REN packet
 	 */
 	virtual void
 	OnREN (Ptr<Face> face,
 			Ptr<REN> ren_p);
 
 	/**
-	 * \brief Actual processing of incoming Nnn content objects
+	 * \brief Actual processing of incoming Nnn DENs
 	 *
-	 * Processing DO packets
+	 * Processing DEN packets
 	 * @param face    incoming face
-	 * @param do_p    DO packet
+	 * @param den_p    DEN packet
+	 */
+	virtual void
+	OnDEN (Ptr<Face> face,
+			Ptr<DEN> den_p);
+
+	/**
+	 * \brief Actual processing of incoming Nnn INFs
+	 *
+	 * Processing INF packets
+	 * @param face    incoming face
+	 * @param inf_p    INF packet
 	 */
 	virtual void
 	OnINF (Ptr<Face> face,
-			Ptr<INF> do_p);
+			Ptr<INF> inf_p);
 
 	/**
 	 * @brief Event fired just before PIT entry is removed by timeout
