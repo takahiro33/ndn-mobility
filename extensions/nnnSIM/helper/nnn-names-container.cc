@@ -33,7 +33,19 @@ NamesContainer::~NamesContainer ()
 void
 NamesContainer::addEntry (NamesContainerEntry nameEntry)
 {
+	container.insert(nameEntry);
+}
 
+void
+NamesContainer::addEntry (NNNAddress name, Time lease_expire)
+{
+	container.insert(NamesContainerEntry(name, lease_expire));
+}
+
+void
+NamesContainer::addEntry (NNNAddress name, Time lease_expire, Time renew)
+{
+	container.insert(NamesContainerEntry(name, lease_expire, renew));
 }
 
 void

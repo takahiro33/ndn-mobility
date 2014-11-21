@@ -66,6 +66,12 @@ public:
 	addEntry (NamesContainerEntry nameEntry);
 
 	void
+	addEntry (NNNAddress name, Time lease_expire);
+
+	void
+	addEntry (NNNAddress name, Time lease_expire, Time renew);
+
+	void
 	deleteEntry (NamesContainerEntry nameEntry);
 
 	void
