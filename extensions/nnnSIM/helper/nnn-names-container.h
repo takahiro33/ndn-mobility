@@ -25,33 +25,65 @@
 #include <ns3-dev/ns3/object.h>
 #include <ns3-dev/ns3/simple-ref-count.h>
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+
 #include "nnn-names-container-entry.h"
 #include "../model/nnn-naming.h"
+
+using namespace ::boost;
+using namespace ::boost::multi_index;
 
 namespace ns3 {
 namespace nnn {
 
 struct address {};
 struct lease {};
-struct renew {};
 
+typedef multi_index_container<
+	NamesContainerEntry,
+	indexed_by<
+		// sort by NamesContainer::operator<
+		ordered_unique<tag<lease>, identity<NamesContainerEntry> >,
 
+		// sort by less<string> on NNNAddress
+		ordered_unique<tag<address>, member<NamesContainerEntry,NNNAddress,&NamesContainerEntry::m_name> >
+	>
+> names_set;
 
 class NamesContainer : public SimpleRefCount<NamesContainer>
 {
 
 public:
-	/**
-	 * \brief Interface ID
-	 *
-	 * \return interface ID
-	 */
-	static TypeId GetTypeId ();
-
 	NamesContainer();
 
-	virtual ~NamesContainer();
+	virtual
+	~NamesContainer();
 
+	void
+	addEntry (NamesContainerEntry nameEntry);
+
+	void
+	deleteEntry (NamesContainerEntry nameEntry);
+
+	void
+	deleteEntry (NNNAddress name);
+
+	Ptr<NamesContainerEntry>
+	findEntry (NNNAddress name);
+
+	bool
+	foundName (NNNAddress name);
+
+	void
+	printByAddress ();
+
+	void
+	printByLease ();
+
+	names_set container;
 };
 
 } /* namespace nnn */

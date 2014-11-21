@@ -20,6 +20,8 @@
 #ifndef NNN_NAMES_CONTAINER_ENTRY_H_
 #define NNN_NAMES_CONTAINER_ENTRY_H_
 
+#include <iostream>
+
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/identity.hpp>
@@ -55,6 +57,13 @@ public:
 	Time m_lease_expire;
 	Time m_renew;
 };
+
+inline std::ostream &
+operator << (std::ostream &os, const NamesContainerEntry &entry)
+{
+	os << entry.m_name << "  " << entry.m_lease_expire << " " << entry.m_renew;
+	return os;
+}
 
 } /* namespace nnn */
 } /* namespace ns3 */

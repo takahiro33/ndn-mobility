@@ -23,12 +23,29 @@ namespace ns3 {
 namespace nnn {
 
 NamesContainerEntry::NamesContainerEntry() {
-	// TODO Auto-generated constructor stub
 
 }
 
 NamesContainerEntry::~NamesContainerEntry() {
-	// TODO Auto-generated destructor stub
+
+}
+
+NamesContainerEntry::NamesContainerEntry(NNNAddress name, Time lease_expire)
+: m_name           (name)
+, m_lease_expire   (lease_expire)
+, m_renew          (lease_expire - Seconds(1))
+{
+
+}
+
+NamesContainerEntry::NamesContainerEntry(NNNAddress name, Time lease_expire, Time renew)
+: m_name           (name)
+, m_lease_expire   (lease_expire)
+{
+	if (renew < m_lease_expire)
+		m_renew = renew;
+	else
+		m_renew = lease_expire - Seconds(1);
 }
 
 } /* namespace nnn */

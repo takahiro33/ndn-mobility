@@ -22,13 +22,54 @@
 namespace ns3 {
 namespace nnn {
 
-NamesContainer::NamesContainer() {
-	// TODO Auto-generated constructor stub
+NamesContainer::NamesContainer ()
+{
+}
+
+NamesContainer::~NamesContainer ()
+{
+}
+
+void
+NamesContainer::addEntry (NamesContainerEntry nameEntry)
+{
 
 }
 
-NamesContainer::~NamesContainer() {
-	// TODO Auto-generated destructor stub
+void
+NamesContainer::deleteEntry (NamesContainerEntry nameEntry)
+{
+
+}
+
+void
+NamesContainer::deleteEntry (NNNAddress name)
+{
+
+}
+
+Ptr<NamesContainerEntry>
+NamesContainer::findEntry (NNNAddress name)
+{
+
+}
+
+bool
+NamesContainer::foundName (NNNAddress name)
+{
+
+}
+
+void
+NamesContainer::printByAddress ()
+{
+
+}
+
+void
+NamesContainer::printByLease ()
+{
+
 }
 
 } /* namespace nnn */
