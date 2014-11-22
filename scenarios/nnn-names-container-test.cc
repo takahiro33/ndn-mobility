@@ -20,8 +20,62 @@
 
 // Extensions
 #include "nnnSIM/nnnSIM-module.h"
+#include "nnnSIM/helper/nnn-names-container.h"
+#include "nnnSIM/helper/nnn-names-container-entry.h"
+
+using namespace ns3;
+using namespace std;
+using namespace nnn;
 
 int main (int argc, char *argv[])
 {
+	NamesContainer test1;
+
+	NNNAddress nn_test1 ("be.54.32");
+	NNNAddress nn_test2 ("af.67.31");
+	NNNAddress nn_test3 ("ae.34.26");
+
+	Time t_test1 = Seconds (20);
+	Time t_test2 = Seconds (60);
+	Time t_test3 = Seconds (10);
+
+	NamesContainerEntry nce_test1 = NamesContainerEntry (nn_test1, t_test1);
+	NamesContainerEntry nce_test2 = NamesContainerEntry (nn_test2, t_test2);
+	NamesContainerEntry nce_test3 = NamesContainerEntry (nn_test3, t_test3);
+
+	test1.addEntry(nce_test1);
+	test1.addEntry(nce_test2);
+	test1.addEntry(nce_test3);
+
+	std::cout << "We have a NamesContainer of size: " << test1.size() << std::endl;
+
+	std::cout << "Printing ordering by address" << std::endl;
+	test1.printByAddress();
+
+	std::cout << "Printing ordering by lease expire time" << std::endl;
+	test1.printByLease();
+
+	std::cout << "Expire time for " << nn_test2 << " is " << test1.findNameExpireTime(nn_test2) << std::endl;
+
+	std::cout << "Deleting " << nn_test3 << " from container..." << std::endl;
+
+	test1.deleteEntry(nn_test3);
+
+	NNNAddress tmp = test1.findNewestName();
+
+	std::cout << "Last address to die will be " << tmp << " at " << test1.findNameExpireTime(tmp) << std::endl;
+
+	std::cout << "We have a NamesContainer of size: " << test1.size() << std::endl;
+	std::cout << "Printing ordering by address" << std::endl;
+	test1.printByAddress();
+
+	Simulator::Stop (Seconds (70));
+	Simulator::Run ();
+	Simulator::Destroy ();
+
+
+
+	std::cout << "Printing ordering by address" << std::endl;
+	test1.printByAddress();
 
 }

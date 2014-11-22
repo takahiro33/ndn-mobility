@@ -61,7 +61,7 @@ public:
 inline std::ostream &
 operator << (std::ostream &os, const NamesContainerEntry &entry)
 {
-	os << entry.m_name << "  " << entry.m_lease_expire << " " << entry.m_renew;
+	os << entry.m_name << "\t" << entry.m_lease_expire << "\t" << entry.m_renew << std::endl;
 	return os;
 }
 

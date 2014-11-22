@@ -22,8 +22,11 @@
 namespace ns3 {
 namespace nnn {
 
-NamesContainerEntry::NamesContainerEntry() {
-
+NamesContainerEntry::NamesContainerEntry()
+: m_name            (NNNAddress ())
+, m_lease_expire    (Seconds (-1))
+, m_renew           (Seconds (-1))
+{
 }
 
 NamesContainerEntry::~NamesContainerEntry() {

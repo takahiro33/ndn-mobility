@@ -34,54 +34,145 @@ void
 NamesContainer::addEntry (NamesContainerEntry nameEntry)
 {
 	container.insert(nameEntry);
+
+	Simulator::Schedule(nameEntry.m_lease_expire, &NamesContainer::cleanExpired, this);
 }
 
 void
 NamesContainer::addEntry (NNNAddress name, Time lease_expire)
 {
 	container.insert(NamesContainerEntry(name, lease_expire));
+
+	Simulator::Schedule(lease_expire, &NamesContainer::cleanExpired, this);
 }
 
 void
 NamesContainer::addEntry (NNNAddress name, Time lease_expire, Time renew)
 {
 	container.insert(NamesContainerEntry(name, lease_expire, renew));
+
+	Simulator::Schedule(lease_expire, &NamesContainer::cleanExpired, this);
 }
 
 void
 NamesContainer::deleteEntry (NamesContainerEntry nameEntry)
 {
-
+	container.erase(nameEntry);
 }
 
 void
 NamesContainer::deleteEntry (NNNAddress name)
 {
+	NamesContainerEntry tmp = findEntry (name);
 
-}
-
-Ptr<NamesContainerEntry>
-NamesContainer::findEntry (NNNAddress name)
-{
-
+	container.erase(tmp);
 }
 
 bool
 NamesContainer::foundName (NNNAddress name)
 {
+	names_set_by_name::iterator it = container.get<address> ().find(name);
 
+	if (it == container.get<address> ().end())
+		return false;
+	else
+		return true;
+}
+
+NamesContainerEntry
+NamesContainer::findEntry (NNNAddress name)
+{
+	names_set_by_name::iterator it = container.get<address> ().find(name);
+
+	if (it != container.get<address> ().end())
+	{
+		return *it;
+	}
+	else
+	{
+		return NamesContainerEntry ();
+	}
+}
+
+NNNAddress
+NamesContainer::findNewestName ()
+{
+	names_set_by_name::iterator it = container.get<address> ().end();
+
+	it--;
+
+	return it->m_name;
+}
+
+Time
+NamesContainer::findNameExpireTime (NNNAddress name)
+{
+	NamesContainerEntry tmp = findEntry(name);
+
+	return tmp.m_lease_expire;
+}
+
+uint32_t
+NamesContainer::size()
+{
+	return container.size();
+}
+
+bool
+NamesContainer::isEmpty()
+{
+	return (container.size() == 0);
+}
+
+void
+NamesContainer::cleanExpired()
+{
+	Time now = Simulator::Now();
+
+	//std::cout << "Deleting expired entries at " << now << std::endl;
+
+	names_set_by_lease::iterator it = container.get<lease> ().begin();
+
+	while (! isEmpty())
+	{
+		if (it->m_lease_expire <= now)
+		{
+			deleteEntry(*it);
+			break;
+		}
+
+		++it;
+	}
 }
 
 void
 NamesContainer::printByAddress ()
 {
+	names_set_by_name::iterator it = container.get<address> ().begin();
 
+	std::cout << "NNN Address\t| Lease Expire\t| Renew" << std::endl;
+	std::cout << "--------------------------------------------------" << std::endl;
+
+	while (it != container.get<address> ().end())
+	{
+		std::cout << *it;
+		++it;
+	}
 }
 
 void
 NamesContainer::printByLease ()
 {
+	names_set_by_lease::iterator it = container.get<lease> ().begin();
 
+	std::cout << "NNN Address\t| Lease Expire\t| Renew" << std::endl;
+	std::cout << "--------------------------------------------------" << std::endl;
+
+	while (it != container.get<lease> ().end ())
+	{
+		std::cout << *it;
+		++it;
+	}
 }
 
 } /* namespace nnn */

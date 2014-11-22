@@ -23,6 +23,7 @@
 #include <ns3-dev/ns3/ptr.h>
 #include <ns3-dev/ns3/node.h>
 #include <ns3-dev/ns3/object.h>
+#include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/simple-ref-count.h>
 
 #include <boost/multi_index_container.hpp>
@@ -33,7 +34,7 @@
 #include "nnn-names-container-entry.h"
 #include "../model/nnn-naming.h"
 
-using namespace ::boost;
+using boost::multi_index_container;
 using namespace ::boost::multi_index;
 
 namespace ns3 {
@@ -46,12 +47,21 @@ typedef multi_index_container<
 	NamesContainerEntry,
 	indexed_by<
 		// sort by NamesContainer::operator<
-		ordered_unique<tag<lease>, identity<NamesContainerEntry> >,
+		ordered_unique<
+			tag<lease>,
+			identity<NamesContainerEntry>
+		>,
 
 		// sort by less<string> on NNNAddress
-		ordered_unique<tag<address>, member<NamesContainerEntry,NNNAddress,&NamesContainerEntry::m_name> >
+		ordered_unique<
+			tag<address>,
+			member<NamesContainerEntry,NNNAddress,&NamesContainerEntry::m_name>
+		>
 	>
 > names_set;
+
+typedef names_set::index<address>::type names_set_by_name;
+typedef names_set::index<lease>::type names_set_by_lease;
 
 class NamesContainer : public SimpleRefCount<NamesContainer>
 {
@@ -77,11 +87,26 @@ public:
 	void
 	deleteEntry (NNNAddress name);
 
-	Ptr<NamesContainerEntry>
-	findEntry (NNNAddress name);
-
 	bool
 	foundName (NNNAddress name);
+
+	NamesContainerEntry
+	findEntry (NNNAddress name);
+
+	NNNAddress
+	findNewestName ();
+
+	uint32_t
+	size ();
+
+	bool
+	isEmpty ();
+
+	Time
+	findNameExpireTime (NNNAddress name);
+
+	void
+	cleanExpired ();
 
 	void
 	printByAddress ();
