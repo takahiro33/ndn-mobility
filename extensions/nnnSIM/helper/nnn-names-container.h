@@ -96,6 +96,12 @@ public:
 	NNNAddress
 	findNewestName ();
 
+	void
+	updateLeaseTime (NNNAddress name, Time lease_expire);
+
+	void
+	updateLeaseTime (NNNAddress name, Time lease_expire, Time renew);
+
 	uint32_t
 	size ();
 
@@ -115,6 +121,9 @@ public:
 	printByLease ();
 
 	names_set container;
+
+
+
 };
 
 } /* namespace nnn */

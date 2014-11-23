@@ -39,6 +39,8 @@ int main (int argc, char *argv[])
 	Time t_test2 = Seconds (60);
 	Time t_test3 = Seconds (10);
 
+	Time updateTime = Seconds (80);
+
 	NamesContainerEntry nce_test1 = NamesContainerEntry (nn_test1, t_test1);
 	NamesContainerEntry nce_test2 = NamesContainerEntry (nn_test2, t_test2);
 	NamesContainerEntry nce_test3 = NamesContainerEntry (nn_test3, t_test3);
@@ -56,6 +58,9 @@ int main (int argc, char *argv[])
 	test1.printByLease();
 
 	std::cout << "Expire time for " << nn_test2 << " is " << test1.findNameExpireTime(nn_test2) << std::endl;
+	std::cout << "Updating expire time for " << nn_test2 << " to " << updateTime << std::endl;
+
+	test1.updateLeaseTime(nn_test2, updateTime);
 
 	std::cout << "Deleting " << nn_test3 << " from container..." << std::endl;
 
@@ -72,8 +77,6 @@ int main (int argc, char *argv[])
 	Simulator::Stop (Seconds (70));
 	Simulator::Run ();
 	Simulator::Destroy ();
-
-
 
 	std::cout << "Printing ordering by address" << std::endl;
 	test1.printByAddress();
