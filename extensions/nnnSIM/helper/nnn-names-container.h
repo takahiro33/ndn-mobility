@@ -121,9 +121,6 @@ public:
 	printByLease ();
 
 	names_set container;
-
-
-
 };
 
 } /* namespace nnn */
