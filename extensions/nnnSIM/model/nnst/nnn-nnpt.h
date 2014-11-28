@@ -25,9 +25,119 @@
 
 #include <ostream>
 
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+
+#include "nnn-nnpt-entry.h"
+#include "../model/nnn-naming.h"
+
+
+using boost::multi_index_container;
+using namespace ::boost::multi_index;
+
+
 namespace ns3 {
 namespace nnn {
 
+struct pair {};
+struct lease {};
+
+typedef multi_index_container<
+	NNPTEntry,
+	indexed_by<
+		// sort by NamesContainer::operator<
+		ordered_unique<
+			tag<lease>,
+			identity<NNPTEntry>
+		>,
+
+		// sort by less<string> on NNNAddress
+		ordered_unique<
+			tag<pair>,
+			member<NNPTEntry,NNNAddress,&NNPTEntry::m_name>
+		>
+	>
+> names_set;
+
+typedef names_set::index<pair>::type names_set_by_name;
+typedef names_set::index<lease>::type names_set_by_lease;
+
+class NNPT : public SimpleRefCount<NNPT>
+{
+
+public:
+	NNPT();
+
+	virtual
+	~NNPT();
+
+	void
+	addEntry (NNNAddress oldName, NNNAddress newName);
+
+	void
+	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
+
+	void
+	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
+
+	void
+	deleteEntry (NNNAddress oldName);
+
+	void
+	deleteEntry (NNNAddress newName);
+
+	void
+	deleteEntry (NNPTEntry nnptEntry);
+
+	void
+	deleteEntry (NNNAddress oldName, NNNAddress newName);
+
+	bool
+	foundName (NNNAddress name);
+
+	NNPTEntry
+	findEntry (NNNAddress name);
+
+	NNNAddress
+	findNewestName ();
+
+	void
+	updateLeaseTime (NNNAddress oldName, Time lease_expire);
+
+	void
+	updateLeaseTime (NNNAddress oldName, Time lease_expire, Time renew);
+
+	uint32_t
+	size ();
+
+	bool
+	isEmpty ();
+
+	Time
+	findNameExpireTime (NNNAddress name);
+
+	Time
+	findNameExpireTime (NNPTEntry nnptEntry);
+
+	void
+	cleanExpired ();
+
+	void
+	printByAddress ();
+
+	void
+	printByLease ();
+
+	void
+	informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire); // where to go?
+
+//names_set container;
+
+};
+
+/*
 class NNPT {
 public:
 	static TypeId GetTypeId ();
@@ -52,7 +162,7 @@ private:
 
 protected:
 
-};
+};*/
 
 std::ostream& operator<< (std::ostream& os, const NNPT &nnpt);
 

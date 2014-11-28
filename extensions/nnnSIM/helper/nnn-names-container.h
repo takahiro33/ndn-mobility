@@ -40,7 +40,7 @@ using namespace ::boost::multi_index;
 namespace ns3 {
 namespace nnn {
 
-struct address {};
+struct pair {};
 struct lease {};
 
 typedef multi_index_container<
@@ -54,13 +54,13 @@ typedef multi_index_container<
 
 		// sort by less<string> on NNNAddress
 		ordered_unique<
-			tag<address>,
+			tag<pair>,
 			member<NamesContainerEntry,NNNAddress,&NamesContainerEntry::m_name>
 		>
 	>
 > names_set;
 
-typedef names_set::index<address>::type names_set_by_name;
+typedef names_set::index<pair>::type names_set_by_name;
 typedef names_set::index<lease>::type names_set_by_lease;
 
 class NamesContainer : public SimpleRefCount<NamesContainer>

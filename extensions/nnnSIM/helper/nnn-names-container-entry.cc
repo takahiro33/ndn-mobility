@@ -22,18 +22,18 @@
 namespace ns3 {
 namespace nnn {
 
-NamesContainerEntry::NamesContainerEntry()
+NNPTEntry::NNPTEntry()
 : m_name            (NNNAddress ())
 , m_lease_expire    (Seconds (-1))
 , m_renew           (Seconds (-1))
 {
 }
 
-NamesContainerEntry::~NamesContainerEntry() {
+NNPTEntry::~NNPTEntry() {
 
 }
 
-NamesContainerEntry::NamesContainerEntry(NNNAddress name, Time lease_expire)
+NNPTEntry::NNPTEntry(NNNAddress name, Time lease_expire)
 : m_name           (name)
 , m_lease_expire   (lease_expire)
 , m_renew          (lease_expire - Seconds(1))
@@ -41,7 +41,7 @@ NamesContainerEntry::NamesContainerEntry(NNNAddress name, Time lease_expire)
 
 }
 
-NamesContainerEntry::NamesContainerEntry(NNNAddress name, Time lease_expire, Time renew)
+NNPTEntry::NNPTEntry(NNNAddress name, Time lease_expire, Time renew)
 : m_name           (name)
 , m_lease_expire   (lease_expire)
 {
