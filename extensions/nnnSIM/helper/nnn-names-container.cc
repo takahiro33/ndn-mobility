@@ -31,7 +31,7 @@ NamesContainer::~NamesContainer ()
 }
 
 void
-NamesContainer::addEntry (NNPTEntry nameEntry)
+NamesContainer::addEntry (NamesContainerEntry nameEntry)
 {
 	container.insert(nameEntry);
 
@@ -41,7 +41,7 @@ NamesContainer::addEntry (NNPTEntry nameEntry)
 void
 NamesContainer::addEntry (NNNAddress name, Time lease_expire)
 {
-	container.insert(NNPTEntry(name, lease_expire));
+	container.insert(NamesContainerEntry(name, lease_expire));
 
 	Simulator::Schedule(lease_expire, &NamesContainer::cleanExpired, this);
 }
@@ -49,13 +49,13 @@ NamesContainer::addEntry (NNNAddress name, Time lease_expire)
 void
 NamesContainer::addEntry (NNNAddress name, Time lease_expire, Time renew)
 {
-	container.insert(NNPTEntry(name, lease_expire, renew));
+	container.insert(NamesContainerEntry(name, lease_expire, renew));
 
 	Simulator::Schedule(lease_expire, &NamesContainer::cleanExpired, this);
 }
 
 void
-NamesContainer::deleteEntry (NNPTEntry nameEntry)
+NamesContainer::deleteEntry (NamesContainerEntry nameEntry)
 {
 	container.erase(nameEntry);
 }
@@ -63,7 +63,7 @@ NamesContainer::deleteEntry (NNPTEntry nameEntry)
 void
 NamesContainer::deleteEntry (NNNAddress name)
 {
-	NNPTEntry tmp = findEntry (name);
+	NamesContainerEntry tmp = findEntry (name);
 
 	container.erase(tmp);
 }
@@ -71,7 +71,7 @@ NamesContainer::deleteEntry (NNNAddress name)
 bool
 NamesContainer::foundName (NNNAddress name)
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.find(name);
 
 	if (it == names_index.end())
@@ -80,10 +80,10 @@ NamesContainer::foundName (NNNAddress name)
 		return true;
 }
 
-NNPTEntry
+NamesContainerEntry
 NamesContainer::findEntry (NNNAddress name)
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.find(name);
 
 	if (it != names_index.end())
@@ -92,14 +92,14 @@ NamesContainer::findEntry (NNNAddress name)
 	}
 	else
 	{
-		return NNPTEntry ();
+		return NamesContainerEntry ();
 	}
 }
 
 NNNAddress
 NamesContainer::findNewestName ()
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.end();
 
 	it--;
@@ -110,7 +110,7 @@ NamesContainer::findNewestName ()
 Time
 NamesContainer::findNameExpireTime (NNNAddress name)
 {
-	NNPTEntry tmp = findEntry(name);
+	NamesContainerEntry tmp = findEntry(name);
 
 	return tmp.m_lease_expire;
 }
@@ -118,12 +118,12 @@ NamesContainer::findNameExpireTime (NNNAddress name)
 void
 NamesContainer::updateLeaseTime (NNNAddress name, Time lease_expire)
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.find(name);
 
 	if (it != names_index.end())
 	{
-		NNPTEntry tmp = *it;
+		NamesContainerEntry tmp = *it;
 
 		tmp.m_lease_expire = lease_expire;
 		tmp.m_renew = lease_expire - Seconds (1);
@@ -138,12 +138,12 @@ NamesContainer::updateLeaseTime (NNNAddress name, Time lease_expire)
 void
 NamesContainer::updateLeaseTime (NNNAddress name, Time lease_expire, Time renew)
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.find(name);
 
 	if (it != names_index.end())
 	{
-		NNPTEntry tmp = *it;
+		NamesContainerEntry tmp = *it;
 
 		tmp.m_lease_expire = lease_expire;
 		tmp.m_renew = renew;
@@ -192,7 +192,7 @@ NamesContainer::cleanExpired()
 void
 NamesContainer::printByAddress ()
 {
-	names_set_by_name& names_index = container.get<pair> ();
+	names_set_by_name& names_index = container.get<address> ();
 	names_set_by_name::iterator it = names_index.begin();
 
 	std::cout << "NNN Address\t| Lease Expire\t| Renew" << std::endl;
