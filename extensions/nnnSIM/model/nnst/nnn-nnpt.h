@@ -31,7 +31,7 @@
 #include <boost/multi_index/member.hpp>
 
 #include "nnn-nnpt-entry.h"
-#include "../model/nnn-naming.h"
+#include "../nnn-naming.h"
 
 
 using boost::multi_index_container;
@@ -56,18 +56,20 @@ typedef multi_index_container<
 		// sort by less<string> on NNNAddress
 		ordered_unique<
 			tag<pair>,
-			member<NNPTEntry,NNNAddress,&NNPTEntry::m_name>
+			member<NNPTEntry,NNNAddress,&NNPTEntry::m_newName>
 		>
 	>
-> names_set;
+> pair_set;
 
-typedef names_set::index<pair>::type names_set_by_name;
-typedef names_set::index<lease>::type names_set_by_lease;
+typedef pair_set::index<pair>::type names_set_by_name;
+typedef pair_set::index<lease>::type names_set_by_lease;
 
 class NNPT : public SimpleRefCount<NNPT>
 {
 
 public:
+	static TypeId GetTypeId ();
+
 	NNPT();
 
 	virtual
@@ -80,13 +82,10 @@ public:
 	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
 	void
-	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
+	addEntry (NNPT nnpt);
 
 	void
 	deleteEntry (NNNAddress oldName);
-
-	void
-	deleteEntry (NNNAddress newName);
 
 	void
 	deleteEntry (NNPTEntry nnptEntry);
@@ -131,9 +130,9 @@ public:
 	printByLease ();
 
 	void
-	informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire); // where to go?
+	informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
-//names_set container;
+	pair_set container;
 
 };
 

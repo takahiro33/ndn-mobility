@@ -41,6 +41,124 @@ NNPT::~NNPT() {
 	// TODO Auto-generated destructor stub
 }
 
+
+void
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName)
+{
+	container.insert(oldName, newName);
+
+//	Simulator::Schedule(oldName.m_lease_expire, &NamesContainer::cleanExpired, this);
+}
+
+void
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
+{
+
+}
+
+void
+NNPT::addEntry (NNPT nnpt)
+{
+
+}
+
+void
+NNPT::deleteEntry (NNNAddress oldName)
+{
+
+}
+
+void
+NNPT::deleteEntry (NNPTEntry nnptEntry)
+{
+
+}
+
+void
+NNPT::deleteEntry (NNNAddress oldName, NNNAddress newName)
+{
+
+}
+
+bool
+NNPT::foundName (NNNAddress name)
+{
+
+}
+
+NNPTEntry
+NNPT::findEntry (NNNAddress name)
+{
+
+}
+
+NNNAddress
+NNPT::findNewestName ()
+{
+
+}
+
+void
+NNPT::updateLeaseTime (NNNAddress oldName, Time lease_expire)
+{
+
+}
+
+void
+NNPT::updateLeaseTime (NNNAddress oldName, Time lease_expire, Time renew)
+{
+
+}
+
+uint32_t
+NNPT::size ()
+{
+
+}
+
+bool
+NNPT::isEmpty ()
+{
+
+}
+
+Time
+NNPT::findNameExpireTime (NNNAddress name)
+{
+
+}
+
+Time
+NNPT::findNameExpireTime (NNPTEntry nnptEntry)
+{
+
+}
+
+void
+NNPT::cleanExpired ()
+{
+
+}
+
+void
+NNPT::printByAddress ()
+{
+
+}
+
+void
+NNPT::printByLease ()
+{
+
+}
+
+void
+NNPT::informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire) // where to go?
+{
+
+}
+
+
 std::ostream&
 operator<< (std::ostream& os, const NNPT &nnpt)
 {

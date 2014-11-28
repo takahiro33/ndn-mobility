@@ -21,23 +21,38 @@
 
 namespace ns3 {
 namespace nnn {
-namespace nnpt {
+//namespace nnpt {
 
-Entry::Entry() {
+NNPTEntry::NNPTEntry()
 	// TODO Auto-generated constructor stub
-
+	  :m_oldName			(NNNAddress ())
+	  ,m_newName			(NNNAddress ())
+	  ,m_lease_expire	(Seconds (-1))
+	  ,m_renew			(Seconds (-1))
+{
 }
 
-Entry::~Entry() {
+NNPTEntry::~NNPTEntry() {
 	// TODO Auto-generated destructor stub
 }
 
-std::ostream& operator<< (std::ostream& os, const Entry &entry)
+NNPTEntry::NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
+:m_oldName			(oldName)
+,m_newName			(newName)
+,m_lease_expire		(lease_expire)
+,m_renew			(lease_expire - Seconds (-1))
 {
-	return os;
 }
 
+NNPTEntry::NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew)
+:m_oldName			(oldName)
+,m_newName			(newName)
+,m_lease_expire		(lease_expire)
+{
+	if(renew < m_lease_expire)		m_renew = renew;		/////////////////// inverse?????
+	else 							m_renew = lease_expire - Seconds(1);
+}
 
-} /* namespace nnpt */
+//} /* namespace nnpt */
 } /* namespace nnn */
 } /* namespace ns3 */
