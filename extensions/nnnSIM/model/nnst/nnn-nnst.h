@@ -116,6 +116,9 @@ public:
 	Remove (const Ptr<const NNNAddress> &prefix);
 
 	void
+	RemoveAddress (Address addr);
+
+	void
 	InvalidateAll ();
 
 	void

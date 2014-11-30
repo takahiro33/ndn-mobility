@@ -61,12 +61,14 @@ public:
 		NNN_NNST_RED = 3
 	};
 
-	FaceMetric (Ptr<Face> face, int32_t cost)
-	: m_face   (face)
-	, m_status (NNN_NNST_GREEN)
-	, m_routingCost (cost)
-	, m_sRtt   (Seconds (0))
-	, m_rttVar (Seconds (0))
+	FaceMetric (Ptr<Face> face, Address addr, Time lease_expire, int32_t cost)
+	: m_face         (face)
+	, m_dst_addr     (addr)
+	, m_lease_expire (lease_expire)
+	, m_status       (NNN_NNST_GREEN)
+	, m_routingCost  (cost)
+	, m_sRtt         (Seconds (0))
+	, m_rttVar       (Seconds (0))
 	{
 
 	}
@@ -144,6 +146,18 @@ public:
 	void
 	UpdateRtt (const Time &rttSample);
 
+	Address
+	GetAddress () const
+	{
+		return m_dst_addr;
+	}
+
+	Time
+	GetExpireTime () const
+	{
+		return m_lease_expire;
+	}
+
 private:
   friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
@@ -181,26 +195,37 @@ struct FaceMetricContainer
 			FaceMetric,
 			indexed_by<
 				// For fast access to elements using Face
-				ordered_unique<
-				tag<i_face>,
-				const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
-			>,
+				ordered_non_unique<
+				    tag<i_face>,
+				    const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
+			    >,
 
-			// List of available faces ordered by (status, m_routingCost)
-			ordered_non_unique<
-				tag<i_metric>,
-				composite_key<
-					FaceMetric,
-					const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
-					const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-				>
-			>,
+			    // For fast access by PoA Address
+			    ordered_non_unique<
+			        tag<i_address>,
+			        const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
+	            >,
 
-			// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
-			random_access<
-				tag<i_nth>
-			>
-		>
+	            ordered_non_unique<
+	                tag<i_lease>,
+	                const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
+	            >,
+
+			    // List of available faces ordered by (status, m_routingCost)
+			    ordered_non_unique<
+				    tag<i_metric>,
+				    composite_key<
+					    FaceMetric,
+					    const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
+					    const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+				    >
+			    >,
+
+			    // To optimize nth candidate selection (sacrifice a little bit space to gain speed)
+			    random_access<
+				    tag<i_nth>
+			    >
+		    >
 	> type;
 	/// @endcond
 };
