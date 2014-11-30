@@ -97,33 +97,33 @@ NNST::Add (const NNNAddress &name, Ptr<Face> face, int32_t metric)
 Ptr<nnst::Entry>
 NNST::Add (const Ptr<const NNNAddress> &name, Ptr<Face> face, int32_t metric)
 {
-	NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId () << boost::cref(*name) << boost::cref(*face) << metric);
-
-	// will add entry if doesn't exists, or just return an iterator to the existing entry
-	std::pair< super::iterator, bool > result = super::insert (*name, 0);
-	if (result.first != super::end ())
-	{
-		if (result.second)
-		{
-			Ptr<nnst::Entry> newEntry = Create<nnst::Entry> (this, name);
-			newEntry->SetTrie (result.first);
-			result.first->set_payload (newEntry);
-		}
-
-		super::modify (result.first,
-				ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
-
-		if (result.second)
-		{
-			// notify forwarding strategy about new NNST entry
-			NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
-			this->GetObject<ForwardingStrategy> ()->DidAddNNSTEntry (result.first->payload ());
-		}
-
-		return result.first->payload ();
-	}
-	else
-		return 0;
+//	NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId () << boost::cref(*name) << boost::cref(*face) << metric);
+//
+//	// will add entry if doesn't exists, or just return an iterator to the existing entry
+//	std::pair< super::iterator, bool > result = super::insert (*name, 0);
+//	if (result.first != super::end ())
+//	{
+//		if (result.second)
+//		{
+//			Ptr<nnst::Entry> newEntry = Create<nnst::Entry> (this, name);
+//			newEntry->SetTrie (result.first);
+//			result.first->set_payload (newEntry);
+//		}
+//
+//		super::modify (result.first,
+//				ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
+//
+//		if (result.second)
+//		{
+//			// notify forwarding strategy about new NNST entry
+//			NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
+//			this->GetObject<ForwardingStrategy> ()->DidAddNNSTEntry (result.first->payload ());
+//		}
+//
+//		return result.first->payload ();
+//	}
+//	else
+//		return 0;
 }
 
 void

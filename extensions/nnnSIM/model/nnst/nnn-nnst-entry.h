@@ -158,12 +158,18 @@ public:
 		return m_lease_expire;
 	}
 
+	void
+	UpdateExpireTime (const Time lease)
+	{
+		m_lease_expire = lease;
+	}
+
 private:
   friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
 private:
 	Ptr<Face> m_face;             ///< Face
-	Address m_dst_addr;      ///< \brief Destination address to use on Face
+	Address m_dst_addr;           ///< \brief Destination address to use on Face
 	Time m_lease_expire;          ///< \brief Time when this entry will expire
 	Time m_sRtt;                  ///< \brief Round-trip time variation
 	Time m_rttVar;                ///< \brief round-trip time variation
@@ -206,6 +212,7 @@ struct FaceMetricContainer
 			        const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
 	            >,
 
+	            // For access by lease time
 	            ordered_non_unique<
 	                tag<i_lease>,
 	                const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
@@ -272,12 +279,15 @@ public:
 	void
 	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
 
+	// Should be deleted when completed
+	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
+
 	/**
 	 * \brief Add or update routing metric of FIB next hop
 	 *
 	 * Initial status of the next hop is set to YELLOW
 	 */
-	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
+	void AddOrUpdateRoutingMetric (Ptr<Face> face, Address addr, int32_t metric);
 
 	void
 	Invalidate ();
@@ -311,6 +321,9 @@ public:
 
 	void
 	printByLease ();
+
+	void
+	printByFace ();
 
 	trie::iterator to_iterator () { return item_; }
 	trie::const_iterator to_iterator ()  const { return item_; }

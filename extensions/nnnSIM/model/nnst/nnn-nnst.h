@@ -101,22 +101,36 @@ public:
 	ClosestSector (const NNNAddress &nnnaddr);
 
 	Ptr<nnst::Entry>
-	SignatureMatch (const Address &poa);
+	SignatureMatch (Address poa);
 
 	Ptr<nnst::Entry>
 	Find (const NNNAddress &prefix);
 
+	// This one should be eliminated
 	Ptr<nnst::Entry>
 	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
 
+	// This one as well
 	Ptr<nnst::Entry>
 	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
+
+	Ptr<nnst::Entry>
+	Add (const NNNAddress &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+
+	Ptr<nnst::Entry>
+	Add (const Ptr<const NNNAddress> &prefix, std::vector<Ptr<Face> > faces, Address poa, Time lease_expire, int32_t metric);
+
+	Ptr<nnst::Entry>
+	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, std::vector<Address> poas, Time lease_expire, int32_t metric);
+
+	Ptr<nnst::Entry>
+	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
 
 	void
 	Remove (const Ptr<const NNNAddress> &prefix);
 
 	void
-	RemoveAddress (Address addr);
+	RemoveAddress (Address poa);
 
 	void
 	InvalidateAll ();
@@ -125,7 +139,13 @@ public:
 	RemoveFace ();
 
 	void
+	RemovePoA ();
+
+	void
 	RemoveFromAll (Ptr<Face> face);
+
+	void
+	RemoveFromAll (Address poa);
 
 	void
 	Print (std::ostream &os) const;
