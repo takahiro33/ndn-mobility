@@ -148,26 +148,31 @@ private:
   friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
 private:
-	Ptr<Face> m_face; ///< Face
+	Ptr<Face> m_face;             ///< Face
+	Address m_dst_addr;      ///< \brief Destination address to use on Face
+	Time m_lease_expire;          ///< \brief Time when this entry will expire
+	Time m_sRtt;                  ///< \brief Round-trip time variation
+	Time m_rttVar;                ///< \brief round-trip time variation
+	int32_t m_routingCost;        ///< \brief routing protocol cost (interpretation of the value depends on the underlying routing protocol)
 	TracedValue<Status> m_status; ///< \brief Status of next hop
-	Time m_sRtt;                   ///< \brief Round-trip time variation
-	Time m_rttVar;       ///< \brief round-trip time variation
-	int32_t m_routingCost; ///< \brief routing protocol cost (interpretation of the value depends on the underlying routing protocol)
 };
 
 /// @cond include_hidden
 class i_face {};
+class i_address {};
+class i_lease {};
 class i_metric {};
 class i_nth {};
 /// @endcond
 
 /**
- * @ingroup ndn-fib
+ * @ingroup nnn-nnst
  * @brief Typedef for indexed face container of Entry
  *
- * Currently, there are 2 indexes:
+ * Currently, there are 3 indexes:
  * - by face (used to find record and update metric)
- * - by sector order
+ * - by Address
+ * - by Lease time
  */
 struct FaceMetricContainer
 {
@@ -210,7 +215,7 @@ public:
 			NNNAddress,
 			nnnSIM::smart_pointer_payload_traits<Entry>,
 			nnnSIM::counting_policy_traits
-			> trie;
+	> trie;
 
 	Entry();
 
@@ -268,28 +273,29 @@ public:
 	AddPoa (Address address);
 
 	std::vector<Address>
-	GetPoas ()
-	{
-		return m_poa_addrs;
-	}
+	GetPoas ();
 
-	size_t
-	GetPoasN ()
-	{
-		return m_poa_addrs.size ();
-	}
+	uint32_t
+	GetPoasN ();
+
+	void
+	cleanExpired();
+
+	void
+	printByAddress ();
+
+	void
+	printByLease ();
 
 	trie::iterator to_iterator () { return item_; }
 	trie::const_iterator to_iterator ()  const { return item_; }
 
 public:
-	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
-	Ptr<const NNNAddress> m_address;       ///< \brief Address used for the NNST Entry
+	Ptr<NNST> m_nnst;                   ///< \brief NNST to which entry is added
+	Ptr<const NNNAddress> m_address;    ///< \brief Address used for the NNST Entry
 	FaceMetricContainer::type m_faces;
 
 private:
-
-	std::vector<Address> m_poa_addrs;
 	trie::iterator item_;
 };
 

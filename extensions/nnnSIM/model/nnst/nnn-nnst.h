@@ -78,15 +78,18 @@ class Entry;
  * @defgroup nnn NNST
  */
 class NNST : public Object,
-				protected nnnSIM::trie_with_policy<NNNAddress,
+				protected nnnSIM::trie_with_policy<
+				                NNNAddress,
 								nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
 								nnnSIM::counting_policy_traits>
 {
 public:
 
-	typedef nnnSIM::trie_with_policy<NNNAddress,
+	typedef nnnSIM::trie_with_policy<
+			NNNAddress,
 			nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
-			nnnSIM::counting_policy_traits > super;
+			nnnSIM::counting_policy_traits
+	> super;
 
 	static TypeId GetTypeId ();
 

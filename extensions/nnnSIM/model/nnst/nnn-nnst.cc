@@ -38,7 +38,7 @@ NNST::GetTypeId (void)
 	static TypeId tid = TypeId ("ns3::nnn::NNST") // cheating ns3 object system
     		.SetParent<Object> ()
     		.SetGroupName ("nnn")
-    		;
+    		.AddConstructor<NNST> ();
 	return tid;
 }
 
@@ -60,6 +60,7 @@ NNST::NotifyNewAggregate ()
 void
 NNST::DoDispose (void)
 {
+	clear ();
 	Object::DoDispose ();
 }
 
