@@ -29,7 +29,6 @@ using namespace nnn;
 
 int main (int argc, char *argv[])
 {
-	NamesContainer test1;
 
 	NNNAddress nn_test1 ("be.54.32");
 	NNNAddress nn_test2 ("af.67.31");
