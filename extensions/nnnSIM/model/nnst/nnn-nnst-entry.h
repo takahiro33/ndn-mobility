@@ -52,7 +52,7 @@ namespace nnst {
 
 /// @cond include_hidden
 class i_face {};
-class i_addr {};
+class i_poa {};
 class i_lease {};
 class i_metric {};
 class i_nth {};
@@ -81,7 +81,7 @@ typedef multi_index_container<
 
 			// For fast access by PoA Address
 			ordered_non_unique<
-			    tag<i_addr>,
+			    tag<i_poa>,
 			    const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
 	        >,
 
@@ -110,7 +110,7 @@ typedef multi_index_container<
 /// @endcond
 
 typedef fmtr_set::index<i_face>::type fmtr_set_by_face;
-typedef fmtr_set::index<i_addr>::type fmtr_set_by_addr;
+typedef fmtr_set::index<i_poa>::type fmtr_set_by_poa;
 typedef fmtr_set::index<i_lease>::type fmtr_set_by_lease;
 typedef fmtr_set::index<i_metric>::type fmtr_set_by_metric;
 typedef fmtr_set::index<i_nth>::type fmtr_set_by_nth;
@@ -180,10 +180,7 @@ public:
 	FindBestCandidate (uint32_t skip = 0) const;
 
 	void
-	RemoveFace (const Ptr<Face> &face)
-	{
-		m_faces.erase (face);
-	}
+	RemoveFace (const Ptr<Face> &face);
 
 	void
 	AddPoA (Ptr<Face> face, Address poa);

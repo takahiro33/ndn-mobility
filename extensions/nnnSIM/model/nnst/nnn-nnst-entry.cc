@@ -161,6 +161,14 @@ Entry::FindBestCandidate (uint32_t skip/* = 0*/) const
 }
 
 void
+Entry::RemoveFace (const Ptr<Face> &face)
+{
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+
+	face_index.erase(face);
+}
+
+void
 Entry::AddPoA (Ptr<Face> face, Address poa)
 {
 }
@@ -180,7 +188,9 @@ Entry::GetPoAsN()
 void
 Entry::RemovePoA (Address poa)
 {
+	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 
+	poa_index.erase(poa);
 }
 
 void
