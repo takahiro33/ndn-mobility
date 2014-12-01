@@ -85,10 +85,12 @@ int main (int argc, char *argv[])
 
 	// Create a FaceMetric
 	FaceMetric n1_test00 (ptrFace00, n1_mac00.operator ns3::Address(), n1_expire, cost);
+	FaceMetric n1_test01 (ptrFace01, n1_mac01.operator ns3::Address(), n1_expire, cost);
 
 	std::cout << "Testing print of FaceMetric!" << std::endl;
 
 	std::cout << n1_test00 << std::endl;
+	std::cout << n1_test01 << std::endl;
 
 	// Create our NNN Addresses
 	NNNAddress n1_test ("be.54.32");

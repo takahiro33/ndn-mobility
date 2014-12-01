@@ -57,6 +57,11 @@ Entry::~Entry()
 
 }
 
+void
+Entry::SetTrie (trie::iterator item)
+{
+	item_ = item;
+}
 
 void
 Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
@@ -74,6 +79,12 @@ Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
 //
 //	// reordering random access index same way as by metric index
 //	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+}
+
+void
+Entry::UpdateStatus (Ptr<Face> face, Address poa, FaceMetric::Status status)
+{
+
 }
 
 void
@@ -103,6 +114,11 @@ Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric)
 //
 //	// reordering random access index same way as by metric index
 //	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+}
+
+void
+Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, Address poa, int32_t metric)
+{
 }
 
 void
@@ -145,14 +161,44 @@ Entry::FindBestCandidate (uint32_t skip/* = 0*/) const
 }
 
 void
-Entry::AddPoa (Address address)
+Entry::AddPoA (Ptr<Face> face, Address poa)
 {
 }
 
-void
-Entry::SetTrie (trie::iterator item)
+std::vector<Address>
+Entry::GetPoAs()
 {
-	item_ = item;
+
+}
+
+uint32_t
+Entry::GetPoAsN()
+{
+	return GetPoAs().size();
+}
+
+void
+Entry::RemovePoA (Address poa)
+{
+
+}
+
+void
+Entry::printByAddress ()
+{
+
+}
+
+void
+Entry::printByLease ()
+{
+
+}
+
+void
+Entry::printByFace ()
+{
+
 }
 
 std::ostream& operator<< (std::ostream& os, const Entry &entry)

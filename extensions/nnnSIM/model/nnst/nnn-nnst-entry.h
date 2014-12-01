@@ -186,13 +186,13 @@ public:
 	}
 
 	void
-	AddPoa (Address poa);
+	AddPoA (Ptr<Face> face, Address poa);
 
 	std::vector<Address>
-	GetPoas ();
+	GetPoAs ();
 
 	uint32_t
-	GetPoasN ();
+	GetPoAsN ();
 
 	void
 	RemovePoA (Address poa);
