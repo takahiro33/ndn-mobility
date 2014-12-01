@@ -17,6 +17,8 @@
  *  along with nnn-nnst-entry-facemetric.cc.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iomanip>
+
 #include "nnn-nnst-entry-facemetric.h"
 
 namespace ns3 {
@@ -61,9 +63,15 @@ FaceMetric::UpdateRtt (const Time &rttSample)
 
 std::ostream& operator<< (std::ostream& os, const FaceMetric &metric)
 {
-//	static const std::string statusString[] = {"","g","y","r"};
-//
-//	os << *metric.m_face << "(" << metric.m_routingCost << ","<< statusString [metric.m_status] << "," << metric.m_face->GetMetric () << ")";
+	static const std::string statusString[] = {"","G","Y","R"};
+
+	os << std::setw(21) << metric.m_dst_addr << " "
+			<< std::setw(5) << std::setprecision(1) << metric.m_lease_expire.GetSeconds() << " "
+			<< std::setw(3) << *metric.m_face << " "
+			<< std::setw(2) << statusString[metric.m_status] << " "
+			<< std::setw(4) << metric.m_routingCost << " "
+			<< std::setw(6) << metric.m_face->GetMetric();
+
 	return os;
 }
 
