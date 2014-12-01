@@ -134,7 +134,7 @@ namespace ns3 {
 
 	Entry();
 
-	Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name);
+	Entry(Ptr<NNST> nnst, Ptr<NNNAddress> name);
 
 	~Entry();
 
@@ -216,8 +216,8 @@ namespace ns3 {
 	trie::const_iterator to_iterator ()  const { return item_; }
 
       public:
-	Ptr<NNST> m_nnst;                   ///< \brief NNST to which entry is added
-	Ptr<const NNNAddress> m_address;    ///< \brief Address used for the NNST Entry
+	Ptr<NNST> m_nnst;             ///< \brief NNST to which entry is added
+	Ptr<NNNAddress> m_address;    ///< \brief Address used for the NNST Entry
 	fmtr_set m_faces;
 
       private:

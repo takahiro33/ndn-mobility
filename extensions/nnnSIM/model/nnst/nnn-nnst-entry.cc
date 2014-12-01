@@ -48,7 +48,7 @@ namespace ns3 {
 
       }
 
-      Entry::Entry(Ptr<NNST> nnst, Ptr<const NNNAddress> &name)
+      Entry::Entry(Ptr<NNST> nnst, Ptr<NNNAddress> name)
       : m_nnst        (nnst)
       , m_address     (name)
       , item_         (0)
@@ -240,17 +240,17 @@ namespace ns3 {
 	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 	fmtr_set_by_poa::iterator it = poa_index.begin ();
 
-	std::cout << std::setw(32) << GetAddress();
+	std::cout << GetAddress();
 
 	if (it != poa_index.end ())
 	  {
-	    std::cout << *it;
+	    std::cout << *it << std::endl;
 	    ++it;
 	  }
 
 	while (it != poa_index.end())
 	  {
-	    std::cout << std::setw(32) << *it;
+	    std::cout << *it << std::endl;
 	    ++it;
 	  }
       }
@@ -261,17 +261,17 @@ namespace ns3 {
 	fmtr_set_by_lease& lease_index = m_faces.get<i_lease> ();
 	fmtr_set_by_lease::iterator it = lease_index.begin ();
 
-	std::cout << std::setw(32) << GetAddress();
+	std::cout << GetAddress();
 
 	if (it != lease_index.end ())
 	  {
-	    std::cout << *it;
+	    std::cout << *it << std::endl;;
 	    ++it;
 	  }
 
 	while (it != lease_index.end())
 	  {
-	    std::cout << std::setw(32) << *it;
+	    std::cout << *it << std::endl;;
 	    ++it;
 	  }
       }
@@ -282,17 +282,17 @@ namespace ns3 {
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin ();
 
-	std::cout << std::setw(32) << GetAddress();
+	std::cout << GetAddress();
 
 	if (it != face_index.end ())
 	  {
-	    std::cout << *it;
+	    std::cout << *it << std::endl;
 	    ++it;
 	  }
 
 	while (it != face_index.end())
 	  {
-	    std::cout << std::setw(32) << *it;
+	    std::cout << *it << std::endl;;
 	    ++it;
 	  }
       }
@@ -303,17 +303,17 @@ namespace ns3 {
 	fmtr_set_by_face& face_index = tmp.get<nnst::i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin ();
 
-	os  << std::setw(32) << entry.GetAddress();
+	os  << entry.GetAddress();
 
 	if (it != face_index.end ())
 	  {
-	    os << *it;
+	    os << "    " << *it << std::endl;
 	    ++it;
 	  }
 
 	while (it != face_index.end())
 	  {
-	    os << std::setw(32) << *it;
+	    os << *it << std::endl;
 	    ++it;
 	  }
 
