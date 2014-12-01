@@ -15,7 +15,7 @@
  *
  *  You should have received a copy of the GNU Affero Public License
  *  along with nnn-nnst-entry.h.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #ifndef NNN_NNST_ENTRY_H_
 #define NNN_NNST_ENTRY_H_
@@ -30,8 +30,8 @@
 #include <boost/multi_index/tag.hpp>
 
 #include <ns3-dev/ns3/ptr.h>
-#include <ns3-dev/ns3/mac48-address.h>
 #include <ns3-dev/ns3/nstime.h>
+#include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/traced-value.h>
 
 #include "nnn-nnst.h"
@@ -47,84 +47,90 @@ using namespace ::boost;
 using namespace ::boost::multi_index;
 
 namespace ns3 {
-namespace nnn {
-namespace nnst {
+  namespace nnn {
+    namespace nnst {
 
-/// @cond include_hidden
-class i_face {};
-class i_poa {};
-class i_lease {};
-class i_metric {};
-class i_nth {};
-/// @endcond
+      /// @cond include_hidden
+      class i_entry {};
+      class i_face {};
+      class i_poa {};
+      class i_lease {};
+      class i_metric {};
+      class i_nth {};
+      /// @endcond
 
-/**
- * @ingroup nnn-nnst
- * @brief Typedef for indexed face container of Entry
- *
- * Currently, there are 5 indexes:
- * - by face (used to find record and update metric)
- * - by Address
- * - by Lease time
- * - by metric
- * - by position
- */
-/// @cond include_hidden
-typedef multi_index_container<
-		FaceMetric,
-		indexed_by<
-			// For fast access to elements using Face
-			ordered_non_unique<
-			    tag<i_face>,
-				const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
-            >,
+      /**
+       * @ingroup nnn-nnst
+       * @brief Typedef for indexed face container of Entry
+       *
+       * Currently, there are 5 indexes:
+       * - by face (used to find record and update metric)
+       * - by Address
+       * - by Lease time
+       * - by metric
+       * - by position
+       */
+      /// @cond include_hidden
+      typedef multi_index_container<
+	  FaceMetric,
+	  indexed_by<
+	  ordered_unique<
+	  tag<i_entry>,
+	  identity<FaceMetric>
+      >,
 
-			// For fast access by PoA Address
-			ordered_non_unique<
-			    tag<i_poa>,
-			    const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
-	        >,
+      // For fast access to elements using Face
+      ordered_non_unique<
+      tag<i_face>,
+      const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
+      >,
 
-	        // For access by lease time
-	        ordered_non_unique<
-	            tag<i_lease>,
-	            const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
-	        >,
+      // For fast access by PoA Address
+      ordered_non_unique<
+      tag<i_poa>,
+      const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
+      >,
 
-		    // List of available faces ordered by (status, m_routingCost)
-			ordered_non_unique<
-			    tag<i_metric>,
-				composite_key<
-				    FaceMetric,
-					const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
-					const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-				>
-			>,
+      // For access by lease time
+      ordered_non_unique<
+      tag<i_lease>,
+      const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
+      >,
 
-			// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
-			random_access<
-			    tag<i_nth>
-			>
-		>
-> fmtr_set;
-/// @endcond
+      // List of available faces ordered by (status, m_routingCost)
+      ordered_non_unique<
+      tag<i_metric>,
+      composite_key<
+      FaceMetric,
+      const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
+      const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+      >
+      >,
 
-typedef fmtr_set::index<i_face>::type fmtr_set_by_face;
-typedef fmtr_set::index<i_poa>::type fmtr_set_by_poa;
-typedef fmtr_set::index<i_lease>::type fmtr_set_by_lease;
-typedef fmtr_set::index<i_metric>::type fmtr_set_by_metric;
-typedef fmtr_set::index<i_nth>::type fmtr_set_by_nth;
+      // To optimize nth candidate selection (sacrifice a little bit space to gain speed)
+      random_access<
+      tag<i_nth>
+      >
+      >
+      > fmtr_set;
+      /// @endcond
 
-class Entry : public SimpleRefCount<Entry>
-{
-public:
+      typedef fmtr_set::index<i_face>::type fmtr_set_by_face;
+      typedef fmtr_set::index<i_poa>::type fmtr_set_by_poa;
+      typedef fmtr_set::index<i_lease>::type fmtr_set_by_lease;
+      typedef fmtr_set::index<i_metric>::type fmtr_set_by_metric;
+      typedef fmtr_set::index<i_nth>::type fmtr_set_by_nth;
+
+      class Entry : public SimpleRefCount<Entry>
+      {
+      public:
 	class NoFaces {};
 
 	typedef nnnSIM::trie_with_policy<
-			NNNAddress,
-			nnnSIM::smart_pointer_payload_traits<Entry>,
-			nnnSIM::counting_policy_traits
-	> trie;
+	    NNNAddress,
+	    nnnSIM::smart_pointer_payload_traits<Entry>,
+	    nnnSIM::counting_policy_traits
+	    > trie;
 
 	Entry();
 
@@ -135,19 +141,19 @@ public:
 	Ptr<NNST>
 	GetNNST ()
 	{
-		return m_nnst;
+	  return m_nnst;
 	}
 
 	Ptr<const NNNAddress>
 	GetPtrAddress ()
 	{
-		return m_address;
+	  return m_address;
 	}
 
 	const NNNAddress&
 	GetAddress () const
 	{
-		return *m_address;
+	  return *m_address;
 	}
 
 	void
@@ -183,7 +189,7 @@ public:
 	RemoveFace (const Ptr<Face> &face);
 
 	void
-	AddPoA (Ptr<Face> face, Address poa);
+	AddPoA (Ptr<Face> face, Address poa, Time e_lease, uint32_t cost);
 
 	std::vector<Address>
 	GetPoAs ();
@@ -209,20 +215,20 @@ public:
 	trie::iterator to_iterator () { return item_; }
 	trie::const_iterator to_iterator ()  const { return item_; }
 
-public:
+      public:
 	Ptr<NNST> m_nnst;                   ///< \brief NNST to which entry is added
 	Ptr<const NNNAddress> m_address;    ///< \brief Address used for the NNST Entry
 	fmtr_set m_faces;
 
-private:
+      private:
 	trie::iterator item_;
-};
+      };
 
-std::ostream& operator<< (std::ostream& os, const Entry &entry);
+      std::ostream& operator<< (std::ostream& os, const Entry &entry);
 
 
-} /* namespace nnst */
-} /* namespace nnn */
+    } /* namespace nnst */
+  } /* namespace nnn */
 } /* namespace ns3 */
 
 #endif /* NNN_NNST_ENTRY_H_ */

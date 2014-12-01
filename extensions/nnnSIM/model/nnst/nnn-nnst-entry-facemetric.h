@@ -49,7 +49,16 @@ public:
 	 * \brief Comparison operator used by boost::multi_index::identity<>
 	 */
 	bool
-	operator< (const FaceMetric &fm) const { return *m_face < *fm.m_face; } // return identity of the face
+	operator< (const FaceMetric &fm) const {
+		if (*m_face == *fm.m_face)
+                {
+                    return m_dst_addr < fm.GetAddress ();
+                } else
+                {
+		    return *m_face < *fm.m_face;
+                } 
+
+	} // return identity of the face
 
 	/**
 	 * @brief Comparison between FaceMetric and Face
