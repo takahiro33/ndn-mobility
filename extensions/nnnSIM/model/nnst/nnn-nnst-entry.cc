@@ -39,33 +39,6 @@ namespace ns3 {
 namespace nnn {
 namespace nnst {
 
-struct FaceMetricByFace
-{
-	typedef FaceMetricContainer::type::index<i_face>::type type;
-};
-
-
-void
-FaceMetric::UpdateRtt (const Time &rttSample)
-{
-	// const Time & this->m_rttSample
-
-	//update srtt and rttvar (RFC 2988)
-	if (m_sRtt.IsZero ())
-	{
-		//first RTT measurement
-		NS_ASSERT_MSG (m_rttVar.IsZero (), "SRTT is zero, but variation is not");
-
-		m_sRtt = rttSample;
-		m_rttVar = Time (m_sRtt / 2.0);
-	}
-	else
-	{
-		m_rttVar = Time ((1 - NNN_RTO_BETA) * m_rttVar + 1.0 * NNN_RTO_BETA * Abs(m_sRtt - rttSample));
-		m_sRtt = Time ((1 - NNN_RTO_ALPHA) * m_sRtt + 1.0 * NNN_RTO_ALPHA * rttSample);
-	}
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 Entry::Entry()
 {
@@ -194,14 +167,6 @@ std::ostream& operator<< (std::ostream& os, const Entry &entry)
 //
 //		os << *metric;
 //	}
-	return os;
-}
-
-std::ostream& operator<< (std::ostream& os, const FaceMetric &metric)
-{
-//	static const std::string statusString[] = {"","g","y","r"};
-//
-//	os << *metric.m_face << "(" << metric.m_routingCost << ","<< statusString [metric.m_status] << "," << metric.m_face->GetMetric () << ")";
 	return os;
 }
 

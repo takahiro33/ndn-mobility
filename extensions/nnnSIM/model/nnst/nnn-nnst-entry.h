@@ -35,6 +35,7 @@
 #include <ns3-dev/ns3/traced-value.h>
 
 #include "nnn-nnst.h"
+#include "nnn-nnst-entry-facemetric.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
 #include "../../utils/trie/trie.h"
@@ -47,139 +48,11 @@ using namespace ::boost::multi_index;
 
 namespace ns3 {
 namespace nnn {
-
-class NNNAddress;
-
 namespace nnst {
-
-class FaceMetric
-{
-public:
-
-	enum Status { NNN_NNST_GREEN = 1,
-		NNN_NNST_YELLOW = 2,
-		NNN_NNST_RED = 3
-	};
-
-	FaceMetric (Ptr<Face> face, Address addr, Time lease_expire, int32_t cost)
-	: m_face         (face)
-	, m_dst_addr     (addr)
-	, m_lease_expire (lease_expire)
-	, m_status       (NNN_NNST_GREEN)
-	, m_routingCost  (cost)
-	, m_sRtt         (Seconds (0))
-	, m_rttVar       (Seconds (0))
-	{
-
-	}
-
-	/**
-	 * \brief Comparison operator used by boost::multi_index::identity<>
-	 */
-	bool
-	operator< (const FaceMetric &fm) const { return *m_face < *fm.m_face; } // return identity of the face
-
-	/**
-	 * @brief Comparison between FaceMetric and Face
-	 */
-	bool
-	operator< (const Ptr<Face> &face) const { return *m_face < *face; }
-
-	/**
-	 * @brief Return Face associated with FaceMetric
-	 */
-	Ptr<Face>
-	GetFace () const { return m_face; }
-
-	void
-	SetStatus (Status status)
-	{
-		m_status.Set (status);
-	}
-
-	Status
-	GetStatus () const
-	{
-		return m_status;
-	}
-
-	/**
-	 * @brief Get current routing cost
-	 */
-	int32_t
-	GetRoutingCost () const
-	{
-		return m_routingCost;
-	}
-
-	/**
-	 * @brief Set routing cost
-	 */
-	void
-	SetRoutingCost (int32_t routingCost)
-	{
-		m_routingCost = routingCost;
-	}
-
-	/**
-	 * @brief Get current estimate for smoothed RTT value
-	 */
-	Time
-	GetSRtt () const
-	{
-		return m_sRtt;
-	}
-
-	/**
-	 * @brief Get current estimate for the RTT variation
-	 */
-	Time
-	GetRttVar () const
-	{
-		return m_rttVar;
-	}
-
-	/**
-	 * \brief Recalculate smoothed RTT and RTT variation
-	 * \param rttSample RTT sample
-	 */
-	void
-	UpdateRtt (const Time &rttSample);
-
-	Address
-	GetAddress () const
-	{
-		return m_dst_addr;
-	}
-
-	Time
-	GetExpireTime () const
-	{
-		return m_lease_expire;
-	}
-
-	void
-	UpdateExpireTime (const Time lease)
-	{
-		m_lease_expire = lease;
-	}
-
-private:
-  friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
-
-private:
-	Ptr<Face> m_face;             ///< Face
-	Address m_dst_addr;           ///< \brief Destination address to use on Face
-	Time m_lease_expire;          ///< \brief Time when this entry will expire
-	Time m_sRtt;                  ///< \brief Round-trip time variation
-	Time m_rttVar;                ///< \brief round-trip time variation
-	int32_t m_routingCost;        ///< \brief routing protocol cost (interpretation of the value depends on the underlying routing protocol)
-	TracedValue<Status> m_status; ///< \brief Status of next hop
-};
 
 /// @cond include_hidden
 class i_face {};
-class i_address {};
+class i_addr {};
 class i_lease {};
 class i_metric {};
 class i_nth {};
@@ -189,54 +62,58 @@ class i_nth {};
  * @ingroup nnn-nnst
  * @brief Typedef for indexed face container of Entry
  *
- * Currently, there are 3 indexes:
+ * Currently, there are 5 indexes:
  * - by face (used to find record and update metric)
  * - by Address
  * - by Lease time
+ * - by metric
+ * - by position
  */
-struct FaceMetricContainer
-{
-	/// @cond include_hidden
-	typedef multi_index_container<
-			FaceMetric,
-			indexed_by<
-				// For fast access to elements using Face
-				ordered_non_unique<
-				    tag<i_face>,
-				    const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
-			    >,
+/// @cond include_hidden
+typedef multi_index_container<
+		FaceMetric,
+		indexed_by<
+			// For fast access to elements using Face
+			ordered_non_unique<
+			    tag<i_face>,
+				const_mem_fun<FaceMetric,Ptr<Face>,&FaceMetric::GetFace>
+            >,
 
-			    // For fast access by PoA Address
-			    ordered_non_unique<
-			        tag<i_address>,
-			        const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
-	            >,
+			// For fast access by PoA Address
+			ordered_non_unique<
+			    tag<i_addr>,
+			    const_mem_fun<FaceMetric,Address,&FaceMetric::GetAddress>
+	        >,
 
-	            // For access by lease time
-	            ordered_non_unique<
-	                tag<i_lease>,
-	                const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
-	            >,
+	        // For access by lease time
+	        ordered_non_unique<
+	            tag<i_lease>,
+	            const_mem_fun<FaceMetric,Time,&FaceMetric::GetExpireTime>
+	        >,
 
-			    // List of available faces ordered by (status, m_routingCost)
-			    ordered_non_unique<
-				    tag<i_metric>,
-				    composite_key<
-					    FaceMetric,
-					    const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
-					    const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
-				    >
-			    >,
+		    // List of available faces ordered by (status, m_routingCost)
+			ordered_non_unique<
+			    tag<i_metric>,
+				composite_key<
+				    FaceMetric,
+					const_mem_fun<FaceMetric,FaceMetric::Status,&FaceMetric::GetStatus>,
+					const_mem_fun<FaceMetric,int32_t,&FaceMetric::GetRoutingCost>
+				>
+			>,
 
-			    // To optimize nth candidate selection (sacrifice a little bit space to gain speed)
-			    random_access<
-				    tag<i_nth>
-			    >
-		    >
-	> type;
-	/// @endcond
-};
+			// To optimize nth candidate selection (sacrifice a little bit space to gain speed)
+			random_access<
+			    tag<i_nth>
+			>
+		>
+> fmtr_set;
+/// @endcond
 
+typedef fmtr_set::index<i_face>::type fmtr_set_by_face;
+typedef fmtr_set::index<i_addr>::type fmtr_set_by_addr;
+typedef fmtr_set::index<i_lease>::type fmtr_set_by_lease;
+typedef fmtr_set::index<i_metric>::type fmtr_set_by_metric;
+typedef fmtr_set::index<i_nth>::type fmtr_set_by_nth;
 
 class Entry : public SimpleRefCount<Entry>
 {
@@ -276,8 +153,12 @@ public:
 	void
 	SetTrie (trie::iterator item);
 
+	// Should be deleted when completed
 	void
 	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
+
+	void
+	UpdateStatus (Ptr<Face> face, Address poa, FaceMetric::Status status);
 
 	// Should be deleted when completed
 	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
@@ -287,7 +168,7 @@ public:
 	 *
 	 * Initial status of the next hop is set to YELLOW
 	 */
-	void AddOrUpdateRoutingMetric (Ptr<Face> face, Address addr, int32_t metric);
+	void AddOrUpdateRoutingMetric (Ptr<Face> face, Address poa, int32_t metric);
 
 	void
 	Invalidate ();
@@ -305,13 +186,16 @@ public:
 	}
 
 	void
-	AddPoa (Address address);
+	AddPoa (Address poa);
 
 	std::vector<Address>
 	GetPoas ();
 
 	uint32_t
 	GetPoasN ();
+
+	void
+	RemovePoA (Address poa);
 
 	void
 	cleanExpired();
@@ -331,14 +215,14 @@ public:
 public:
 	Ptr<NNST> m_nnst;                   ///< \brief NNST to which entry is added
 	Ptr<const NNNAddress> m_address;    ///< \brief Address used for the NNST Entry
-	FaceMetricContainer::type m_faces;
+	fmtr_set m_faces;
 
 private:
 	trie::iterator item_;
 };
 
 std::ostream& operator<< (std::ostream& os, const Entry &entry);
-std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
+
 
 } /* namespace nnst */
 } /* namespace nnn */

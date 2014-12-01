@@ -150,6 +150,18 @@ public:
 	void
 	Print (std::ostream &os) const;
 
+	void
+	cleanExpired();
+
+	void
+	printByAddress ();
+
+	void
+	printByLease ();
+
+	void
+	printByFace ();
+
 	virtual Ptr<const nnst::Entry>
 	Begin () const;
 
