@@ -22,6 +22,7 @@
 
 #include <ns3-dev/ns3/simple-ref-count.h>
 #include <ns3-dev/ns3/node.h>
+#include <ns3-dev/ns3/simulator.h>
 
 #include <ostream>
 
@@ -75,14 +76,17 @@ public:
 	virtual
 	~NNPT();
 
-	void
-	addEntry (NNNAddress oldName, NNNAddress newName);
+//	void
+//	addEntry (NNNAddress oldName, NNNAddress newName);
 
 	void
 	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
 	void
-	addEntry (NNPT nnpt);
+	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
+
+	void
+	addEntry (NNPTEntry nnptEntry);
 
 	void
 	deleteEntry (NNNAddress oldName);

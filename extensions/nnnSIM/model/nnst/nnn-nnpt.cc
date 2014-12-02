@@ -41,31 +41,43 @@ NNPT::~NNPT() {
 	// TODO Auto-generated destructor stub
 }
 
-
-void
+/*void
 NNPT::addEntry (NNNAddress oldName, NNNAddress newName)
 {
-	container.insert(oldName, newName);
+	container.insert(NNPT(oldName, newName));
 
-//	Simulator::Schedule(oldName.m_lease_expire, &NamesContainer::cleanExpired, this);
-}
+	Simulator::Schedule(oldName.m_lease_expire, &NNPT::cleanExpired, this);
+}*/
 
 void
 NNPT::addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
 {
+	container.insert(NNPTEntry(oldName, newName, lease_expire));
 
+	Simulator::Schedule(lease_expire, &NNPT::cleanExpired, this);
 }
 
 void
-NNPT::addEntry (NNPT nnpt)
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew)
 {
+	container.insert(NNPTEntry(oldName, newName, lease_expire, renew));
 
+	Simulator::Schedule(lease_expire, &NNPT::cleanExpired, this);
+}
+
+void
+NNPT::addEntry (NNPTEntry nnptEntry)
+{
+	container.insert(nnptEntry);
+
+	Simulator::Schedule(nnptEntry.m_lease_expire, &NNPT::cleanExpired, this);
 }
 
 void
 NNPT::deleteEntry (NNNAddress oldName)
 {
-
+	NamesContainerEntry tmp = findEntry (oldName);
+	container.erase(tmp);
 }
 
 void
