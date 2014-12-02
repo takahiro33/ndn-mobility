@@ -242,9 +242,11 @@ namespace ns3 {
 
 	if (it != poa_index.end ())
 	  {
-	    std::cout << *it << std::endl;
+	    std::cout << *it;
 	    ++it;
 	  }
+
+	std::cout << std::endl;
 
 	while (it != poa_index.end())
 	  {
@@ -263,9 +265,11 @@ namespace ns3 {
 
 	if (it != lease_index.end ())
 	  {
-	    std::cout << *it << std::endl;;
+	    std::cout << *it;
 	    ++it;
 	  }
+
+	std::cout << std::endl;
 
 	while (it != lease_index.end())
 	  {
@@ -284,9 +288,11 @@ namespace ns3 {
 
 	if (it != face_index.end ())
 	  {
-	    std::cout << *it << std::endl;
+	    std::cout << *it;
 	    ++it;
 	  }
+
+	std::cout << std::endl;
 
 	while (it != face_index.end())
 	  {
@@ -305,9 +311,11 @@ namespace ns3 {
 
 	if (it != face_index.end ())
 	  {
-	    os << *it << std::endl;
+	    os << *it;
 	    ++it;
 	  }
+
+	os << std::endl;
 
 	while (it != face_index.end())
 	  {

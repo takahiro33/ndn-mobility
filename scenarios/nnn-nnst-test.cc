@@ -36,11 +36,10 @@ using namespace nnst;
 int main (int argc, char *argv[])
 {
   // Create 48 bit MAC addresses
-  Mac48Address n1_mac00 = Mac48Address ("01:02:A3:04:05:06");
+  Mac48Address n1_mac00 = Mac48Address ("01:B2:03:04:05:06");
   Mac48Address n1_mac01 = Mac48Address ("01:02:03:04:05:06");
 
-
-  Mac48Address n2_mac00 = Mac48Address ("01:B2:03:04:05:06");
+  Mac48Address n2_mac00 = Mac48Address ("01:02:A3:04:05:06");
   Mac48Address n2_mac01 = Mac48Address ("01:02:03:C4:05:06");
   Mac48Address n2_mac02 = Mac48Address ("01:D2:03:04:05:06");
 
@@ -84,10 +83,9 @@ int main (int argc, char *argv[])
 
   nnst::Entry n1_nnst_entry (ptrn1_nnst, n1_test);
 
-  n1_nnst_entry.AddPoA(ptrFace01, n2_mac00.operator ns3::Address(), n2_expire, cost);
   n1_nnst_entry.AddPoA(ptrFace00, n1_mac00.operator ns3::Address(), n1_expire, cost);
   n1_nnst_entry.AddPoA(ptrFace00, n1_mac01.operator ns3::Address(), n1_expire, cost);
-
+  n1_nnst_entry.AddPoA(ptrFace01, n2_mac00.operator ns3::Address(), n2_expire, cost);
 
   std::cout << "Testing print of nnst::Entry" << std::endl;
 
@@ -105,8 +103,37 @@ int main (int argc, char *argv[])
 
   n1_nnst_entry.printByAddress();
 
+  std::cout << "Retrieving PoAs from Entry" << std::endl;
+
+  std::vector<Address> tmp = n1_nnst_entry.GetPoAs();
+
+  std::vector<Address>::iterator it = tmp.begin();
+
+  while (it != tmp.end())
+    {
+      std::cout << *it << std::endl;
+      ++it;
+    }
+
+  std::cout << "Testing deletion of PoA " << n2_mac00.operator ns3::Address() << " at " << Simulator::Now() << std::endl;
+
+  n1_nnst_entry.RemovePoA(n2_mac00.operator ns3::Address());
+
+  n1_nnst_entry.printByAddress();
+
+  std::cout << "Testing deletion of Face " <<  *ptrFace00 << " at " << Simulator::Now() << std::endl;
+
+  n1_nnst_entry.RemoveFace(ptrFace00);
+
+  n1_nnst_entry.printByAddress();
+
+  std::cout << "End deletion tests" << std::endl;
+
   Simulator::Stop (Seconds (70));
   Simulator::Run ();
   Simulator::Destroy ();
+
+  std::cout << "Printing ordering by address at " << Simulator::Now() << std::endl;
+  n1_nnst_entry.printByAddress();
 
 }
