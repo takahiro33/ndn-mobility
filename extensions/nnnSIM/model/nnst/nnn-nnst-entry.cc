@@ -218,8 +218,6 @@ namespace ns3 {
 	fmtr_set_by_lease& lease_index = m_faces.get<i_lease> ();
 	Time now = Simulator::Now();
 
-	//std::cout << "Deleting expired entries at " << now << std::endl;
-
 	fmtr_set_by_lease::iterator it = lease_index.begin();
 
 	while (! (m_faces.size () == 0))
@@ -240,7 +238,7 @@ namespace ns3 {
 	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 	fmtr_set_by_poa::iterator it = poa_index.begin ();
 
-	std::cout << GetAddress();
+	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
 	if (it != poa_index.end ())
 	  {
@@ -250,7 +248,7 @@ namespace ns3 {
 
 	while (it != poa_index.end())
 	  {
-	    std::cout << *it << std::endl;
+	    std::cout << std::setw(30) << " " << *it << std::endl;
 	    ++it;
 	  }
       }
@@ -261,7 +259,7 @@ namespace ns3 {
 	fmtr_set_by_lease& lease_index = m_faces.get<i_lease> ();
 	fmtr_set_by_lease::iterator it = lease_index.begin ();
 
-	std::cout << GetAddress();
+	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
 	if (it != lease_index.end ())
 	  {
@@ -271,7 +269,7 @@ namespace ns3 {
 
 	while (it != lease_index.end())
 	  {
-	    std::cout << *it << std::endl;;
+	    std::cout << std::setw(30) << " " << *it << std::endl;;
 	    ++it;
 	  }
       }
@@ -282,7 +280,7 @@ namespace ns3 {
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin ();
 
-	std::cout << GetAddress();
+	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
 	if (it != face_index.end ())
 	  {
@@ -292,7 +290,7 @@ namespace ns3 {
 
 	while (it != face_index.end())
 	  {
-	    std::cout << *it << std::endl;;
+	    std::cout << std::setw(30) << " " << *it << std::endl;;
 	    ++it;
 	  }
       }
@@ -303,17 +301,17 @@ namespace ns3 {
 	fmtr_set_by_face& face_index = tmp.get<nnst::i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin ();
 
-	os  << entry.GetAddress();
+	os  << std::left << std::setw(30) << entry.GetAddress().toDotHex();
 
 	if (it != face_index.end ())
 	  {
-	    os << "    " << *it << std::endl;
+	    os << *it << std::endl;
 	    ++it;
 	  }
 
 	while (it != face_index.end())
 	  {
-	    os << *it << std::endl;
+	    os << std::setw(30) << " " <<  *it << std::endl;
 	    ++it;
 	  }
 

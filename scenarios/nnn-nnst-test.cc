@@ -84,13 +84,26 @@ int main (int argc, char *argv[])
 
   nnst::Entry n1_nnst_entry (ptrn1_nnst, n1_test);
 
+  n1_nnst_entry.AddPoA(ptrFace01, n2_mac00.operator ns3::Address(), n2_expire, cost);
   n1_nnst_entry.AddPoA(ptrFace00, n1_mac00.operator ns3::Address(), n1_expire, cost);
   n1_nnst_entry.AddPoA(ptrFace00, n1_mac01.operator ns3::Address(), n1_expire, cost);
-  n1_nnst_entry.AddPoA(ptrFace01, n2_mac00.operator ns3::Address(), n2_expire, cost);
+
 
   std::cout << "Testing print of nnst::Entry" << std::endl;
 
   std::cout << n1_nnst_entry << std::endl;
+
+  std::cout << "Testing print of nnst::Entry by lease" << std::endl;
+
+  n1_nnst_entry.printByLease();
+
+  std::cout << "Testing print of nnst::Entry by face" << std::endl;
+
+  n1_nnst_entry.printByFace();
+
+  std::cout << "Testing print of nnst::Entry by address" << std::endl;
+
+  n1_nnst_entry.printByAddress();
 
   Simulator::Stop (Seconds (70));
   Simulator::Run ();

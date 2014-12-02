@@ -65,12 +65,12 @@ std::ostream& operator<< (std::ostream& os, const FaceMetric &metric)
 {
 	static const std::string statusString[] = {"","G","Y","R"};
 
-	os << std::setw(28) << metric.m_dst_addr << " "
-			<< std::setw(7) << std::setprecision(1) << metric.m_lease_expire.GetSeconds() << " "
-			<< std::setw(5) << *metric.m_face << " "
-			<< std::setw(2) << statusString[metric.m_status] << " "
-			<< std::setw(4) << metric.m_routingCost << " "
-			<< std::setw(5) << metric.m_face->GetMetric();
+	os << std::left << std::setw(28) << metric.m_dst_addr << " "
+	    << std::right << std::setw(7) << std::setprecision(1) << metric.m_lease_expire.GetSeconds() << " "
+	    << *metric.m_face << " "
+	    << std::right << std::setw(3) << statusString[metric.m_status] << " "
+	    << std::right << std::setw(4) << metric.m_routingCost << " "
+	    << std::right << std::setw(5) << metric.m_face->GetMetric();
 
 	return os;
 }
