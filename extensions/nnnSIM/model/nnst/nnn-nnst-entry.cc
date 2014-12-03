@@ -69,90 +69,114 @@ namespace ns3 {
       void
       Entry::UpdateStatus (Ptr<Face> face, FaceMetric::Status status)
       {
-	//	NS_LOG_FUNCTION (this << boost::cref(*face) << status);
-	//
-	//	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
-	//	if (record == m_faces.get<i_face> ().end ())
-	//	{
-	//		return;
-	//	}
-	//
-	//	m_faces.modify (record,
-	//			ll::bind (&FaceMetric::SetStatus, ll::_1, status));
-	//
-	//	// reordering random access index same way as by metric index
-	//	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+	NS_LOG_FUNCTION (this << boost::cref(*face) << status);
+
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+	fmtr_set_by_face::iterator it = face_index.begin ();
+
+	while (it != face_index.end ())
+	  {
+	    FaceMetric tmp = *it;
+	    if (tmp.GetFace() == face)
+	      {
+		tmp.SetStatus(status);
+
+		face_index.replace(it, tmp);
+	      }
+	    ++it;
+	  }
+
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
       }
 
       void
-      Entry::UpdateStatus (Ptr<Face> face, Address poa, FaceMetric::Status status)
+      Entry::UpdateLeaseTime (Time n_lease)
       {
+	fmtr_set_by_nth& nth_index = m_faces.get<i_nth> ();
+	fmtr_set_by_nth::iterator it = nth_index.begin();
 
+	bool replaced = false;
+
+	while (it != nth_index.end())
+	  {
+	    FaceMetric tmp = *it;
+
+	    tmp.UpdateExpireTime(n_lease);
+
+	    replaced = nth_index.replace(it, tmp) || replaced;
+
+	    ++it;
+	  }
+
+	if (replaced)
+	  Simulator::Schedule(n_lease, &Entry::cleanExpired, this);
       }
 
       void
       Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric)
       {
-	//	NS_LOG_FUNCTION (this);
-	//	NS_ASSERT_MSG (face != NULL, "Trying to Add or Update NULL face");
-	//
-	//	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
-	//	if (record == m_faces.get<i_face> ().end ())
-	//	{
-	//		// Need to update insert
-	//		m_faces.insert (FaceMetric (face, metric));
-	//	}
-	//	else
-	//	{
-	//		// don't update metric to higher value
-	//		if (record->GetRoutingCost () > metric || record->GetStatus () == FaceMetric::NNN_NNST_RED)
-	//		{
-	//			m_faces.modify (record,
-	//					ll::bind (&FaceMetric::SetRoutingCost, ll::_1, metric));
-	//
-	//			m_faces.modify (record,
-	//					ll::bind (&FaceMetric::SetStatus, ll::_1, FaceMetric::NNN_NNST_YELLOW));
-	//		}
-	//	}
-	//
-	//	// reordering random access index same way as by metric index
-	//	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
-      }
+	NS_LOG_FUNCTION (this);
+	NS_ASSERT_MSG (face != NULL, "Trying to Add or Update NULL face");
 
-      void
-      Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, Address poa, int32_t metric)
-      {
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+	fmtr_set_by_face::iterator it = face_index.begin ();
+
+	while (it != face_index.end ())
+	  {
+	    FaceMetric tmp = *it;
+	    if (tmp.GetFace() == face)
+	      {
+		if (tmp.GetRoutingCost () > metric || tmp.GetStatus() == FaceMetric::NNN_NNST_RED)
+		  {
+		    tmp.SetRoutingCost(metric);
+		    tmp.SetStatus(FaceMetric::NNN_NNST_YELLOW);
+
+		    face_index.replace(it, tmp);
+		  }
+	      }
+	    ++it;
+	  }
+
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
       }
 
       void
       Entry::Invalidate ()
       {
-	//	for (FaceMetricByFace::type::iterator face = m_faces.begin ();
-	//			face != m_faces.end ();
-	//			face++)
-	//	{
-	//		m_faces.modify (face,
-	//				ll::bind (&FaceMetric::SetRoutingCost, ll::_1, std::numeric_limits<uint16_t>::max ()));
-	//
-	//		m_faces.modify (face,
-	//				ll::bind (&FaceMetric::SetStatus, ll::_1, FaceMetric::NNN_NNST_RED));
-	//	}
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+
+	for (fmtr_set_by_face::iterator face = face_index.begin ();
+	    face != face_index.end ();
+	    face++)
+	  {
+	    FaceMetric tmp = *face;
+
+	    tmp.SetRoutingCost(std::numeric_limits<uint16_t>::max ());
+	    tmp.SetStatus(FaceMetric::NNN_NNST_RED);
+
+	    face_index.replace(face, tmp);
+	  }
       }
 
       void
       Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
       {
-	//	FaceMetricByFace::type::iterator record = m_faces.get<i_face> ().find (face);
-	//	if (record == m_faces.get<i_face> ().end ())
-	//	{
-	//		return;
-	//	}
-	//
-	//	m_faces.modify (record,
-	//			ll::bind (&FaceMetric::UpdateRtt, ll::_1, sample));
-	//
-	//	// reordering random access index same way as by metric index
-	//	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+	fmtr_set_by_face::iterator it = face_index.begin ();
+
+	while (it != face_index.end ())
+	  {
+	    FaceMetric tmp = *it;
+	    if (tmp.GetFace() == face)
+	      {
+		tmp.UpdateRtt(sample);
+
+		face_index.replace(it, tmp);
+	      }
+	    ++it;
+	  }
       }
 
       const FaceMetric &
@@ -178,6 +202,9 @@ namespace ns3 {
 
 	m_faces.insert(tmp);
 
+	// reordering random access index same way as by metric index
+	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
+
 	Simulator::Schedule(e_lease, &Entry::cleanExpired, this);
       }
 
@@ -198,10 +225,50 @@ namespace ns3 {
 	return poas;
       }
 
+      std::vector<Address>
+      Entry::GetPoAs(Ptr<Face> face)
+      {
+	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
+	fmtr_set_by_face::iterator it = face_index.begin();
+
+	std::vector<Address> poas;
+
+	while (it != face_index.end ())
+	  {
+	    if (it->GetFace() == face )
+	      poas.push_back(it->GetAddress());
+	    ++it;
+	  }
+
+	return poas;
+      }
+
       uint32_t
       Entry::GetPoAsN()
       {
 	return GetPoAs().size();
+      }
+
+      uint32_t
+      Entry::GetPoAsN(Ptr<Face> face)
+      {
+	return GetPoAs(face).size();
+      }
+
+      Ptr<Face>
+      Entry::GetFace (Address poa)
+      {
+	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
+	fmtr_set_by_poa::iterator it = poa_index.find(poa);
+
+	Ptr<Face> tmp;
+
+	if (it != poa_index.end())
+	  {
+	    tmp = it->GetFace();
+	  }
+
+	return tmp;
       }
 
       void
@@ -279,6 +346,29 @@ namespace ns3 {
       }
 
       void
+      Entry::printByMetric ()
+      {
+	fmtr_set_by_metric& metric_index = m_faces.get<i_metric> ();
+	fmtr_set_by_metric::iterator it = metric_index.begin ();
+
+	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
+
+	if (it != metric_index.end ())
+	  {
+	    std::cout << *it;
+	    ++it;
+	  }
+
+	std::cout << std::endl;
+
+	while (it != metric_index.end())
+	  {
+	    std::cout << std::setw(30) << " " << *it << std::endl;
+	    ++it;
+	  }
+      }
+
+      void
       Entry::printByFace ()
       {
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
@@ -325,7 +415,6 @@ namespace ns3 {
 
 	return os;
       }
-
 
     } /* namespace nnst */
   } /* namespace nnn */

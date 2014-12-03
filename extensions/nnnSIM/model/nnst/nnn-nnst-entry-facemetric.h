@@ -32,14 +32,14 @@
 #define NNN_RTO_K 4
 
 namespace ns3 {
-namespace nnn {
-namespace nnst {
+  namespace nnn {
+    namespace nnst {
 
-class FaceMetric {
-public:
+      class FaceMetric {
+      public:
 	enum Status { NNN_NNST_GREEN = 1,
-		NNN_NNST_YELLOW = 2,
-		NNN_NNST_RED = 3
+	  NNN_NNST_YELLOW = 2,
+	  NNN_NNST_RED = 3
 	};
 
 	FaceMetric(Ptr<Face> face, Address addr, Time lease_expire, int32_t cost);
@@ -50,13 +50,13 @@ public:
 	 */
 	bool
 	operator< (const FaceMetric &fm) const {
-		if (*m_face == *fm.m_face)
-                {
-                    return m_dst_addr < fm.GetAddress ();
-                } else
-                {
-		    return *m_face < *fm.m_face;
-                } 
+	  if (*m_face == *fm.m_face)
+	    {
+	      return m_dst_addr < fm.GetAddress ();
+	    } else
+	      {
+		return *m_face < *fm.m_face;
+	      }
 
 	} // return identity of the face
 
@@ -75,13 +75,13 @@ public:
 	void
 	SetStatus (Status status)
 	{
-		m_status.Set (status);
+	  m_status.Set (status);
 	}
 
 	Status
 	GetStatus () const
 	{
-		return m_status;
+	  return m_status;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public:
 	int32_t
 	GetRoutingCost () const
 	{
-		return m_routingCost;
+	  return m_routingCost;
 	}
 
 	/**
@@ -99,7 +99,7 @@ public:
 	void
 	SetRoutingCost (int32_t routingCost)
 	{
-		m_routingCost = routingCost;
+	  m_routingCost = routingCost;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public:
 	Time
 	GetSRtt () const
 	{
-		return m_sRtt;
+	  return m_sRtt;
 	}
 
 	/**
@@ -117,7 +117,7 @@ public:
 	Time
 	GetRttVar () const
 	{
-		return m_rttVar;
+	  return m_rttVar;
 	}
 
 	/**
@@ -130,31 +130,31 @@ public:
 	Address
 	GetAddress () const
 	{
-		return m_dst_addr;
+	  return m_dst_addr;
 	}
 
 	void
 	SetAddress (Address poa)
 	{
-		m_dst_addr = poa;
+	  m_dst_addr = poa;
 	}
 
 	Time
 	GetExpireTime () const
 	{
-		return m_lease_expire;
+	  return m_lease_expire;
 	}
 
 	void
-	UpdateExpireTime (const Time lease)
+	UpdateExpireTime (Time lease)
 	{
-		m_lease_expire = lease;
+	  m_lease_expire = lease;
 	}
 
-private:
-  friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
+      private:
+	friend std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
-private:
+      private:
 	Ptr<Face> m_face;             ///< Face
 	Address m_dst_addr;           ///< \brief Destination address to use on Face
 	Time m_lease_expire;          ///< \brief Time when this entry will expire
@@ -162,12 +162,12 @@ private:
 	Time m_rttVar;                ///< \brief round-trip time variation
 	int32_t m_routingCost;        ///< \brief routing protocol cost (interpretation of the value depends on the underlying routing protocol)
 	TracedValue<Status> m_status; ///< \brief Status of next hop
-};
+      };
 
-std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
+      std::ostream& operator<< (std::ostream& os, const FaceMetric &metric);
 
-} /* namespace nnst */
-} /* namespace nnn */
+    } /* namespace nnst */
+  } /* namespace nnn */
 } /* namespace ns3 */
 
 #endif /* NNN_NNST_ENTRY_FACEMETRIC_H_ */

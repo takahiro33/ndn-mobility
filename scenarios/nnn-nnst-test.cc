@@ -84,7 +84,7 @@ int main (int argc, char *argv[])
   nnst::Entry n1_nnst_entry (ptrn1_nnst, n1_test);
 
   n1_nnst_entry.AddPoA(ptrFace00, n1_mac00.operator ns3::Address(), n1_expire, cost);
-  n1_nnst_entry.AddPoA(ptrFace00, n1_mac01.operator ns3::Address(), n1_expire, cost);
+  n1_nnst_entry.AddPoA(ptrFace00, n1_mac01.operator ns3::Address(), n1_expire, 1);
   n1_nnst_entry.AddPoA(ptrFace01, n2_mac00.operator ns3::Address(), n2_expire, cost);
 
   std::cout << "Testing print of nnst::Entry" << std::endl;
@@ -103,7 +103,19 @@ int main (int argc, char *argv[])
 
   n1_nnst_entry.printByAddress();
 
-  std::cout << "Retrieving PoAs from Entry" << std::endl;
+  std::cout << "Testing print of nnst::Entry by metric" << std::endl;
+
+  n1_nnst_entry.printByMetric();
+
+  Time updateTime = Seconds(60);
+
+  std::cout << "Testing updating lease time to " << updateTime << std::endl;
+
+  n1_nnst_entry.UpdateLeaseTime(updateTime);
+
+  n1_nnst_entry.printByLease();
+
+  std::cout << "Retrieving all PoAs from Entry" << std::endl;
 
   std::vector<Address> tmp = n1_nnst_entry.GetPoAs();
 
@@ -114,6 +126,30 @@ int main (int argc, char *argv[])
       std::cout << *it << std::endl;
       ++it;
     }
+
+  std::cout << "Retrieving PoAs from Entry using " << *ptrFace01 << std::endl;
+
+  tmp = n1_nnst_entry.GetPoAs(ptrFace01);
+
+  it = tmp.begin();
+
+  while (it != tmp.end())
+    {
+      std::cout << *it << std::endl;
+      ++it;
+    }
+
+  Ptr<Face> tmp1 = n1_nnst_entry.GetFace(n1_mac01.operator ns3::Address());
+
+  std::cout << "Testing getting best FaceMetric!" << std::endl;
+
+  FaceMetric fm_tmp = n1_nnst_entry.FindBestCandidate();
+
+  std::cout << "Face: " << *(fm_tmp.GetFace()) << std::endl;
+  std::cout << "Address: " << fm_tmp.GetAddress() << std::endl;
+  std::cout << "Lease: " << fm_tmp.GetExpireTime() << std::endl;
+  std::cout << "Cost: " << fm_tmp.GetRoutingCost() << std::endl;
+  std::cout << std::endl;
 
   std::cout << "Testing deletion of PoA " << n2_mac00.operator ns3::Address() << " at " << Simulator::Now() << std::endl;
 

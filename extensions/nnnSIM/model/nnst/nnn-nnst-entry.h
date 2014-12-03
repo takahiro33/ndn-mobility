@@ -159,22 +159,18 @@ namespace ns3 {
 	void
 	SetTrie (trie::iterator item);
 
-	// Should be deleted when completed
 	void
 	UpdateStatus (Ptr<Face> face, FaceMetric::Status status);
 
 	void
-	UpdateStatus (Ptr<Face> face, Address poa, FaceMetric::Status status);
-
-	// Should be deleted when completed
-	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
+	UpdateLeaseTime (Time n_lease);
 
 	/**
 	 * \brief Add or update routing metric of FIB next hop
 	 *
 	 * Initial status of the next hop is set to YELLOW
 	 */
-	void AddOrUpdateRoutingMetric (Ptr<Face> face, Address poa, int32_t metric);
+	void AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric);
 
 	void
 	Invalidate ();
@@ -194,8 +190,17 @@ namespace ns3 {
 	std::vector<Address>
 	GetPoAs ();
 
+	std::vector<Address>
+	GetPoAs (Ptr<Face> face);
+
 	uint32_t
 	GetPoAsN ();
+
+	uint32_t
+	GetPoAsN (Ptr<Face> face);
+
+	Ptr<Face>
+	GetFace (Address poa);
 
 	void
 	RemovePoA (Address poa);
@@ -208,6 +213,9 @@ namespace ns3 {
 
 	void
 	printByLease ();
+
+	void
+	printByMetric ();
 
 	void
 	printByFace ();
