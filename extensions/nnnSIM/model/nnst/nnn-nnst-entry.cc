@@ -48,7 +48,7 @@ namespace ns3 {
 
       }
 
-      Entry::Entry(Ptr<NNST> nnst, Ptr<NNNAddress> name)
+      Entry::Entry(Ptr<NNST> nnst, const Ptr<const NNNAddress> &name)
       : m_nnst        (nnst)
       , m_address     (name)
       , item_         (0)
@@ -300,14 +300,13 @@ namespace ns3 {
       }
 
       void
-      Entry::printByAddress ()
+      Entry::printByAddress () const
       {
-	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
-	fmtr_set_by_poa::iterator it = poa_index.begin ();
+	fmtr_set_by_poa::iterator it = m_faces.get<i_poa> ().begin ();
 
 	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
-	if (it != poa_index.end ())
+	if (it != m_faces.get<i_poa> ().end ())
 	  {
 	    std::cout << *it;
 	    ++it;
@@ -315,7 +314,7 @@ namespace ns3 {
 
 	std::cout << std::endl;
 
-	while (it != poa_index.end())
+	while (it != m_faces.get<i_poa> ().end())
 	  {
 	    std::cout << std::setw(30) << " " << *it << std::endl;
 	    ++it;
@@ -323,14 +322,13 @@ namespace ns3 {
       }
 
       void
-      Entry::printByLease ()
+      Entry::printByLease () const
       {
-	fmtr_set_by_lease& lease_index = m_faces.get<i_lease> ();
-	fmtr_set_by_lease::iterator it = lease_index.begin ();
+	fmtr_set_by_lease::iterator it = m_faces.get<i_lease> ().begin ();
 
 	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
-	if (it != lease_index.end ())
+	if (it != m_faces.get<i_lease> ().end ())
 	  {
 	    std::cout << *it;
 	    ++it;
@@ -338,7 +336,7 @@ namespace ns3 {
 
 	std::cout << std::endl;
 
-	while (it != lease_index.end())
+	while (it != m_faces.get<i_lease> ().end())
 	  {
 	    std::cout << std::setw(30) << " " << *it << std::endl;;
 	    ++it;
@@ -346,14 +344,13 @@ namespace ns3 {
       }
 
       void
-      Entry::printByMetric ()
+      Entry::printByMetric () const
       {
-	fmtr_set_by_metric& metric_index = m_faces.get<i_metric> ();
-	fmtr_set_by_metric::iterator it = metric_index.begin ();
+	fmtr_set_by_metric::iterator it = m_faces.get<i_metric> ().begin ();
 
 	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
-	if (it != metric_index.end ())
+	if (it != m_faces.get<i_metric> ().end ())
 	  {
 	    std::cout << *it;
 	    ++it;
@@ -361,7 +358,7 @@ namespace ns3 {
 
 	std::cout << std::endl;
 
-	while (it != metric_index.end())
+	while (it != m_faces.get<i_metric> ().end())
 	  {
 	    std::cout << std::setw(30) << " " << *it << std::endl;
 	    ++it;
@@ -369,14 +366,13 @@ namespace ns3 {
       }
 
       void
-      Entry::printByFace ()
+      Entry::printByFace () const
       {
-	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
-	fmtr_set_by_face::iterator it = face_index.begin ();
+	fmtr_set_by_face::iterator it = m_faces.get<i_face> ().begin ();
 
 	std::cout << std::left << std::setw(30) << GetAddress().toDotHex();
 
-	if (it != face_index.end ())
+	if (it != m_faces.get<i_face> ().end ())
 	  {
 	    std::cout << *it;
 	    ++it;
@@ -384,7 +380,7 @@ namespace ns3 {
 
 	std::cout << std::endl;
 
-	while (it != face_index.end())
+	while (it != m_faces.get<i_face> ().end())
 	  {
 	    std::cout << std::setw(30) << " " << *it << std::endl;;
 	    ++it;

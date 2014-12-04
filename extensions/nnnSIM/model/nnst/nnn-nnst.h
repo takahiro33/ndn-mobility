@@ -47,164 +47,159 @@ using namespace ::boost::multi_index;
 #include "../../utils/trie/trie-with-policy.h"
 
 namespace ns3 {
-namespace nnn {
+  namespace nnn {
 
-class L3Protocol;
+    class L3Protocol;
 
-class NULLp;
-typedef NULLp NULLpHeader;
-class SO;
-typedef SO SOHeader;
-class DO;
-typedef DO DOHeader;
-class EN;
-typedef EN ENHeader;
-class AEN;
-typedef AEN AENHeader;
-class REN;
-typedef REN RENHeader;
-class INF;
-typedef INF INFHeader;
+    class NULLp;
+    typedef NULLp NULLpHeader;
+    class SO;
+    typedef SO SOHeader;
+    class DO;
+    typedef DO DOHeader;
+    class EN;
+    typedef EN ENHeader;
+    class AEN;
+    typedef AEN AENHeader;
+    class REN;
+    typedef REN RENHeader;
+    class INF;
+    typedef INF INFHeader;
 
 
-namespace nnst {
+    namespace nnst {
 
-class Entry;
+      class Entry;
 
-}
+    }
 
-/**
- * @ingroup nnn
- * @defgroup nnn NNST
- */
-class NNST : public Object,
-				protected nnnSIM::trie_with_policy<
-				                NNNAddress,
-								nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
-								nnnSIM::counting_policy_traits>
-{
-public:
+    /**
+     * @ingroup nnn
+     * @defgroup nnn NNST
+     */
+    class NNST : public Object,
+    protected nnnSIM::trie_with_policy<
+    NNNAddress,
+    nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
+    nnnSIM::counting_policy_traits>
+    {
+    public:
 
-	typedef nnnSIM::trie_with_policy<
-			NNNAddress,
-			nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
-			nnnSIM::counting_policy_traits
-	> super;
+      typedef nnnSIM::trie_with_policy<
+	  NNNAddress,
+	  nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
+	  nnnSIM::counting_policy_traits
+	  > super;
 
-	static TypeId GetTypeId ();
+      static TypeId GetTypeId ();
 
-	NNST();
+      NNST();
 
-	~NNST();
+      ~NNST();
 
-	Ptr<nnst::Entry>
-	ClosestSector (const NNNAddress &nnnaddr);
+      Ptr<nnst::Entry>
+      ClosestSector (const NNNAddress &nnnaddr);
 
-	Ptr<nnst::Entry>
-	SignatureMatch (Address poa);
+      // Possibly unnecessary
+      //Ptr<nnst::Entry>
+      //SignatureMatch (Address poa);
 
-	Ptr<nnst::Entry>
-	Find (const NNNAddress &prefix);
+      Ptr<nnst::Entry>
+      Find (const NNNAddress &prefix);
 
-	// This one should be eliminated
-	Ptr<nnst::Entry>
-	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
+      // This one should be eliminated
+      Ptr<nnst::Entry>
+      Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
 
-	// This one as well
-	Ptr<nnst::Entry>
-	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
+      // This one as well
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
 
-	Ptr<nnst::Entry>
-	Add (const NNNAddress &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+      Ptr<nnst::Entry>
+      Add (const NNNAddress &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
 
-	Ptr<nnst::Entry>
-	Add (const Ptr<const NNNAddress> &prefix, std::vector<Ptr<Face> > faces, Address poa, Time lease_expire, int32_t metric);
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, std::vector<Ptr<Face> > faces, Address poa, Time lease_expire, int32_t metric);
 
-	Ptr<nnst::Entry>
-	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, std::vector<Address> poas, Time lease_expire, int32_t metric);
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, std::vector<Address> poas, Time lease_expire, int32_t metric);
 
-	Ptr<nnst::Entry>
-	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
 
-	void
-	Remove (const Ptr<const NNNAddress> &prefix);
+      void
+      InvalidateAll ();
 
-	void
-	RemoveAddress (Address poa);
+      void
+      Remove (const Ptr<const NNNAddress> &prefix);
 
-	void
-	InvalidateAll ();
+      void
+      RemoveFromAll (Ptr<Face> face);
 
-	void
-	RemoveFace ();
+      void
+      RemoveFromAll (Address poa);
 
-	void
-	RemovePoA ();
+      void
+      Print (std::ostream &os) const;
 
-	void
-	RemoveFromAll (Ptr<Face> face);
+      void
+      PrintByMetric () const;
 
-	void
-	RemoveFromAll (Address poa);
+      void
+      PrintByAddress () const;
 
-	void
-	Print (std::ostream &os) const;
+      void
+      PrintByLease () const;
 
-	void
-	cleanExpired();
+      void
+      PrintByFace () const;
 
-	void
-	printByAddress ();
+      virtual Ptr<const nnst::Entry>
+      Begin () const;
 
-	void
-	printByLease ();
+      Ptr<nnst::Entry>
+      Begin ();
 
-	void
-	printByFace ();
+      Ptr<const nnst::Entry>
+      End () const;
 
-	virtual Ptr<const nnst::Entry>
-	Begin () const;
+      Ptr<nnst::Entry>
+      End ();
 
-	Ptr<nnst::Entry>
-	Begin ();
+      Ptr<const nnst::Entry>
+      Next (Ptr<const nnst::Entry> item) const;
 
-	Ptr<const nnst::Entry>
-	End () const;
+      Ptr<nnst::Entry>
+      Next (Ptr<nnst::Entry> item);
 
-	Ptr<nnst::Entry>
-	End ();
+      uint32_t
+      GetSize ();
 
-	Ptr<const nnst::Entry>
-	Next (Ptr<const nnst::Entry> item) const;
+      Ptr<NNST>
+      GetNNST (Ptr<Object> node);
 
-	Ptr<nnst::Entry>
-	Next (Ptr<nnst::Entry> item);
+    protected:
+      // inherited from Object class
+      virtual void NotifyNewAggregate (); ///< @brief Notify when object is aggregated
+      virtual void DoDispose (); ///< @brief Perform cleanup
 
-	uint32_t
-	GetSize ();
+    private:
+      /**
+       * @brief Remove reference to a face from the entry. If entry had only this face, the whole
+       * entry will be removed
+       */
+      void
+      RemoveFace (super::parent_trie &item, Ptr<Face> face);
 
-	Ptr<NNST>
-	GetNNST (Ptr<Object> node);
+      void
+      RemovePoA (super::parent_trie &item, Address poa);
+    };
 
-protected:
-	// inherited from Object class
-	virtual void NotifyNewAggregate (); ///< @brief Notify when object is aggregated
-	virtual void DoDispose (); ///< @brief Perform cleanup
-
-private:
-	/**
-	 * @brief Remove reference to a face from the entry. If entry had only this face, the whole
-	 * entry will be removed
-	 */
-	void
-	RemoveFace (super::parent_trie &item, Ptr<Face> face);
-};
-
-std::ostream& operator<< (std::ostream& os, const NNST &nnst);
+    std::ostream& operator<< (std::ostream& os, const NNST &nnst);
 
 
 
-} /* namespace nnn */
+  } /* namespace nnn */
 } /* namespace ns3 */
 
 #endif /* NNN_NNST_H_ */
