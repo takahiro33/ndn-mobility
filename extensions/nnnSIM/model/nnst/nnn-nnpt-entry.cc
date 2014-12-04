@@ -36,7 +36,7 @@ NNPTEntry::~NNPTEntry() {
 	// TODO Auto-generated destructor stub
 }
 
-NNPTEntry::NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
+NNPTEntry::NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire)
 :m_oldName			(oldName)
 ,m_newName			(newName)
 ,m_lease_expire		(lease_expire)
@@ -44,7 +44,7 @@ NNPTEntry::NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
 {
 }
 
-NNPTEntry::NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew)
+NNPTEntry::NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew)
 :m_oldName			(oldName)
 ,m_newName			(newName)
 ,m_lease_expire		(lease_expire)

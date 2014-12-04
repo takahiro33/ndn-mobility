@@ -51,19 +51,19 @@ typedef multi_index_container<
 		// sort by NamesContainer::operator<
 		ordered_unique<
 			tag<lease>,
-			identity<NNPTEntry>
+			identity<NamesContainerEntry>
 		>,
 
-		// sort by less<string> on NNNAddress
+		// sort by less<string> on NamesContainerEntry
 		ordered_unique<
 			tag<pair>,
-			member<NNPTEntry,NNNAddress,&NNPTEntry::m_newName>
+			member<NNPTEntry,NamesContainerEntry,&NNPTEntry::m_newName>
 		>
 	>
 > pair_set;
 
-typedef pair_set::index<pair>::type names_set_by_name;
-typedef pair_set::index<lease>::type names_set_by_lease;
+typedef pair_set::index<pair>::type pair_set_by_name;
+typedef pair_set::index<lease>::type pair_set_by_lease;
 
 class NNPT : public SimpleRefCount<NNPT>
 {
@@ -77,40 +77,40 @@ public:
 	~NNPT();
 
 //	void
-//	addEntry (NNNAddress oldName, NNNAddress newName);
+//	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName);
 
 	void
-	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
+	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
 
 	void
-	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
+	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew);
 
 	void
 	addEntry (NNPTEntry nnptEntry);
 
 	void
-	deleteEntry (NNNAddress oldName);
+	deleteEntry (NamesContainerEntry oldName);
 
 	void
 	deleteEntry (NNPTEntry nnptEntry);
 
 	void
-	deleteEntry (NNNAddress oldName, NNNAddress newName);
+	deleteEntry (NamesContainerEntry oldName, NamesContainerEntry newName);
 
 	bool
-	foundName (NNNAddress name);
+	foundName (NamesContainerEntry name);
 
 	NNPTEntry
-	findEntry (NNNAddress name);
+	findEntry (NamesContainerEntry name);
 
-	NNNAddress
+	NamesContainerEntry
 	findNewestName ();
 
 	void
-	updateLeaseTime (NNNAddress oldName, Time lease_expire);
+	updateLeaseTime (NamesContainerEntry oldName, Time lease_expire);
 
 	void
-	updateLeaseTime (NNNAddress oldName, Time lease_expire, Time renew);
+	updateLeaseTime (NamesContainerEntry oldName, Time lease_expire, Time renew);
 
 	uint32_t
 	size ();
@@ -119,7 +119,7 @@ public:
 	isEmpty ();
 
 	Time
-	findNameExpireTime (NNNAddress name);
+	findNameExpireTime (NamesContainerEntry name);
 
 	Time
 	findNameExpireTime (NNPTEntry nnptEntry);
@@ -134,38 +134,12 @@ public:
 	printByLease ();
 
 	void
-	informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
+	informEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
 
 	pair_set container;
 
 };
 
-/*
-class NNPT {
-public:
-	static TypeId GetTypeId ();
-
-	NNPT();
-
-	virtual ~NNPT();
-
-	virtual void
-	AddPair();
-
-	virtual void
-	DeletePair();
-
-	virtual void
-	SearchOldName();
-
-	virtual void
-	SearchNewName();
-
-private:
-
-protected:
-
-};*/
 
 std::ostream& operator<< (std::ostream& os, const NNPT &nnpt);
 

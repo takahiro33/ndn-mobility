@@ -73,16 +73,16 @@ public:
    */
   NNPTEntry ();
 
-  NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
+  NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
 
-  NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
+  NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew);
 
   virtual ~NNPTEntry ();
 
   bool operator< (const NNPTEntry e) const { return m_lease_expire < e.m_lease_expire; }
 
-  NNNAddress m_oldName;
-  NNNAddress m_newName;
+  NamesContainerEntry m_oldName;
+  NamesContainerEntry m_newName;
   Time m_lease_expire;
   Time m_renew;
 };
