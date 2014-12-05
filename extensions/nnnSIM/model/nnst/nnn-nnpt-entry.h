@@ -34,6 +34,8 @@
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/traced-value.h>
 
+#include "nnn-names-container-entry.h"
+
 //#include "nnn-nnpt.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
@@ -73,16 +75,16 @@ public:
    */
   NNPTEntry ();
 
-  NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
+  NNPTEntry (NNNAddres oldName, NNNAddres newName, Time lease_expire);
 
-  NNPTEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew);
+  NNPTEntry (NNNAddres oldName, NNNAddres newName, Time lease_expire, Time renew);
 
   virtual ~NNPTEntry ();
 
   bool operator< (const NNPTEntry e) const { return m_lease_expire < e.m_lease_expire; }
 
-  NamesContainerEntry m_oldName;
-  NamesContainerEntry m_newName;
+  NNNAddres m_oldName;
+  NNNAddres m_newName;
   Time m_lease_expire;
   Time m_renew;
 };
