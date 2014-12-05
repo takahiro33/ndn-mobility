@@ -102,6 +102,8 @@ TypeId ForwardingStrategy::GetTypeId (void)
                    MakeBooleanChecker ())
     ;
 					 */
+    // Required for testing at this moment
+					.AddConstructor <ForwardingStrategy> ()
 					;
 	return tid;
 }

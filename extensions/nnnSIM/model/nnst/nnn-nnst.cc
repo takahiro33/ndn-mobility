@@ -252,7 +252,7 @@ namespace ns3 {
 	{
 	  if (item->payload () == 0) continue;
 
-	  os << item->payload ();
+	  os << *(item->payload ());
 	}
     }
 
@@ -442,12 +442,13 @@ namespace ns3 {
     {
       os << "Node " << Names::FindName (nnst.GetObject<Node>()) << std::endl;
       os << std::setw(30) << "3N Address"
-	  << std::setw(29) << "PoA Address"
-	  << std::setw(8) << "Lease"
-	  << std::setw(8) << "Face"
-	  << std::setw(4) << "Status"
-	  << std::setw(5) << "Cost"
-	  << std::setw(6) << "Metric";
+	  << std::setw(25) << "PoA Address"
+	  << std::setw(5) << " Lease"
+	  << std::setw(13) << " Face"
+	  << std::setw(4) << " Status"
+	  << std::setw(4) << " Cost"
+	  << std::setw(5) << " Metric"
+	  << std::endl;
 
       nnst.Print (os);
       return os;

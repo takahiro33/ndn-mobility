@@ -24,6 +24,7 @@
 
 // Extensions
 #include "nnnSIM/nnnSIM-module.h"
+#include "nnnSIM/model/fw/nnn-forwarding-strategy.h"
 #include "nnnSIM/model/nnst/nnn-nnst.h"
 #include "nnnSIM/model/nnst/nnn-nnst-entry.h"
 #include "nnnSIM/model/nnst/nnn-nnst-entry-facemetric.h"
@@ -54,6 +55,22 @@ int main (int argc, char *argv[])
   Time n2_expire = Seconds (40);
   Time n3_expire = Seconds (60);
 
+  std::vector<Address> n1_poas;
+
+  n1_poas.push_back(n1_mac00.operator ns3::Address());
+  n1_poas.push_back(n1_mac01.operator ns3::Address());
+
+  std::vector<Address> n2_poas_1;
+
+  n2_poas_1.push_back(n2_mac01.operator ns3::Address());
+  n2_poas_1.push_back(n2_mac02.operator ns3::Address());
+
+  std::vector<Address> n3_poas_1;
+
+  n3_poas_1.push_back(n3_mac01.operator ns3::Address());
+  n3_poas_1.push_back(n3_mac02.operator ns3::Address());
+  n3_poas_1.push_back(n3_mac03.operator ns3::Address());
+
   // Routing cost
   int32_t cost = 5;
 
@@ -79,7 +96,11 @@ int main (int argc, char *argv[])
   Ptr<NNNAddress> n2_test = Create<NNNAddress> ("af.67.31");
   Ptr<NNNAddress> n3_test = Create<NNNAddress> ("ae.34.26");
 
-  Ptr<NNST> ptrn1_nnst = Create<NNST> ();
+  Ptr<NNST> ptrn1_nnst = CreateObject<NNST> ();
+  Ptr<ForwardingStrategy> fw = CreateObject<ForwardingStrategy> ();
+  Ptr<Node> node = tmpNodes.Get(0);
+
+  ptrn1_nnst->AggregateObject(fw);
 
   nnst::Entry n1_nnst_entry (ptrn1_nnst, n1_test);
 
@@ -171,5 +192,20 @@ int main (int argc, char *argv[])
 
   std::cout << "Printing ordering by address at " << Simulator::Now() << std::endl;
   n1_nnst_entry.printByAddress();
+
+  std::cout << std::setfill('*') << std::setw(80) << "" << std::endl;
+
+  ptrn1_nnst->Add(n1_test, ptrFace00, n1_poas, n1_expire, cost);
+
+  ptrn1_nnst->Add(n2_test, ptrFace00, n2_mac00.operator ns3::Address(), n2_expire, cost);
+  ptrn1_nnst->Add(n2_test, ptrFace01, n1_poas, n3_expire, cost);
+
+  ptrn1_nnst->Add(n3_test, ptrFace00, n3_mac00.operator ns3::Address(), n1_expire, cost);
+  ptrn1_nnst->Add(n3_test, ptrFace01, n3_poas_1, n3_expire, cost);
+  ptrn1_nnst->Add(n3_test, ptrFace02, n3_mac04.operator ns3::Address(), n1_expire, cost);
+
+  std::cout << "Begin testing of NNST" << std::endl;
+
+  std::cout << std::setfill(' ') << *ptrn1_nnst << std::endl;
 
 }
