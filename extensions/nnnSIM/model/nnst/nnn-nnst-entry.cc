@@ -36,7 +36,7 @@ namespace ll = boost::lambda;
 
 #include "../nnn-naming.h"
 
-NS_LOG_COMPONENT_DEFINE ("nnn.nnst.Entry");
+NS_LOG_COMPONENT_DEFINE ("nnn.nnst.entry");
 
 namespace ns3 {
   namespace nnn {
@@ -93,6 +93,8 @@ namespace ns3 {
       void
       Entry::UpdateLeaseTime (Time n_lease)
       {
+	NS_LOG_FUNCTION (this << n_lease);
+
 	fmtr_set_by_nth& nth_index = m_faces.get<i_nth> ();
 	fmtr_set_by_nth::iterator it = nth_index.begin();
 
@@ -116,7 +118,7 @@ namespace ns3 {
       void
       Entry::AddOrUpdateRoutingMetric (Ptr<Face> face, int32_t metric)
       {
-	NS_LOG_FUNCTION (this);
+	NS_LOG_FUNCTION (this << boost::cref(*face) << metric);
 	NS_ASSERT_MSG (face != NULL, "Trying to Add or Update NULL face");
 
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
@@ -145,6 +147,7 @@ namespace ns3 {
       void
       Entry::Invalidate ()
       {
+	NS_LOG_FUNCTION (this);
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 
 	for (fmtr_set_by_face::iterator face = face_index.begin ();
@@ -163,6 +166,7 @@ namespace ns3 {
       void
       Entry::UpdateFaceRtt (Ptr<Face> face, const Time &sample)
       {
+	NS_LOG_FUNCTION (this << boost::cref(*face) << sample);
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin ();
 
@@ -190,6 +194,7 @@ namespace ns3 {
       void
       Entry::RemoveFace (const Ptr<Face> &face)
       {
+	NS_LOG_FUNCTION (this << boost::cref(*face));
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 
 	face_index.erase(face);
@@ -198,6 +203,7 @@ namespace ns3 {
       void
       Entry::AddPoA (Ptr<Face> face, Address poa, Time e_lease, uint32_t cost)
       {
+	NS_LOG_FUNCTION (this << boost::cref(*face) << poa << e_lease << cost);
 	FaceMetric tmp (face, poa, e_lease, cost);
 
 	m_faces.insert(tmp);
@@ -211,6 +217,7 @@ namespace ns3 {
       std::vector<Address>
       Entry::GetPoAs()
       {
+	NS_LOG_FUNCTION (this);
 	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 	fmtr_set_by_poa::iterator it = poa_index.begin ();
 
@@ -228,6 +235,7 @@ namespace ns3 {
       std::vector<Address>
       Entry::GetPoAs(Ptr<Face> face)
       {
+	NS_LOG_FUNCTION (this << boost::cref(*face));
 	fmtr_set_by_face& face_index = m_faces.get<i_face> ();
 	fmtr_set_by_face::iterator it = face_index.begin();
 
@@ -246,18 +254,21 @@ namespace ns3 {
       uint32_t
       Entry::GetPoAsN()
       {
+	NS_LOG_FUNCTION (this);
 	return GetPoAs().size();
       }
 
       uint32_t
       Entry::GetPoAsN(Ptr<Face> face)
       {
+	NS_LOG_FUNCTION (this << boost::cref(*face));
 	return GetPoAs(face).size();
       }
 
       Ptr<Face>
       Entry::GetFace (Address poa)
       {
+	NS_LOG_FUNCTION (this << poa);
 	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 	fmtr_set_by_poa::iterator it = poa_index.find(poa);
 
@@ -274,12 +285,14 @@ namespace ns3 {
       bool
       Entry::isEmpty()
       {
+	NS_LOG_FUNCTION (this);
 	return (m_faces.size() == 0);
       }
 
       void
       Entry::RemovePoA (Address poa)
       {
+	NS_LOG_FUNCTION (this << poa);
 	fmtr_set_by_poa& poa_index = m_faces.get<i_poa> ();
 
 	poa_index.erase(poa);
@@ -288,6 +301,7 @@ namespace ns3 {
       void
       Entry::cleanExpired()
       {
+	NS_LOG_FUNCTION (this);
 	fmtr_set_by_lease& lease_index = m_faces.get<i_lease> ();
 	Time now = Simulator::Now();
 

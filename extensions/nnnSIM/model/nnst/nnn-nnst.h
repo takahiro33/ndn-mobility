@@ -98,7 +98,7 @@ namespace ns3 {
       ~NNST();
 
       Ptr<nnst::Entry>
-      ClosestSector (const NNNAddress &nnnaddr);
+      ClosestSector (const NNNAddress &prefix);
 
       // Possibly unnecessary
       //Ptr<nnst::Entry>
@@ -184,6 +184,9 @@ namespace ns3 {
       virtual void DoDispose (); ///< @brief Perform cleanup
 
     private:
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric, char c);
+
       /**
        * @brief Remove reference to a face from the entry. If entry had only this face, the whole
        * entry will be removed

@@ -27,7 +27,7 @@ namespace ll = boost::lambda;
 #include "nnn-nnst.h"
 #include "nnn-nnst-entry.h"
 
-NS_LOG_COMPONENT_DEFINE ("nnn.nnst.impl");
+NS_LOG_COMPONENT_DEFINE ("nnn.nnst");
 
 namespace ns3 {
   namespace nnn {
@@ -49,9 +49,10 @@ namespace ns3 {
     }
 
     Ptr<nnst::Entry>
-    NNST::ClosestSector (const NNNAddress &nnnaddr)
+    NNST::ClosestSector (const NNNAddress &prefix)
     {
-      super::iterator item = super::longest_prefix_match (nnnaddr);
+      NS_LOG_FUNCTION (this << prefix);
+      super::iterator item = super::longest_prefix_match (prefix);
       // @todo use predicate to search with exclude filters
 
       if (item == super::end ())
@@ -61,9 +62,10 @@ namespace ns3 {
     }
 
     Ptr<nnst::Entry>
-    NNST::Find (const NNNAddress &name)
+    NNST::Find (const NNNAddress &prefix)
     {
-      super::iterator item = super::find_exact (name);
+      NS_LOG_FUNCTION (this << prefix);
+      super::iterator item = super::find_exact (prefix);
 
       if (item == super::end ())
 	return 0;
@@ -87,7 +89,9 @@ namespace ns3 {
     Ptr<nnst::Entry>
     NNST::Add (const NNNAddress &name, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric)
     {
-      Ptr<nnst::Entry> tmp = Add (Create<NNNAddress> (name), face, poa, lease_expire, metric);
+      NS_LOG_FUNCTION ("const NNNAddress Add" << name);
+      char c;
+      Ptr<nnst::Entry> tmp = Add (Create<NNNAddress> (name), face, poa, lease_expire, metric, c);
 
       Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
       return tmp;
@@ -96,10 +100,12 @@ namespace ns3 {
     Ptr<nnst::Entry>
     NNST::Add (const Ptr<const NNNAddress> &prefix, std::vector<Ptr<Face> > faces, Address poa, Time lease_expire, int32_t metric)
     {
+      NS_LOG_FUNCTION ("Face vector Add" << boost::cref(*prefix));
       Ptr<nnst::Entry> tmp;
+      char c;
       for (std::vector<Ptr<Face> >::iterator i = faces.begin(); i != faces.end (); ++i)
 	{
-	  tmp = Add(prefix, *i, poa, lease_expire, metric);
+	  tmp = Add(prefix, *i, poa, lease_expire, metric, c);
 	}
 
       Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
@@ -109,10 +115,12 @@ namespace ns3 {
     Ptr<nnst::Entry>
     NNST::Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, std::vector<Address> poas, Time lease_expire, int32_t metric)
     {
+      NS_LOG_FUNCTION ("Address vector Add" << boost::cref(*prefix));
       Ptr<nnst::Entry> tmp;
+      char c;
       for (std::vector<Address>::iterator i = poas.begin(); i != poas.end (); ++i)
 	{
-	  tmp = Add(prefix, face, *i, lease_expire, metric);
+	  tmp = Add(prefix, face, *i, lease_expire, metric, c);
 	}
 
       Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
@@ -122,49 +130,18 @@ namespace ns3 {
     Ptr<nnst::Entry>
     NNST::Add (const Ptr<const NNNAddress> &name, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric)
     {
-      NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId () << boost::cref(*name) << boost::cref(*face) << metric);
+      NS_LOG_FUNCTION ("Unitary Add" << boost::cref(*name));
+      char c;
+      Ptr<nnst::Entry> tmp = Add(name, face, poa, lease_expire, metric, c);
 
-      // will add entry if doesn't exists, or just return an iterator to the existing entry
-      bool p_entry = false;
-      std::pair< super::iterator, bool > result = super::insert (*name, 0);
-      if (result.first != super::end ())
-	{
-	  if (result.second)
-	    {
-	      Ptr<nnst::Entry> newEntry = Create<nnst::Entry> (this, name);
-
-	      newEntry->AddPoA(face, poa, lease_expire, metric);
-	      newEntry->SetTrie (result.first);
-	      result.first->set_payload (newEntry);
-	      p_entry = true;
-	    }
-
-	  super::modify (result.first,
-	                 ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
-
-	  if (result.second)
-	    {
-	      // notify forwarding strategy about new NNST entry
-	      NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
-	      this->GetObject<ForwardingStrategy> ()->DidAddNNSTEntry (result.first->payload ());
-	    }
-
-	  // If this is a new entry, then the PoA has not been added
-	  if (!p_entry)
-	    {
-	      result.first->payload()->AddPoA(face, poa, lease_expire, metric);
-	    }
-
-	  return result.first->payload ();
-	}
-      else
-	return 0;
+      Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
+      return tmp;
     }
 
     void
     NNST::InvalidateAll ()
     {
-      NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId ());
+      NS_LOG_FUNCTION (this);
 
       super::parent_trie::recursive_iterator item (super::getTrie ());
       super::parent_trie::recursive_iterator end (0);
@@ -180,7 +157,7 @@ namespace ns3 {
     void
     NNST::Remove (const Ptr<const NNNAddress> &name)
     {
-      NS_LOG_FUNCTION (this->GetObject<Node> ()->GetId () << boost::cref(*name));
+      NS_LOG_FUNCTION (boost::cref(*name));
 
       super::iterator nnstEntry = super::find_exact (*name);
       if (nnstEntry != super::end ())
@@ -196,7 +173,7 @@ namespace ns3 {
     void
     NNST::RemoveFromAll (Ptr<Face> face)
     {
-      NS_LOG_FUNCTION (this);
+      NS_LOG_FUNCTION (this << boost::cref(*face));
 
       Ptr<nnst::Entry> entry = Begin ();
       while (entry != End ())
@@ -223,7 +200,7 @@ namespace ns3 {
     void
     NNST::RemoveFromAll (Address poa)
     {
-      NS_LOG_FUNCTION (this);
+      NS_LOG_FUNCTION (this << poa);
 
       Ptr<nnst::Entry> entry = Begin ();
       while (entry != End ())
@@ -422,6 +399,46 @@ namespace ns3 {
       Object::DoDispose ();
     }
 
+    Ptr<nnst::Entry>
+    NNST::Add (const Ptr<const NNNAddress> &name, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric, char c)
+    {
+      NS_LOG_FUNCTION ("Full Add" << boost::cref(*name) << boost::cref(*face) << poa << lease_expire << metric);
+
+      // will add entry if doesn't exists, or just return an iterator to the existing entry
+      std::pair< super::iterator, bool > result = super::insert (*name, 0);
+      if (result.first != super::end ())
+	{
+	  if (result.second)
+	    {
+	      Ptr<nnst::Entry> newEntry = Create<nnst::Entry> (this, name);
+
+	      newEntry->AddPoA(face, poa, lease_expire, metric);
+	      newEntry->SetTrie (result.first);
+	      result.first->set_payload (newEntry);
+	    }
+
+	  super::modify (result.first,
+	                 ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
+
+	  if (result.second)
+	    {
+	      // notify forwarding strategy about new NNST entry
+	      NS_ASSERT (this->GetObject<ForwardingStrategy> () != 0);
+	      this->GetObject<ForwardingStrategy> ()->DidAddNNSTEntry (result.first->payload ());
+	    }
+
+	  // If this is a new entry, then the PoA has not been added
+	  if (!result.second)
+	    {
+	      result.first->payload()->AddPoA(face, poa, lease_expire, metric);
+	    }
+
+	  return result.first->payload ();
+	}
+      else
+	return 0;
+    }
+
     void
     NNST::RemoveFace (super::parent_trie &item, Ptr<Face> face)
     {
@@ -446,6 +463,7 @@ namespace ns3 {
     NNST::cleanExpired(Ptr<nnst::Entry> item)
     {
       Ptr<const NNNAddress> name = item->GetPtrAddress();
+      NS_LOG_FUNCTION (this << boost::cref(*name));
 
       item->cleanExpired();
 

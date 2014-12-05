@@ -222,13 +222,13 @@ int main (int argc, char *argv[])
 
 
   std::cout << "Searching for " << *n3_test << std::endl;
-//  Ptr<nnst::Entry> ptr_ent = ptrn1_nnst->Find(*n3_test);
-//
-//  if (ptr_ent != 0)
-//    {
-//      std::cout << "Attempting to update " << *n3_test << std::endl;
-//      ptr_ent->UpdateLeaseTime(Seconds(20));
-//    }
+  Ptr<nnst::Entry> ptr_ent = ptrn1_nnst->Find(*n3_test);
+
+  if (ptr_ent != 0)
+    {
+      std::cout << "Attempting to update " << *n3_test << std::endl;
+      ptr_ent->UpdateLeaseTime(Seconds(20));
+    }
 
   Simulator::Schedule(Seconds(24), &printNNST, ptrn1_nnst);
 
