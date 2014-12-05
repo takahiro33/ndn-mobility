@@ -87,7 +87,13 @@ public:
   Time m_renew;
 };
 
-std::ostream& operator<< (std::ostream& os, const NNPTEntry &entry);
+inline std::ostream &
+operator<< (std::ostream &os, const NNPTEntry &nnpt)
+{
+	os << nnpt.m_oldName << "\t" << nnpt.m_lease_expire << "\t" << nnpt.m_renew << std::endl;
+	return os;
+}
+
 
 //} /* namespace nnpt */
 } /* namespace nnn */

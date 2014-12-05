@@ -51,13 +51,13 @@ typedef multi_index_container<
 		// sort by NamesContainer::operator<
 		ordered_unique<
 			tag<lease>,
-			identity<NamesContainerEntry>
+			identity<NNPTEntry>
 		>,
 
 		// sort by less<string> on NamesContainerEntry
 		ordered_unique<
 			tag<pair>,
-			member<NNPTEntry,NamesContainerEntry,&NNPTEntry::m_newName>
+			member<NNPTEntry,NamesContainerEntry,&NNPTEntry::m_oldName>
 		>
 	>
 > pair_set;
@@ -139,9 +139,6 @@ public:
 	pair_set container;
 
 };
-
-
-std::ostream& operator<< (std::ostream& os, const NNPT &nnpt);
 
 } /* namespace nnn */
 } /* namespace ns3 */
