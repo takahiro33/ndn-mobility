@@ -109,8 +109,8 @@ namespace ns3 {
 	    ++it;
 	  }
 
-	if (replaced)
-	  Simulator::Schedule(n_lease, &Entry::cleanExpired, this);
+	//if (replaced)
+	//  Simulator::Schedule(n_lease, &Entry::cleanExpired, this);
       }
 
       void
@@ -205,7 +205,7 @@ namespace ns3 {
 	// reordering random access index same way as by metric index
 	m_faces.get<i_nth> ().rearrange (m_faces.get<i_metric> ().begin ());
 
-	Simulator::Schedule(e_lease, &Entry::cleanExpired, this);
+	//Simulator::Schedule(e_lease, &Entry::cleanExpired, this);
       }
 
       std::vector<Address>
@@ -271,6 +271,12 @@ namespace ns3 {
 	return tmp;
       }
 
+      bool
+      Entry::isEmpty()
+      {
+	return (m_faces.size() == 0);
+      }
+
       void
       Entry::RemovePoA (Address poa)
       {
@@ -286,16 +292,15 @@ namespace ns3 {
 	Time now = Simulator::Now();
 
 	fmtr_set_by_lease::iterator it = lease_index.begin();
-
-	while (! (m_faces.size () == 0))
+	for (; it != lease_index.end();)
 	  {
 	    if (it->GetExpireTime() <= now)
-	      {
-		m_faces.erase(*it);
-		break;
-	      }
+	      it = lease_index.erase(it);
+	    else
+	      ++it;
 
-	    ++it;
+	    if (it->GetExpireTime() > now)
+	      break;
 	  }
       }
 

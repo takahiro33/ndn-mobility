@@ -193,11 +193,12 @@ namespace ns3 {
 
       void
       RemovePoA (super::parent_trie &item, Address poa);
+
+      void
+      cleanExpired(Ptr<nnst::Entry> item);
     };
 
     std::ostream& operator<< (std::ostream& os, const NNST &nnst);
-
-
 
   } /* namespace nnn */
 } /* namespace ns3 */

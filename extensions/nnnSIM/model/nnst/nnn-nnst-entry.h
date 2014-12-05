@@ -202,6 +202,9 @@ namespace ns3 {
 	Ptr<Face>
 	GetFace (Address poa);
 
+	bool
+	isEmpty();
+
 	void
 	RemovePoA (Address poa);
 

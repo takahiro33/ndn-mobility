@@ -34,6 +34,14 @@ using namespace std;
 using namespace nnn;
 using namespace nnst;
 
+void
+printNNST(Ptr<NNST> nnst)
+{
+  std::cout << "Attempt NNST printing " <<  Simulator::Now() << std::endl;
+
+  std::cout << *nnst << std::endl;
+}
+
 int main (int argc, char *argv[])
 {
   // Create 48 bit MAC addresses
@@ -50,10 +58,12 @@ int main (int argc, char *argv[])
   Mac48Address n3_mac03 = Mac48Address ("01:02:03:04:A5:06");
   Mac48Address n3_mac04 = Mac48Address ("01:1E:03:04:05:06");
 
+  Mac48Address n4_mac01 = Mac48Address ("20:1E:03:04:05:06");
+
   // Expire times
-  Time n1_expire = Seconds (20);
-  Time n2_expire = Seconds (40);
-  Time n3_expire = Seconds (60);
+  Time n1_expire = Seconds (5);
+  Time n2_expire = Seconds (10);
+  Time n3_expire = Seconds (15);
 
   std::vector<Address> n1_poas;
 
@@ -95,6 +105,7 @@ int main (int argc, char *argv[])
   Ptr<NNNAddress> n1_test = Create<NNNAddress> ("be.54.32");
   Ptr<NNNAddress> n2_test = Create<NNNAddress> ("af.67.31");
   Ptr<NNNAddress> n3_test = Create<NNNAddress> ("ae.34.26");
+  Ptr<NNNAddress> n4_test = Create<NNNAddress> ("b1.34.26");
 
   Ptr<NNST> ptrn1_nnst = CreateObject<NNST> ();
   Ptr<ForwardingStrategy> fw = CreateObject<ForwardingStrategy> ();
@@ -186,10 +197,6 @@ int main (int argc, char *argv[])
 
   std::cout << "End deletion tests" << std::endl;
 
-  Simulator::Stop (Seconds (70));
-  Simulator::Run ();
-  Simulator::Destroy ();
-
   std::cout << "Printing ordering by address at " << Simulator::Now() << std::endl;
   n1_nnst_entry.printByAddress();
 
@@ -198,14 +205,36 @@ int main (int argc, char *argv[])
   ptrn1_nnst->Add(n1_test, ptrFace00, n1_poas, n1_expire, cost);
 
   ptrn1_nnst->Add(n2_test, ptrFace00, n2_mac00.operator ns3::Address(), n2_expire, cost);
-  ptrn1_nnst->Add(n2_test, ptrFace01, n1_poas, n3_expire, cost);
+  ptrn1_nnst->Add(n2_test, ptrFace01, n1_poas, n2_expire, cost);
 
-  ptrn1_nnst->Add(n3_test, ptrFace00, n3_mac00.operator ns3::Address(), n1_expire, cost);
+  ptrn1_nnst->Add(n3_test, ptrFace00, n3_mac00.operator ns3::Address(), n3_expire, cost);
   ptrn1_nnst->Add(n3_test, ptrFace01, n3_poas_1, n3_expire, cost);
-  ptrn1_nnst->Add(n3_test, ptrFace02, n3_mac04.operator ns3::Address(), n1_expire, cost);
+  ptrn1_nnst->Add(n3_test, ptrFace02, n3_mac04.operator ns3::Address(), n3_expire, cost);
 
-  std::cout << "Begin testing of NNST" << std::endl;
+  ptrn1_nnst->Add(n4_test, ptrFace00, n4_mac01.operator ns3::Address(), n3_expire, cost);
+
+  std::cout << "Begin testing of NNST at " <<  Simulator::Now() << std::endl;
 
   std::cout << std::setfill(' ') << *ptrn1_nnst << std::endl;
 
+  std::cout << "Begin to wait at " <<  Simulator::Now() << std::endl;
+  Simulator::Schedule(Seconds(8), &printNNST, ptrn1_nnst);
+
+
+  std::cout << "Searching for " << *n3_test << std::endl;
+//  Ptr<nnst::Entry> ptr_ent = ptrn1_nnst->Find(*n3_test);
+//
+//  if (ptr_ent != 0)
+//    {
+//      std::cout << "Attempting to update " << *n3_test << std::endl;
+//      ptr_ent->UpdateLeaseTime(Seconds(20));
+//    }
+
+  Simulator::Schedule(Seconds(24), &printNNST, ptrn1_nnst);
+
+  Simulator::Stop (Seconds (25));
+  Simulator::Run ();
+  Simulator::Destroy ();
+
+  std::cout << "End everything " <<  Simulator::Now() << std::endl;
 }

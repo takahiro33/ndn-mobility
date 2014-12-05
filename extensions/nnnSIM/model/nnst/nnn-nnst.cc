@@ -87,7 +87,10 @@ namespace ns3 {
     Ptr<nnst::Entry>
     NNST::Add (const NNNAddress &name, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric)
     {
-      return Add (Create<NNNAddress> (name), face, poa, lease_expire, metric);
+      Ptr<nnst::Entry> tmp = Add (Create<NNNAddress> (name), face, poa, lease_expire, metric);
+
+      Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
+      return tmp;
     }
 
     Ptr<nnst::Entry>
@@ -99,6 +102,7 @@ namespace ns3 {
 	  tmp = Add(prefix, *i, poa, lease_expire, metric);
 	}
 
+      Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
       return tmp;
     }
 
@@ -111,6 +115,7 @@ namespace ns3 {
 	  tmp = Add(prefix, face, *i, lease_expire, metric);
 	}
 
+      Simulator::Schedule(lease_expire, &NNST::cleanExpired, this, tmp);
       return tmp;
     }
 
@@ -435,6 +440,17 @@ namespace ns3 {
 
       super::modify (&item,
                      ll::bind (&nnst::Entry::RemovePoA, ll::_1, poa));
+    }
+
+    void
+    NNST::cleanExpired(Ptr<nnst::Entry> item)
+    {
+      Ptr<const NNNAddress> name = item->GetPtrAddress();
+
+      item->cleanExpired();
+
+      if (item->isEmpty())
+	Remove(name);
     }
 
     std::ostream&
