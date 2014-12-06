@@ -34,7 +34,7 @@
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/traced-value.h>
 
-#include "nnn-names-container-entry.h"
+//#include "nnn-names-container-entry.h"
 
 //#include "nnn-nnpt.h"
 #include "../nnn-naming.h"
@@ -43,6 +43,7 @@
 #include "../../utils/trie/counting-policy.h"
 #include "../../utils/trie/trie-with-policy.h"
 #include "../../helper/nnn-face-container.h"
+#include "../nnn-naming.h"
 
 namespace ns3 {
 namespace nnn {
@@ -75,16 +76,16 @@ public:
    */
   NNPTEntry ();
 
-  NNPTEntry (NNNAddres oldName, NNNAddres newName, Time lease_expire);
+  NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
-  NNPTEntry (NNNAddres oldName, NNNAddres newName, Time lease_expire, Time renew);
+  NNPTEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
 
   virtual ~NNPTEntry ();
 
   bool operator< (const NNPTEntry e) const { return m_lease_expire < e.m_lease_expire; }
 
-  NNNAddres m_oldName;
-  NNNAddres m_newName;
+  NNNAddress m_oldName;
+  NNNAddress m_newName;
   Time m_lease_expire;
   Time m_renew;
 };
@@ -92,7 +93,7 @@ public:
 inline std::ostream &
 operator<< (std::ostream &os, const NNPTEntry &nnpt)
 {
-	os << nnpt.m_oldName << "\t" << nnpt.m_lease_expire << "\t" << nnpt.m_renew << std::endl;
+	os << nnpt.m_oldName << "\t" << nnpt.m_newName  << "\t" << nnpt.m_lease_expire << "\t" << nnpt.m_renew << std::endl;
 	return os;
 }
 

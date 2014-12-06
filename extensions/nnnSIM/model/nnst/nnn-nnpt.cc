@@ -42,7 +42,7 @@ NNPT::~NNPT() {
 }
 
 /*void
-NNPT::addEntry (NamesContainerEntry oldName, NamesContainerEntry newName)
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName)
 {
 	container.insert(NNPT(oldName, newName));
 
@@ -50,7 +50,7 @@ NNPT::addEntry (NamesContainerEntry oldName, NamesContainerEntry newName)
 }*/
 
 void
-NNPT::addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire)
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire)
 {
 	container.insert(NNPTEntry(oldName, newName, lease_expire));
 
@@ -58,7 +58,7 @@ NNPT::addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time l
 }
 
 void
-NNPT::addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew)
+NNPT::addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew)
 {
 	container.insert(NNPTEntry(oldName, newName, lease_expire, renew));
 
@@ -74,7 +74,7 @@ NNPT::addEntry (NNPTEntry nnptEntry)
 }
 
 void
-NNPT::deleteEntry (NamesContainerEntry oldName)
+NNPT::deleteEntry (NNNAddress oldName)
 {
 	NNPTEntry tmp = findEntry (oldName);
 	container.erase(tmp);
@@ -86,15 +86,8 @@ NNPT::deleteEntry (NNPTEntry nnptEntry)
 	container.erase(nnptEntry);
 }
 
-/*
-void
-NNPT::deleteEntry (NamesContainerEntry oldName, NamesContainerEntry newName)
-{
-
-}*/
-
 bool
-NNPT::foundName (NamesContainerEntry name)//????
+NNPT::foundName (NNNAddress name)
 {
 	pair_set_by_name& names_index = container.get<pair> ();
 	pair_set_by_name::iterator it = names_index.find(name);
@@ -105,8 +98,26 @@ NNPT::foundName (NamesContainerEntry name)//????
 		return true;
 }
 
+NNNAddress
+NNPT::findPairedName (NNNAddress oldName)
+{
+	pair_set_by_name& pair_index = container.get<pair> ();
+	pair_set_by_name::iterator it = pair_index.find(oldName);
+
+	if (it != pair_index.end())
+	{
+		NNPTEntry tmp = *it;
+		NNNAddress newName = tmp.m_newName;
+		return newName;
+	}
+	else
+	{
+		return oldName;
+	}
+}
+
 NNPTEntry
-NNPT::findEntry (NamesContainerEntry name)
+NNPT::findEntry (NNNAddress name)
 {
 	pair_set_by_name& pair_index = container.get<pair> ();
 	pair_set_by_name::iterator it = pair_index.find(name);
@@ -122,7 +133,7 @@ NNPT::findEntry (NamesContainerEntry name)
 	}
 }
 
-NamesContainerEntry
+NNNAddress
 NNPT::findNewestName ()
 {
 	pair_set_by_name& pair_index = container.get<pair> ();
@@ -134,7 +145,7 @@ NNPT::findNewestName ()
 }
 
 void
-NNPT::updateLeaseTime (NamesContainerEntry oldName, Time lease_expire)
+NNPT::updateLeaseTime (NNNAddress oldName, Time lease_expire)
 {
 	pair_set_by_name& pair_index = container.get<pair> ();
 	pair_set_by_name::iterator it = pair_index.find(oldName);
@@ -154,7 +165,7 @@ NNPT::updateLeaseTime (NamesContainerEntry oldName, Time lease_expire)
 }
 
 void
-NNPT::updateLeaseTime (NamesContainerEntry oldName, Time lease_expire, Time renew)
+NNPT::updateLeaseTime (NNNAddress oldName, Time lease_expire, Time renew)
 {
 	pair_set_by_name& pair_index = container.get<pair> ();
 	pair_set_by_name::iterator it = pair_index.find(oldName);
@@ -186,7 +197,7 @@ NNPT::isEmpty ()
 }
 
 Time
-NNPT::findNameExpireTime (NamesContainerEntry name)
+NNPT::findNameExpireTime (NNNAddress name)
 {
 	NNPTEntry tmp = findEntry(name);
 
@@ -226,8 +237,8 @@ NNPT::printByAddress ()
 	pair_set_by_name& pair_index = container.get<pair> ();
 	pair_set_by_name::iterator it = pair_index.begin();
 
-	std::cout << "NNN Address\t| Lease Expire\t| Renew" << std::endl;
-	std::cout << "--------------------------------------------------" << std::endl;
+	std::cout << "Old Address\t| New Address\t| Lease Expire\t| Renew" << std::endl;
+	std::cout << "--------------------------------------------------------" << std::endl;
 
 	while (it != pair_index.end())
 	{
@@ -242,8 +253,8 @@ NNPT::printByLease ()
 	pair_set_by_lease& lease_index = container.get<lease> ();
 	pair_set_by_lease::iterator it = lease_index.begin();
 
-	std::cout << "NNN Address\t| Lease Expire\t| Renew" << std::endl;
-	std::cout << "--------------------------------------------------" << std::endl;
+	std::cout << "NNN Address\t| New Address\t| Lease Expire\t| Renew" << std::endl;
+	std::cout << "--------------------------------------------------------" << std::endl;
 
 	while (it != lease_index.end ())
 	{

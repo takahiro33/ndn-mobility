@@ -34,6 +34,8 @@
 #include "nnn-nnpt-entry.h"
 #include "../nnn-naming.h"
 
+#include <ns3-dev/ns3/object.h>
+#include <ns3-dev/ns3/ptr.h>
 
 using boost::multi_index_container;
 using namespace ::boost::multi_index;
@@ -48,16 +50,16 @@ struct lease {};
 typedef multi_index_container<
 	NNPTEntry,
 	indexed_by<
-		// sort by NamesContainer::operator<
+		// sort by NNPT::operator<
 		ordered_unique<
 			tag<lease>,
 			identity<NNPTEntry>
 		>,
 
-		// sort by less<string> on NamesContainerEntry
+		// sort by less<string> on NNNAddress
 		ordered_unique<
 			tag<pair>,
-			member<NNPTEntry,NamesContainerEntry,&NNPTEntry::m_oldName>
+			member<NNPTEntry,NNNAddress,&NNPTEntry::m_oldName>
 		>
 	>
 > pair_set;
@@ -76,41 +78,41 @@ public:
 	virtual
 	~NNPT();
 
-//	void
-//	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName);
+	void
+	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
 	void
-	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
-
-	void
-	addEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire, Time renew);
+	addEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire, Time renew);
 
 	void
 	addEntry (NNPTEntry nnptEntry);
 
 	void
-	deleteEntry (NamesContainerEntry oldName);
+	deleteEntry (NNNAddress oldName);
 
 	void
 	deleteEntry (NNPTEntry nnptEntry);
 
 	void
-	deleteEntry (NamesContainerEntry oldName, NamesContainerEntry newName);
+	deleteEntry (NNNAddress oldName, NNNAddress newName);
 
 	bool
-	foundName (NamesContainerEntry name);
+	foundName (NNNAddress name);
+
+	NNNAddress
+	findPairedName (NNNAddress oldName);
 
 	NNPTEntry
-	findEntry (NamesContainerEntry name);
+	findEntry (NNNAddress name);
 
-	NamesContainerEntry
+	NNNAddress
 	findNewestName ();
 
 	void
-	updateLeaseTime (NamesContainerEntry oldName, Time lease_expire);
+	updateLeaseTime (NNNAddress oldName, Time lease_expire);
 
 	void
-	updateLeaseTime (NamesContainerEntry oldName, Time lease_expire, Time renew);
+	updateLeaseTime (NNNAddress oldName, Time lease_expire, Time renew);
 
 	uint32_t
 	size ();
@@ -119,7 +121,7 @@ public:
 	isEmpty ();
 
 	Time
-	findNameExpireTime (NamesContainerEntry name);
+	findNameExpireTime (NNNAddress name);
 
 	Time
 	findNameExpireTime (NNPTEntry nnptEntry);
@@ -134,7 +136,7 @@ public:
 	printByLease ();
 
 	void
-	informEntry (NamesContainerEntry oldName, NamesContainerEntry newName, Time lease_expire);
+	informEntry (NNNAddress oldName, NNNAddress newName, Time lease_expire);
 
 	pair_set container;
 
