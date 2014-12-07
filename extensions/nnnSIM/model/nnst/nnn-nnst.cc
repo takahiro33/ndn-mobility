@@ -139,6 +139,57 @@ namespace ns3 {
     }
 
     void
+    NNST::UpdateStatus(const NNNAddress &prefix, Ptr<Face> face, nnst::FaceMetric::Status status)
+    {
+      NS_LOG_FUNCTION (this << prefix << boost::cref(*face) << status);
+
+      super::iterator item = super::find_exact (prefix);
+
+      if (item != super::end ())
+	super::modify (&(*item), ll::bind (&nnst::Entry::UpdateStatus, ll::_1, face, status));
+    }
+
+    void
+    NNST::UpdateLeaseTime(const NNNAddress &prefix, Time n_lease)
+    {
+      NS_LOG_FUNCTION (this << prefix << n_lease);
+
+      super::iterator item = super::find_exact (prefix);
+
+      if (item != super::end ())
+	{
+	  bool ok = super::modify (&(*item), ll::bind (&nnst::Entry::UpdateLeaseTime, ll::_1, n_lease));
+
+	  if (ok)
+	    {
+	      Ptr<nnst::Entry> tmp = item->payload ();
+	      Simulator::Schedule(n_lease, &NNST::cleanExpired, this, tmp);
+	    }
+	}
+    }
+
+    void
+    NNST::AddOrUpdateRoutingMetric(const NNNAddress &prefix, Ptr<Face> face, int32_t metric)
+    {
+      NS_LOG_FUNCTION (this << prefix << boost::cref(*face) << metric);
+      super::iterator item = super::find_exact (prefix);
+
+      if (item != super::end ())
+	  super::modify (&(*item), ll::bind (&nnst::Entry::AddOrUpdateRoutingMetric, ll::_1, face, metric));
+    }
+
+    void
+    NNST::UpdateFaceRtt(const NNNAddress &prefix, Ptr<Face> face, const Time &sample)
+    {
+      NS_LOG_FUNCTION (this << prefix << boost::cref(*face) << sample);
+      super::iterator item = super::find_exact (prefix);
+
+      if (item != super::end ())
+	super::modify (&(*item), ll::bind (&nnst::Entry::UpdateFaceRtt, ll::_1, face, sample));
+    }
+
+
+    void
     NNST::InvalidateAll ()
     {
       NS_LOG_FUNCTION (this);

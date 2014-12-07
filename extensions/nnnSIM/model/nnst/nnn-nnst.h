@@ -39,6 +39,7 @@ using namespace ::boost::multi_index;
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/object.h>
 
+#include "nnn-nnst-entry-facemetric.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
 #include "../fw/nnn-forwarding-strategy.h"
@@ -126,6 +127,26 @@ namespace ns3 {
 
       Ptr<nnst::Entry>
       Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+
+//      void
+//      Invalidate ();
+
+      void
+      UpdateStatus (const NNNAddress &prefix, Ptr<Face> face, nnst::FaceMetric::Status status);
+
+      void
+      UpdateLeaseTime (const NNNAddress &prefix, Time n_lease);
+
+      /**
+       * \brief Add or update routing metric of FIB next hop
+       *
+       * Initial status of the next hop is set to YELLOW
+       */
+      void
+      AddOrUpdateRoutingMetric (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
+
+      void
+      UpdateFaceRtt (const NNNAddress &prefix, Ptr<Face> face, const Time &sample);
 
       void
       InvalidateAll ();
