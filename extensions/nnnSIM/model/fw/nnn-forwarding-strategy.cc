@@ -20,15 +20,6 @@
  *  along with nnn-forwarding-strategy.cc.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "nnn-forwarding-strategy.h"
-
-#include "../nnn-face.h"
-#include "../nnn-packets.h"
-#include "../nnst/nnn-nnst.h"
-#include "../nnst/nnn-nnst-entry.h"
-#include "../nnpt/nnn-nnpt.h"
-#include "../nnpt/nnn-nnpt-entry.h"
-
 #include <boost/ref.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -41,6 +32,16 @@
 #include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/boolean.h>
 #include <ns3-dev/ns3/string.h>
+
+#include "nnn-forwarding-strategy.h"
+
+#include "../nnn-face.h"
+#include "../nnn-packets.h"
+#include "../nnst/nnn-nnst.h"
+#include "../nnst/nnn-nnst-entry.h"
+#include "../nnst/nnn-nnst-entry-facemetric.h"
+#include "../nnpt/nnn-nnpt.h"
+#include "../nnpt/nnn-nnpt-entry.h"
 
 namespace ll = boost::lambda;
 
@@ -146,12 +147,14 @@ ForwardingStrategy::DoDispose ()
 void
 ForwardingStrategy::DidCreateNNSTEntry (Ptr<Face> inFace, Ptr<const SO> so_p, Ptr<nnst::Entry> nnstEntry)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnSO (Ptr<Face> face, Ptr<SO> so_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
@@ -159,66 +162,79 @@ ForwardingStrategy::OnSO (Ptr<Face> face, Ptr<SO> so_p)
 void
 ForwardingStrategy::OnDO (Ptr<Face> face, Ptr<DO> do_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnNULLp (Ptr<Face> face, Ptr<NULLp> null_p)
 {
+  NS_LOG_FUNCTION (this);
+
+
 
 }
 
 void
 ForwardingStrategy::OnEN (Ptr<Face> face, Ptr<EN> en_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnAEN (Ptr<Face> face, Ptr<AEN> aen_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnREN (Ptr<Face> face, Ptr<REN> ren_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnDEN (Ptr<Face> face, Ptr<DEN> den_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::OnINF (Ptr<Face> face, Ptr<INF> do_p)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::DidAddNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::WillRemoveNNSTEntry (Ptr<nnst::Entry> NNSTEntry)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::DidAddNNPTEntry (Ptr<nnpt::Entry> NNPTEntry)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
 void
 ForwardingStrategy::WillRemoveNNPTEntry (Ptr<nnpt::Entry> NNPTEntry)
 {
+  NS_LOG_FUNCTION (this);
 
 }
 
