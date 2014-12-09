@@ -40,6 +40,7 @@
 #include "../nnst/nnn-nnst.h"
 #include "../nnst/nnn-nnst-entry.h"
 #include "../nnst/nnn-nnst-entry-facemetric.h"
+#include "../../helper/nnn-names-container.h"
 #include "../nnpt/nnn-nnpt.h"
 #include "../nnpt/nnn-nnpt-entry.h"
 
