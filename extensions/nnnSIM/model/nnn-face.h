@@ -67,7 +67,7 @@ public:
 	GetTypeId ();
 
 	/**
-	 * \brief NDN protocol handlers
+	 * \brief NNN protocol handlers
 	 *
 	 * \param Face Face from which packet has been received
 	 * \param packet Original packet

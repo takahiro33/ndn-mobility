@@ -43,6 +43,7 @@
 #include "../nnst/nnn-nnst-entry-facemetric.h"
 #include "../nnst/nnn-nnpt.h"
 #include "../nnst/nnn-nnpt-entry.h"
+#include "../../helper/nnn-names-container.h"
 
 namespace ll = boost::lambda;
 
