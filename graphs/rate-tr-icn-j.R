@@ -49,6 +49,11 @@ intdata = data
 
 intdata = subset(intdata, Type %in% c("OutInterests", "InData"))
 
+if (nrow(intdata) == 0) {
+  cat(sprintf("There is no data. Possibly not a NDN data file.\n"))
+  quit("yes")
+}
+
 name = ""
 filnodes = unlist(strsplit(opt$node, ","))
 

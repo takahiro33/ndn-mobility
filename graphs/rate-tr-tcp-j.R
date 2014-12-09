@@ -49,6 +49,11 @@ intdata = data
 
 intdata = subset(intdata, Type %in% c("Out", "In"))
 
+if (nrow(intdata) == 0) {
+  cat(sprintf("There is no data. Possibly not a TCP/IP data file.\n"))
+  quit("yes")
+}
+
 name = ""
 filnodes = unlist(strsplit(opt$node, ","))
 
