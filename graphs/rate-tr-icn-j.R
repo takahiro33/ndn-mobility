@@ -6,18 +6,18 @@
 # Copyright (c) 2014 Waseda University, Sato Laboratory
 # Author: Jairo Eduardo Lopez <jairo@ruri.waseda.jp>
 #
-# app-data-j.R is free software: you can redistribute it and/or modify
+# rate-tr-j.R is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
-# app-data-j.R is distributed in the hope that it will be useful,
+# rate-tr-j.R is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of              
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               
 # GNU Affero Public License for more details.                                 
 #                                                                             
 # You should have received a copy of the GNU Affero Public License            
-# along with app-data-j.R.  If not, see <http://www.gnu.org/licenses/>.
+# along with rate-tr-j.R.  If not, see <http://www.gnu.org/licenses/>.
 #                    
 
 suppressPackageStartupMessages(library (ggplot2))
@@ -28,7 +28,7 @@ suppressPackageStartupMessages(library (doBy))
 # set some reasonable defaults for the options that are needed
 option_list <- list (
   make_option(c("-f", "--file"), type="character", default="results/rate-trace.txt",
-              help="File which holds the raw rate data.\n\t\t[Default \"%default\"]"),
+              help="File which holds the raw ICN rate data.\n\t\t[Default \"%default\"]"),
   make_option(c("-e", "--node"), type="character", default="",
               help="Node data to graph. Can be a comma separated list.\n\t\tDefault graphs data for all nodes."),
   make_option(c("-o", "--output"), type="character", default=".",
@@ -38,7 +38,7 @@ option_list <- list (
   )
 
 # Load the parser
-opt = parse_args(OptionParser(option_list=option_list, description="Creates graphs from ndnSIM L3 Data rate Tracer data"))
+opt = parse_args(OptionParser(option_list=option_list, description="Creates graphs from ndnSIM L3 Data ICN rate Tracer data"))
 
 data = read.table (opt$file, header=T)
 data$Node = factor (data$Node)
