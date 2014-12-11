@@ -26,7 +26,10 @@
 #include <ns3-dev/ns3/ptr.h>
 #include <ns3-dev/ns3/traced-callback.h>
 #include <ns3-dev/ns3/type-id.h>
+
 #include <ns3-dev/ns3/ndn-face.h>
+#include <ns3-dev/ns3/ndn-interest.h>
+#include <ns3-dev/ns3/ndn-data.h>
 
 #include "../nnn-face.h"
 
@@ -35,7 +38,7 @@ namespace ns3
   namespace nnn
   {
 
-    class NDNFace : public Face
+    class NDNFace : public nnn::Face, public ndn::Face
     {
     public:
       static TypeId
@@ -46,8 +49,73 @@ namespace ns3
       virtual
       ~NDNFace ();
 
-    private:
-      Ptr<ns3::ndn::Face> m_ndn_face;
+      bool
+      ReceiveNULLp (Ptr<NULLp> n_i);
+
+      bool
+      ReceiveSO (Ptr<SO> so_i);
+
+      bool
+      ReceiveDO (Ptr<DO>  do_i);
+
+      bool
+      ReceiveEN (Ptr<EN> en_i);
+
+      bool
+      ReceiveAEN (Ptr<AEN> aen_i);
+
+      bool
+      ReceiveREN (Ptr<REN> ren_i);
+
+      bool
+      ReceiveDEN (Ptr<DEN> den_i);
+
+      bool
+      ReceiveData (Ptr<ndn::Data> data);
+
+      bool
+      ReceiveInterest (Ptr<ndn::Interest> interest);
+
+      bool
+      SendNULLp (Ptr<const NULLp> n_o);
+
+      bool
+      SendSO (Ptr<const SO> so_o);
+
+      bool
+      SendDO (Ptr<const DO> do_o);
+
+      bool
+      SendEN (Ptr<const EN> en_o);
+
+      bool
+      SendAEN (Ptr<const AEN> aen_o);
+
+      bool
+      SendREN (Ptr<const REN> ren_o);
+
+      bool
+      SendDEN (Ptr<const DEN> den_o);
+
+      bool
+      SendINF (Ptr<const INF> inf_o);
+
+      bool
+      ReceiveINF (Ptr<INF> inf_i);
+
+      bool
+      SendData (Ptr<const ndn::Data> data);
+
+      bool
+      SendInterest (Ptr<const ndn::Interest> interest);
+
+    protected:
+      bool
+      Receive (Ptr<Packet> packet);
+
+      bool
+      Send (Ptr<Packet> packet);
+
     };
 
   } /* namespace nnn */
