@@ -33,24 +33,159 @@ namespace ns3
     NDNFace::GetTypeId ()
     {
       static TypeId tid = TypeId ("ns3::nnn::ndnFace")
-            .SetParent<Face> ()
-            .SetGroupName ("Nnn")
-            ;
+        	.SetParent<nnn::Face> ()
+        	.SetGroupName ("Nnn")
+        	;
       return tid;
     }
 
     NDNFace::NDNFace (Ptr<Node> node)
-    : Face (node)
+    : ns3::nnn::Face (node)
+    , ns3::ndn::Face (node)
     {
-    	NS_LOG_FUNCTION (this << node);
+      NS_LOG_FUNCTION (this << node);
 
-    	NS_ASSERT_MSG (node != 0, "node cannot be NULL. Check the code");
+      NS_ASSERT_MSG (node != 0, "node cannot be NULL. Check the code");
 
-    	m_ndn_face = CreateObject<ndn::Face> (node);
+      this->nnn::Face::SetFlags(nnn::Face::NDN);
     }
 
     NDNFace::~NDNFace ()
     {
+    }
+
+    bool
+    NDNFace::ReceiveNULLp (Ptr<NULLp> n_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveSO (Ptr<SO> so_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveDO (Ptr<DO>  do_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveEN (Ptr<EN> en_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveAEN (Ptr<AEN> aen_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveREN (Ptr<REN> ren_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveDEN (Ptr<DEN> den_i)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveData (Ptr<ndn::Data> data)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveInterest (Ptr<ndn::Interest> interest)
+    {
+
+    }
+
+    bool
+    NDNFace::SendNULLp (Ptr<const NULLp> n_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendSO (Ptr<const SO> so_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendDO (Ptr<const DO> do_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendEN (Ptr<const EN> en_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendAEN (Ptr<const AEN> aen_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendREN (Ptr<const REN> ren_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendDEN (Ptr<const DEN> den_o)
+    {
+
+    }
+
+    bool
+    NDNFace::SendINF (Ptr<const INF> inf_o)
+    {
+
+    }
+
+    bool
+    NDNFace::ReceiveINF (Ptr<INF> inf_i)
+    {
+
+    }
+
+
+
+    bool
+    NDNFace::SendData(Ptr<const ndn::Data> data)
+    {
+
+    }
+
+    bool
+    NDNFace::SendInterest(Ptr<const ndn::Interest> interest)
+    {
+
+    }
+
+    bool
+    NDNFace::Receive(Ptr<Packet> packet)
+    {
+
+    }
+
+    bool
+    NDNFace::Send(Ptr<Packet> packet)
+    {
+
     }
 
   } /* namespace nnn */

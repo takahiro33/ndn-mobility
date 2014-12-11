@@ -250,8 +250,8 @@ public:
 	 */
 	enum Flags
 	{
-		POA = 0,
-		APPLICATION = 1 ///< @brief A netDevice Face, temporarily
+		APPLICATION = 1, ///< @brief An application directly on NNN
+		NDN = 2          ///< @brief Connects to the NDN layer
 	};
 
 	/**
@@ -343,7 +343,7 @@ private:
 	bool m_ifup;
 	uint32_t m_id; ///< \brief id of the interNN_Face in NNN stack (per-node uniqueness)
 	uint16_t m_metric; ///< \brief metric of the Face
-	uint32_t m_flags; ///< @brief NN_Faces flags (e.g., APPLICATION)
+	uint32_t m_flags; ///< @brief NN_Faces flags (e.g., APPLICATION, NDN)
 };
 std::ostream&
 operator<< (std::ostream& os, const Face &face);
