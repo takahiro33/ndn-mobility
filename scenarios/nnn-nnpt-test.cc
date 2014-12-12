@@ -113,8 +113,8 @@ int main (int argc, char *argv[])
 
 	std::cout << "Printing ordering by address" << std::endl;
 	test1.printByAddress();
-
 	std::cout << "\"" << nn_test1 <<"\"'s New address is \"" << test1.findPairedName(nn_test1) << "\"" << std::endl;
+	std::cout << "\"" << nn_test2 <<"\"'s New address is \"" << test1.findPairedName(nn_test2) << "\"" << std::endl;
 
 }
 

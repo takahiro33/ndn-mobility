@@ -64,7 +64,7 @@ namespace nnn {
 NNNStackHelper::NNNStackHelper ()
 {
 	m_nnnFactory.         SetTypeId ("ns3::nnn::L3Protocol");
-	m_nnnforwardingstrategyFactory.    SetTypeId ("ns3::nnn::fw::ForwardingStrategy");
+	m_nnnforwardingstrategyFactory.    SetTypeId ("ns3::nnn::ForwardingStrategy");
 	m_nnstFactory.         SetTypeId ("ns3::nnn::nnst::Default");
 
 	m_netDeviceCallbacks.push_back (std::make_pair (PointToPointNetDevice::GetTypeId (), MakeCallback (&NNNStackHelper::PointToPointNetDeviceCallback, this)));

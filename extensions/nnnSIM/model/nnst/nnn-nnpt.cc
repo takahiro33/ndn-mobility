@@ -112,6 +112,7 @@ NNPT::findPairedName (NNNAddress oldName)
 	}
 	else
 	{
+// to be considered (return EROOR?)
 		return oldName;
 	}
 }

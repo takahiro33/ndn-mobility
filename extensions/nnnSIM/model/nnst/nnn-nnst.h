@@ -39,6 +39,7 @@ using namespace ::boost::multi_index;
 #include <ns3-dev/ns3/nstime.h>
 #include <ns3-dev/ns3/object.h>
 
+#include "nnn-nnst-entry-facemetric.h"
 #include "../nnn-naming.h"
 #include "../nnn-face.h"
 #include "../fw/nnn-forwarding-strategy.h"
@@ -47,126 +48,183 @@ using namespace ::boost::multi_index;
 #include "../../utils/trie/trie-with-policy.h"
 
 namespace ns3 {
-namespace nnn {
+  namespace nnn {
 
-class L3Protocol;
+    class L3Protocol;
 
-class NULLp;
-typedef NULLp NULLpHeader;
-class SO;
-typedef SO SOHeader;
-class DO;
-typedef DO DOHeader;
-class EN;
-typedef EN ENHeader;
-class AEN;
-typedef AEN AENHeader;
-class REN;
-typedef REN RENHeader;
-class INF;
-typedef INF INFHeader;
-
-
-namespace nnst {
-
-class Entry;
-
-}
-
-/**
- * @ingroup nnn
- * @defgroup nnn NNST
- */
-class NNST : public Object,
-				protected nnnSIM::trie_with_policy<NNNAddress,
-								nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
-								nnnSIM::counting_policy_traits>
-{
-public:
-
-	typedef nnnSIM::trie_with_policy<NNNAddress,
-			nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
-			nnnSIM::counting_policy_traits > super;
-
-	static TypeId GetTypeId ();
-
-	NNST();
-
-	~NNST();
-
-	Ptr<nnst::Entry>
-	ClosestSector (const NNNAddress &nnnaddr);
-
-	Ptr<nnst::Entry>
-	SignatureMatch (const Address &poa);
-
-	Ptr<nnst::Entry>
-	Find (const NNNAddress &prefix);
-
-	Ptr<nnst::Entry>
-	Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
-
-	Ptr<nnst::Entry>
-	Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
-
-	void
-	Remove (const Ptr<const NNNAddress> &prefix);
-
-	void
-	InvalidateAll ();
-
-	void
-	RemoveFace ();
-
-	void
-	RemoveFromAll (Ptr<Face> face);
-
-	void
-	Print (std::ostream &os) const;
-
-	virtual Ptr<const nnst::Entry>
-	Begin () const;
-
-	Ptr<nnst::Entry>
-	Begin ();
-
-	Ptr<const nnst::Entry>
-	End () const;
-
-	Ptr<nnst::Entry>
-	End ();
-
-	Ptr<const nnst::Entry>
-	Next (Ptr<const nnst::Entry> item) const;
-
-	Ptr<nnst::Entry>
-	Next (Ptr<nnst::Entry> item);
-
-	uint32_t
-	GetSize ();
-
-	Ptr<NNST>
-	GetNNST (Ptr<Object> node);
-
-protected:
-	// inherited from Object class
-	virtual void NotifyNewAggregate (); ///< @brief Notify when object is aggregated
-	virtual void DoDispose (); ///< @brief Perform cleanup
-
-private:
-	/**
-	 * @brief Remove reference to a face from the entry. If entry had only this face, the whole
-	 * entry will be removed
-	 */
-	void
-	RemoveFace (super::parent_trie &item, Ptr<Face> face);
-};
-
-std::ostream& operator<< (std::ostream& os, const NNST &nnst);
+    class NULLp;
+    typedef NULLp NULLpHeader;
+    class SO;
+    typedef SO SOHeader;
+    class DO;
+    typedef DO DOHeader;
+    class EN;
+    typedef EN ENHeader;
+    class AEN;
+    typedef AEN AENHeader;
+    class REN;
+    typedef REN RENHeader;
+    class INF;
+    typedef INF INFHeader;
 
 
+    namespace nnst {
 
-} /* namespace nnn */
+      class Entry;
+
+    }
+
+    /**
+     * @ingroup nnn
+     * @defgroup nnn NNST
+     */
+    class NNST : public Object,
+    protected nnnSIM::trie_with_policy<
+    NNNAddress,
+    nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
+    nnnSIM::counting_policy_traits>
+    {
+    public:
+
+      typedef nnnSIM::trie_with_policy<
+	  NNNAddress,
+	  nnnSIM::smart_pointer_payload_traits<nnst::Entry>,
+	  nnnSIM::counting_policy_traits
+	  > super;
+
+      static TypeId GetTypeId ();
+
+      NNST();
+
+      ~NNST();
+
+      Ptr<nnst::Entry>
+      ClosestSector (const NNNAddress &prefix);
+
+      // Possibly unnecessary
+      //Ptr<nnst::Entry>
+      //SignatureMatch (Address poa);
+
+      Ptr<nnst::Entry>
+      Find (const NNNAddress &prefix);
+
+      // This one should be eliminated
+      Ptr<nnst::Entry>
+      Add (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
+
+      // This one as well
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, int32_t metric);
+
+      Ptr<nnst::Entry>
+      Add (const NNNAddress &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, std::vector<Ptr<Face> > faces, Address poa, Time lease_expire, int32_t metric);
+
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, std::vector<Address> poas, Time lease_expire, int32_t metric);
+
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric);
+
+//      void
+//      Invalidate ();
+
+      void
+      UpdateStatus (const NNNAddress &prefix, Ptr<Face> face, nnst::FaceMetric::Status status);
+
+      void
+      UpdateLeaseTime (const NNNAddress &prefix, Time n_lease);
+
+      /**
+       * \brief Add or update routing metric of FIB next hop
+       *
+       * Initial status of the next hop is set to YELLOW
+       */
+      void
+      AddOrUpdateRoutingMetric (const NNNAddress &prefix, Ptr<Face> face, int32_t metric);
+
+      void
+      UpdateFaceRtt (const NNNAddress &prefix, Ptr<Face> face, const Time &sample);
+
+      void
+      InvalidateAll ();
+
+      void
+      Remove (const Ptr<const NNNAddress> &prefix);
+
+      void
+      RemoveFromAll (Ptr<Face> face);
+
+      void
+      RemoveFromAll (Address poa);
+
+      void
+      Print (std::ostream &os) const;
+
+      void
+      PrintByMetric () const;
+
+      void
+      PrintByAddress () const;
+
+      void
+      PrintByLease () const;
+
+      void
+      PrintByFace () const;
+
+      virtual Ptr<const nnst::Entry>
+      Begin () const;
+
+      Ptr<nnst::Entry>
+      Begin ();
+
+      Ptr<const nnst::Entry>
+      End () const;
+
+      Ptr<nnst::Entry>
+      End ();
+
+      Ptr<const nnst::Entry>
+      Next (Ptr<const nnst::Entry> item) const;
+
+      Ptr<nnst::Entry>
+      Next (Ptr<nnst::Entry> item);
+
+      uint32_t
+      GetSize ();
+
+      Ptr<NNST>
+      GetNNST (Ptr<Object> node);
+
+    protected:
+      // inherited from Object class
+      virtual void NotifyNewAggregate (); ///< @brief Notify when object is aggregated
+      virtual void DoDispose (); ///< @brief Perform cleanup
+
+    private:
+      Ptr<nnst::Entry>
+      Add (const Ptr<const NNNAddress> &prefix, Ptr<Face> face, Address poa, Time lease_expire, int32_t metric, char c);
+
+      /**
+       * @brief Remove reference to a face from the entry. If entry had only this face, the whole
+       * entry will be removed
+       */
+      void
+      RemoveFace (super::parent_trie &item, Ptr<Face> face);
+
+      void
+      RemovePoA (super::parent_trie &item, Address poa);
+
+      void
+      cleanExpired(Ptr<nnst::Entry> item);
+    };
+
+    std::ostream& operator<< (std::ostream& os, const NNST &nnst);
+
+  } /* namespace nnn */
 } /* namespace ns3 */
 
 #endif /* NNN_NNST_H_ */

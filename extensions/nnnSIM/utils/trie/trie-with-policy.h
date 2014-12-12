@@ -62,14 +62,14 @@ public:
 				trie_.insert (key, payload);
 
 		if (item.second) // real insert
-				{
+		{
 			bool ok = policy_.insert (s_iterator_to (item.first));
 			if (!ok)
 			{
 				item.first->erase (); // cannot insert
 				return std::make_pair (end (), false);
 			}
-				}
+		}
 		else
 		{
 			return std::make_pair (s_iterator_to (item.first), false);
