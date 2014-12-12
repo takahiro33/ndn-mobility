@@ -26,8 +26,8 @@
 #include "../nnn-packets.h"
 #include "../nnst/nnn-nnst.h"
 #include "../nnst/nnn-nnst-entry.h"
-#include "../nnst/nnn-nnpt.h"
-#include "../nnst/nnn-nnpt-entry.h"
+#include "../nnpt/nnn-nnpt.h"
+#include "../nnpt/nnn-nnpt-entry.h"
 
 #include <boost/ref.hpp>
 #include <boost/foreach.hpp>
@@ -41,8 +41,6 @@
 #include <ns3-dev/ns3/simulator.h>
 #include <ns3-dev/ns3/boolean.h>
 #include <ns3-dev/ns3/string.h>
-
-//#include "ns3/nnnSIM/utils/nnn-fw-hop-count-tag.h"
 
 namespace ll = boost::lambda;
 

@@ -46,8 +46,8 @@
 #include "../model/nnn-naming.h"
 #include "../model/nnst/nnn-nnst.h"
 #include "../model/nnst/nnn-nnst-entry.h"
-#include "../model/nnst/nnn-nnpt.h"
-#include "../model/nnst/nnn-nnpt-entry.h"
+#include "../model/nnpt/nnn-nnpt.h"
+#include "../model/nnpt/nnn-nnpt-entry.h"
 
 #include "../model/fw/nnn-forwarding-strategy.h"
 
