@@ -203,7 +203,7 @@ namespace ns3 {
     void
     NNPT::cleanExpired ()
     {
-      pair_set_by_lease& lease_index = container.get<lease> ();
+      pair_set_by_lease& lease_index = container.get<st_lease> ();
       Time now = Simulator::Now();
 
       //std::cout << "Deleting expired entries at " << now << std::endl;
@@ -240,7 +240,7 @@ namespace ns3 {
     void
     NNPT::printByLease ()
     {
-      pair_set_by_lease& lease_index = container.get<lease> ();
+      pair_set_by_lease& lease_index = container.get<st_lease> ();
       pair_set_by_lease::iterator it = lease_index.begin();
 
       std::cout << "NNN Address\t| New Address\t| Lease Expire\t| Renew" << std::endl;

@@ -50,8 +50,8 @@
 #include "../nnst/nnn-nnst.h"
 #include "../nnst/nnn-nnst-entry.h"
 #include "../nnst/nnn-nnst-entry-facemetric.h"
-#include "../nnst/nnn-nnpt.h"
-#include "../nnst/nnn-nnpt-entry.h"
+#include "../nnpt/nnn-nnpt.h"
+#include "../nnpt/nnn-nnpt-entry.h"
 #include "../../helper/nnn-names-container.h"
 
 namespace ll = boost::lambda;

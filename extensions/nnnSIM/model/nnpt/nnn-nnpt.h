@@ -46,13 +46,13 @@ namespace ns3 {
   namespace nnn {
 
     struct pair {};
-    struct lease {};
+    struct st_lease {};
 
     typedef multi_index_container<
 	NNPTEntry,
 	indexed_by<
 	ordered_unique<
-	tag<lease>,
+	tag<st_lease>,
 	identity<NNPTEntry>
     >,
 
@@ -65,7 +65,7 @@ namespace ns3 {
     > pair_set;
 
     typedef pair_set::index<pair>::type pair_set_by_name;
-    typedef pair_set::index<lease>::type pair_set_by_lease;
+    typedef pair_set::index<st_lease>::type pair_set_by_lease;
 
     class NNPT : public SimpleRefCount<NNPT>
     {
